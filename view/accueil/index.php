@@ -1,7 +1,3 @@
-<?php
-// On définit une classe spécifique pour le body de l'accueil afin de mettre le fond
-$page_class = 'page-accueil';
-?>
 <main class="home-main">
   <div class="home-content">
     <h1 class="hero-title">BACKROOMS</h1>
