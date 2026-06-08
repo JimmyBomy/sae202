@@ -23,9 +23,9 @@ body {
 
 /* Background image specifically for home page */
 body.page-accueil {
-  background: 
+  background:
     linear-gradient(to right, rgba(15, 15, 10, 0.95) 0%, rgba(15, 15, 10, 0.8) 40%, rgba(15, 15, 10, 0.3) 100%),
-    url('https://images.unsplash.com/photo-1616422285623-14c1e403d6e5?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+    url('../img/fond.jpg') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
 }
@@ -60,6 +60,13 @@ body:not(.page-accueil) .site-header {
   text-decoration: none;
   display: flex;
   align-items: center;
+}
+
+/* Logo image (wordmark BACKROOMS de la maquette) */
+.logo-img {
+  height: 50px;
+  width: auto;
+  display: block;
 }
 
 .main-nav ul {
@@ -206,8 +213,8 @@ body:not(.page-accueil) .site-header {
 }
 
 .feature-icon {
-  width: 45px;
-  height: 45px;
+  width: auto;
+  height: 52px;
   margin-bottom: 15px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
@@ -244,6 +251,7 @@ body.page-accueil .site-footer {
   .header-container { flex-direction: column; gap: 20px; }
   .home-content { max-width: 100%; }
   .hero-features { flex-wrap: wrap; gap: 30px; }
+  .logo-img { height: 40px; }
 }
 
 /* ======================================================================

@@ -16,23 +16,17 @@ $page_class = 'page-accueil';
 
     <div class="hero-features">
       <a href="<?= BASE_URL ?>/concept" class="feature-item">
-        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 22h16M6 2v20M14 2v20M14 2H6M10 12h1" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img class="feature-icon" src="<?= BASE_URL ?>/view/img/icone-porte.png" alt="">
         <span>ENTRER DANS<br>LES BACKROOMS &gt;</span>
       </a>
-      
+
       <a href="<?= BASE_URL ?>/infos" class="feature-item">
-        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img class="feature-icon" src="<?= BASE_URL ?>/view/img/icone-joueurs.png" alt="">
         <span>JOUEURS &gt;</span>
       </a>
 
       <a href="<?= BASE_URL ?>/regles" class="feature-item">
-        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M19.428 15.428a2 2 0 0 0-1.022-.547l-2.387-.477a6 6 0 0 0-3.86.517l-.318.158a6 6 0 0 1-3.86.517L6.05 15.12a2 2 0 0 0-1.806.547M8 4h8l-1 1v5.172a2 2 0 0 0 .586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 0 0 9 10.172V5L8 4Z" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img class="feature-icon" src="<?= BASE_URL ?>/view/img/icone-puzzle.png" alt="">
         <span>RÈGLES &gt;</span>
       </a>
     </div>
