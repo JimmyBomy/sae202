@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Zone Sécurisée (Administrateur)"
+AuthUserFile /home/mmi25c02/htpassword.mmi
+Require valid-user

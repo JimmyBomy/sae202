@@ -1,0 +1,13 @@
+# Toutes les URL qui ne correspondent pas à un fichier/dossier réel
+# sont redirigées vers index.php (front controller MVC).
+RewriteEngine On
+
+RewriteRule ^gestion/?(.*)$ admin/$1 [L]
+
+# Ne pas réécrire les fichiers et dossiers existants (css, images, etc.)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Tout le reste -> index.php
+RewriteRule ^ index.php [L]
