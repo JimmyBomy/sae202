@@ -1,4 +1,4 @@
-  <footer>
+  <footer class="site-footer">
     <div class="footer-content">
       <p>&copy; <?= date('Y') ?> <?= NOM_SITE ?>. Tous droits réservés.</p>
       <nav>

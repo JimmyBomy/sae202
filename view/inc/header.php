@@ -6,27 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($titrePage ?? NOM_SITE) ?> — <?= NOM_SITE ?></title>
   <meta name="description" content="<?= htmlspecialchars($metaDesc ?? SLOGAN) ?>">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=2">
 </head>
-<body>
-  <header>
-    <div class="navbar">
+<body class="<?= isset($page_class) ? $page_class : '' ?>">
+  <header class="site-header">
+    <div class="header-container">
       <div class="logo">
-        <a href="<?= BASE_URL ?>/"><?= NOM_SITE ?></a>
+        <a href="<?= BASE_URL ?>/">
+          <!-- Le logo sera fourni par l'utilisateur plus tard -->
+          <img src="<?= BASE_URL ?>/view/css/logo_placeholder.png" alt="BACKROOMS" style="height:40px; display:none;" id="real-logo">
+          <span id="text-logo" style="font-family: 'VT323', monospace; font-size: 32px; color: var(--primary-color, #e0ad0f); letter-spacing: 2px;">BACKROOMS</span>
+        </a>
       </div>
-      <nav>
+      <nav class="main-nav">
         <ul>
-          <li><a href="<?= BASE_URL ?>/">Accueil</a></li>
-          <li><a href="<?= BASE_URL ?>/concept">Le Concept</a></li>
-          <li><a href="<?= BASE_URL ?>/infos">Infos pratiques</a></li>
-          <?php if (isset($_SESSION['user_id'])): ?>
-            <li><a href="<?= BASE_URL ?>/profil">Mon Profil</a></li>
-            <li><a href="<?= BASE_URL ?>/compte/deconnexion">Déconnexion</a></li>
-          <?php else: ?>
-            <li><a href="<?= BASE_URL ?>/compte/inscription">S'inscrire</a></li>
-            <li><a href="<?= BASE_URL ?>/compte/connexion">Se connecter</a></li>
-          <?php endif; ?>
+          <li><a href="<?= BASE_URL ?>/" <?= (!isset($_GET['action']) || $_GET['action'] == 'accueil') ? 'class="active"' : '' ?>>ACCUEIL</a></li>
+          <li><a href="<?= BASE_URL ?>/concept" <?= (isset($_GET['action']) && $_GET['action'] == 'concept') ? 'class="active"' : '' ?>>À PROPOS</a></li>
+          <li><a href="<?= BASE_URL ?>/infos" <?= (isset($_GET['action']) && $_GET['action'] == 'infos') ? 'class="active"' : '' ?>>LES SALLES</a></li>
+          <li><a href="<?= BASE_URL ?>/regles" <?= (isset($_GET['action']) && $_GET['action'] == 'regles') ? 'class="active"' : '' ?>>RÈGLES</a></li>
+          <li><a href="<?= BASE_URL ?>/contact" <?= (isset($_GET['action']) && $_GET['action'] == 'contact') ? 'class="active"' : '' ?>>CONTACT</a></li>
         </ul>
       </nav>
+      <div class="header-actions">
+        <a href="<?= BASE_URL ?>/compte/inscription" class="btn btn-outline">RÉSERVER</a>
+      </div>
     </div>
   </header>
