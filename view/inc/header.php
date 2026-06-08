@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=2">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=3">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">
@@ -31,7 +31,13 @@
         </ul>
       </nav>
       <div class="header-actions">
-        <a href="<?= BASE_URL ?>/compte/inscription" class="btn btn-outline">RÉSERVER</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+          <a href="<?= BASE_URL ?>/profil" class="btn-link">MON ESPACE</a>
+          <a href="<?= BASE_URL ?>/compte/deconnexion" class="btn-link">DÉCONNEXION</a>
+        <?php else: ?>
+          <a href="<?= BASE_URL ?>/compte/connexion" class="btn-link">CONNEXION</a>
+        <?php endif; ?>
+        <a href="<?= BASE_URL ?>/reservation" class="btn btn-outline">RÉSERVER</a>
       </div>
     </div>
   </header>

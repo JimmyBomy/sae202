@@ -10,7 +10,7 @@ $page_class = 'page-accueil';
     </p>
     
     <div class="hero-buttons">
-      <a href="<?= BASE_URL ?>/compte/inscription" class="btn btn-primary">RÉSERVER UNE SESSION</a>
+      <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary">RÉSERVER UNE SESSION</a>
       <a href="<?= BASE_URL ?>/concept" class="btn-link">EN SAVOIR PLUS &gt;</a>
     </div>
 

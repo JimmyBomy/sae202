@@ -42,7 +42,11 @@ function update_utilisateur_password($id, $mot_de_passe) {
 
 function get_tous_utilisateurs() {
     $pdo = getBdd();
-    $sql = "SELECT * FROM utilisateurs ORDER BY date_inscription DESC";
+    // Jointure avec les équipes pour afficher le nom de l'équipe dans le back-office.
+    $sql = "SELECT u.*, e.nom AS equipe_nom
+            FROM utilisateurs u
+            LEFT JOIN equipes e ON e.id = u.equipe_id
+            ORDER BY u.date_inscription DESC";
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
 }

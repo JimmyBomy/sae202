@@ -1,5 +1,7 @@
 <?php
 require_once('model/utilisateur.php');
+require_once('model/equipe.php');
+require_once('model/score.php');
 
 function index() {
     if (!isset($_SESSION['user_id'])) {
@@ -8,7 +10,7 @@ function index() {
     }
 
     $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
-    
+
     $erreur = '';
     $succes = '';
 
@@ -37,6 +39,10 @@ function index() {
             }
         }
     }
+
+    // Équipe et scores du joueur (affichés en lecture seule dans l'espace privé).
+    $equipe = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
+    $scores = $equipe ? get_scores_by_equipe($equipe['id']) : [];
 
     $titrePage = 'Mon Profil';
     require('view/inc/header.php');
@@ -79,5 +85,36 @@ function password() {
     $titrePage = 'Modifier le mot de passe';
     require('view/inc/header.php');
     require('view/profil/password.php');
+    require('view/inc/footer.php');
+}
+
+function commentaire() {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: ' . BASE_URL . '/compte/connexion');
+        exit;
+    }
+
+    require_once('model/commentaire.php');
+    $erreur = '';
+    $succes = '';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $note = (int)($_POST['note'] ?? 0);
+        $texte = htmlspecialchars(trim($_POST['texte'] ?? ''));
+
+        if ($note < 1 || $note > 5 || empty($texte)) {
+            $erreur = 'Veuillez remplir tous les champs correctement.';
+        } else {
+            if (ajouter_commentaire($_SESSION['user_id'], $note, $texte)) {
+                $succes = 'Votre commentaire a été soumis et est en attente de modération.';
+            } else {
+                $erreur = 'Une erreur est survenue lors de l\'envoi du commentaire.';
+            }
+        }
+    }
+
+    $titrePage = 'Laisser un avis';
+    require('view/inc/header.php');
+    require('view/profil/commentaire.php');
     require('view/inc/footer.php');
 }
