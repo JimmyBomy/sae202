@@ -1,8 +1,9 @@
 <main class="container page-contenu">
   <section class="infos">
-    <h1>Les salles &amp; infos pratiques</h1>
+    <h1>Les salles</h1>
     <p class="page-intro">
       Trois niveaux de difficulté, une seule promesse&nbsp;: vous faire perdre la notion du temps.
+      (Localisation, tarifs et contact sur la page <a href="<?= BASE_URL ?>/infospratiques">Infos pratiques</a>.)
     </p>
 
     <div class="cartes">
@@ -26,22 +27,6 @@
         <p>Réservé aux experts. Obscurité quasi totale, comédiens en pleine action et
            énigmes redoutables. Le mot d'arrêt « LUMIÈRE » risque d'être tentant…</p>
         <p class="salle-meta">Durée ~2h30 · 4 à 6 joueurs · dès 18 ans</p>
-      </div>
-    </div>
-
-    <h2 class="section-titre">Infos pratiques</h2>
-    <div class="cartes">
-      <div class="carte">
-        <h2>📍 Lieu</h2>
-        <p>Entrepôt désaffecté aménagé<br>12 rue des Liminaux, 10000 Troyes</p>
-      </div>
-      <div class="carte">
-        <h2>🕐 Horaires</h2>
-        <p>Sessions nocturnes du jeudi au dimanche<br>Arrivée 30 min avant l'heure réservée</p>
-      </div>
-      <div class="carte">
-        <h2>🎟️ Tarifs</h2>
-        <p>À partir de 28&nbsp;€ / joueur<br>Tarif réduit étudiants &amp; groupes</p>
       </div>
     </div>
 

@@ -15,7 +15,7 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=6">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=7">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">
@@ -25,15 +25,22 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
           <img src="<?= BASE_URL ?>/view/img/logo.png?v=2" alt="BACKROOMS — Escape game nocturne" class="logo-img">
         </a>
       </div>
+
+      <!-- Menu hamburger (CSS pur, sans JS) pour le mobile -->
+      <input type="checkbox" id="menu-toggle" class="menu-toggle">
+      <label for="menu-toggle" class="burger" aria-label="Ouvrir le menu"><span></span><span></span><span></span></label>
+
       <nav class="main-nav">
         <ul>
           <li><a href="<?= BASE_URL ?>/" <?= $actif('') ?>>ACCUEIL</a></li>
           <li><a href="<?= BASE_URL ?>/concept" <?= $actif('concept') ?>>À PROPOS</a></li>
           <li><a href="<?= BASE_URL ?>/infos" <?= $actif('infos') ?>>LES SALLES</a></li>
+          <li><a href="<?= BASE_URL ?>/infospratiques" <?= $actif('infospratiques') ?>>INFOS PRATIQUES</a></li>
           <li><a href="<?= BASE_URL ?>/regles" <?= $actif('regles') ?>>RÈGLES</a></li>
           <li><a href="<?= BASE_URL ?>/contact" <?= $actif('contact') ?>>CONTACT</a></li>
         </ul>
       </nav>
+
       <div class="header-actions">
         <?php if (isset($_SESSION['user_id'])): ?>
           <a href="<?= BASE_URL ?>/profil" class="btn-link">MON ESPACE</a>
