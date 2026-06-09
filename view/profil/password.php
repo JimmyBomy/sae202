@@ -5,6 +5,7 @@
         <a href="<?= BASE_URL ?>/profil" class="btn btn-outline">Informations personnelles</a>
         <a href="<?= BASE_URL ?>/profil/password" class="btn btn-primary">Mot de passe</a>
         <a href="<?= BASE_URL ?>/profil/commentaire" class="btn btn-outline">Laisser un avis</a>
+        <a href="<?= BASE_URL ?>/compte/deconnexion" class="btn btn-outline" style="margin-left:auto;">Déconnexion</a>
     </div>
 
     <?php if (!empty($erreur)): ?>

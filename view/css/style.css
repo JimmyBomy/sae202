@@ -13,22 +13,23 @@
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-color);
   color: var(--text-light);
   line-height: 1.5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-/* Background image specifically for home page */
-body.page-accueil {
-  background:
-    linear-gradient(to right, rgba(13, 13, 10, 0.90) 0%, rgba(13, 13, 10, 0.60) 35%, rgba(13, 13, 10, 0.20) 70%, rgba(13, 13, 10, 0.05) 100%),
-    url('../img/fond.jpg') no-repeat center center;
+  /* MÊME fond liminal sur TOUTES les pages, voile léger (on voit bien le décor) */
+  background-color: var(--bg-color);
+  background-image:
+    linear-gradient(rgba(13, 12, 9, 0.55), rgba(13, 12, 9, 0.62)),
+    url('../img/fond.jpg');
+  background-position: center center;
   background-size: cover;
   background-attachment: fixed;
+  background-repeat: no-repeat;
 }
+
+/* L'accueil et le concept héritent désormais du fond global (identique partout) */
 
 .container {
   max-width: 1200px;
@@ -37,15 +38,11 @@ body.page-accueil {
   width: 100%;
 }
 
-/* Navbar */
+/* Navbar — transparente sur toutes les pages, laisse voir le fond.
+   Léger dégradé sombre vers le haut juste pour la lisibilité du menu. */
 .site-header {
   padding: 30px 40px;
-  background: transparent;
-}
-
-body:not(.page-accueil) .site-header {
-  background-color: #1a1a1a;
-  border-bottom: 1px solid #333;
+  background: linear-gradient(to bottom, rgba(8, 8, 6, 0.72), rgba(8, 8, 6, 0));
 }
 
 .header-container {
@@ -466,14 +463,20 @@ main { flex: 1 0 auto; }
    ====================================================================== */
 
 /* Fond liminal sombre sur toute la page, fixe au défilement */
-body.page-concept {
-  background:
-    linear-gradient(rgba(11, 11, 8, 0.74), rgba(11, 11, 8, 0.84)),
-    url('../img/fond.jpg') center top / cover fixed;
+/* Lisibilité du texte « nu » par-dessus le fond visible */
+.concept-lead, .pillar p, .pillar h3, .sec-sub,
+.page-intro, .page-contenu h1, .container h1, .container h2, .container > p {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.78);
 }
 
-/* Lisibilité du texte « nu » par-dessus le fond plus visible */
-.concept-lead, .pillar p, .pillar h3, .sec-sub { text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85); }
+/* Page Mentions légales : panneau sombre lisible (beaucoup de texte) */
+.mentions {
+  background: rgba(10, 10, 8, 0.62);
+  border: 1px solid #2a2a20;
+  border-radius: 10px;
+  padding: 30px 34px;
+}
+.mentions h2 { color: var(--primary-color); }
 
 .concept-page { max-width: 1120px; margin: 0 auto; padding: 0 20px 50px; }
 .concept-section { padding: 48px 0; }
@@ -616,5 +619,14 @@ body.page-concept {
 @media (max-width: 540px) {
   .quick-links { grid-template-columns: 1fr; }
   .interdits-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Formulaires « nus » (inscription / connexion) : panneau sombre lisible sur le fond */
+.container form {
+  background: rgba(12, 11, 8, 0.66);
+  border: 1px solid #2a2a20;
+  border-radius: 10px;
+  padding: 26px;
+  max-width: 640px;
 }
 

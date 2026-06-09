@@ -15,7 +15,7 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=7">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=8">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">
@@ -43,12 +43,12 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
 
       <div class="header-actions">
         <?php if (isset($_SESSION['user_id'])): ?>
-          <a href="<?= BASE_URL ?>/profil" class="btn-link">MON ESPACE</a>
-          <a href="<?= BASE_URL ?>/compte/deconnexion" class="btn-link">DÉCONNEXION</a>
+          <!-- Connecté : accès à l'espace privé (profil, équipe, déconnexion) -->
+          <a href="<?= BASE_URL ?>/profil" class="btn btn-outline">MON ESPACE</a>
         <?php else: ?>
-          <a href="<?= BASE_URL ?>/compte/connexion" class="btn-link">CONNEXION</a>
+          <!-- Un seul bouton : RÉSERVER mène à l'inscription / connexion -->
+          <a href="<?= BASE_URL ?>/reservation" class="btn btn-outline">RÉSERVER</a>
         <?php endif; ?>
-        <a href="<?= BASE_URL ?>/reservation" class="btn btn-outline">RÉSERVER</a>
       </div>
     </div>
   </header>
