@@ -28,6 +28,9 @@
       <label for="mot_de_passe">Mot de passe *</label>
       <input type="password" name="mot_de_passe" id="mot_de_passe" required>
     </div>
-    <button type="submit" class="btn">S'inscrire</button>
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
   </form>
+  <p class="form-switch">Déjà inscrit&nbsp;?
+    <a href="<?= BASE_URL ?>/compte/connexion">Connectez-vous</a>
+  </p>
 </main>

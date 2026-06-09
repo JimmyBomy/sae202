@@ -12,6 +12,9 @@
       <label for="mot_de_passe">Mot de passe</label>
       <input type="password" name="mot_de_passe" id="mot_de_passe" required>
     </div>
-    <button type="submit" class="btn">Se connecter</button>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
   </form>
+  <p class="form-switch">Pas encore de compte&nbsp;?
+    <a href="<?= BASE_URL ?>/compte/inscription">Créez-en un</a>
+  </p>
 </main>
