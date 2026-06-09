@@ -24,6 +24,12 @@ if (file_exists(__DIR__ . '/secrets.local.php')) {
 if (!defined('DB_USER')) { define('DB_USER', 'root'); }
 if (!defined('DB_PASS')) { define('DB_PASS', ''); }
 
+// --- Clé API Google Maps ---
+// Utilisée pour la carte stylée (style "Pamplona" de Snazzy Maps) sur la page Infos pratiques.
+// À définir dans conf/secrets.local.php : define('GOOGLE_MAPS_KEY', 'VOTRE_CLE');
+// Si vide, la page affiche une carte OpenStreetMap de secours (jamais cassée).
+if (!defined('GOOGLE_MAPS_KEY')) { define('GOOGLE_MAPS_KEY', ''); }
+
 // --- Sessions ---
 // On démarre la session une seule fois, pour gérer la connexion utilisateur.
 if (session_status() === PHP_SESSION_NONE) {

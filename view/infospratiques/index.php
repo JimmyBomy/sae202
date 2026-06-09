@@ -36,9 +36,31 @@
         <div class="info-field"><span class="info-label">Code postal</span><p>10000</p></div>
       </div>
       <div class="loc-map">
-        <iframe
-          src="https://www.openstreetmap.org/export/embed.html?bbox=4.0550%2C48.2880%2C4.1000%2C48.3080&layer=mapnik&marker=48.2973%2C4.0744"
-          title="Carte de localisation à Troyes" loading="lazy"></iframe>
+        <?php if (GOOGLE_MAPS_KEY !== ''): ?>
+          <!-- Carte Google Maps stylée (style "Pamplona" de Snazzy Maps, tons jaunes) -->
+          <div id="map-backrooms"></div>
+          <script>
+            function initMap() {
+              // Style "Pamplona" récupéré sur snazzymaps.com
+              const stylePamplona = [{"featureType":"all","elementType":"geometry","stylers":[{"color":"#f2e4b2"}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"gamma":0.01},{"lightness":20}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"saturation":-31},{"lightness":-33},{"weight":2},{"gamma":0.8}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"lightness":30},{"saturation":30}]},{"featureType":"landscape.natural.landcover","elementType":"geometry","stylers":[{"visibility":"on"},{"saturation":"-17"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"saturation":20}]},{"featureType":"poi","elementType":"labels.text","stylers":[{"saturation":"-26"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"lightness":20},{"saturation":-20},{"visibility":"off"},{"color":"#e4a5a5"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":10},{"saturation":-30}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"saturation":25},{"lightness":25}]},{"featureType":"water","elementType":"all","stylers":[{"lightness":-20}]}];
+              const troyes = { lat: 48.2973, lng: 4.0744 };
+              const map = new google.maps.Map(document.getElementById('map-backrooms'), {
+                center: troyes,
+                zoom: 14,
+                styles: stylePamplona,
+                streetViewControl: false,
+                mapTypeControl: false
+              });
+              new google.maps.Marker({ position: troyes, map: map, title: 'BACKROOMS' });
+            }
+          </script>
+          <script async src="https://maps.googleapis.com/maps/api/js?key=<?= htmlspecialchars(GOOGLE_MAPS_KEY) ?>&callback=initMap"></script>
+        <?php else: ?>
+          <!-- Repli OpenStreetMap tant que la clé Google Maps n'est pas renseignée -->
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=4.0550%2C48.2880%2C4.1000%2C48.3080&layer=mapnik&marker=48.2973%2C4.0744"
+            title="Carte de localisation à Troyes" loading="lazy"></iframe>
+        <?php endif; ?>
       </div>
     </div>
   </section>
