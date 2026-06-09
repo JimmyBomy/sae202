@@ -280,8 +280,8 @@ body:not(.page-accueil) .site-header {
 }
 
 /* Responsive */
-/* ========== RESPONSIVE : menu hamburger sous 1024px ========== */
-@media (max-width: 1024px) {
+/* ========== RESPONSIVE : menu hamburger sous 1200px ========== */
+@media (max-width: 1200px) {
   .burger { display: flex; }
   .header-container { flex-wrap: wrap; }
   /* Nav + actions masquées, dépliées au clic sur le hamburger */
