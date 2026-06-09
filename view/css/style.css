@@ -21,7 +21,7 @@ body {
   /* MÊME fond liminal sur TOUTES les pages, voile léger (on voit bien le décor) */
   background-color: var(--bg-color);
   background-image:
-    linear-gradient(rgba(13, 12, 9, 0.55), rgba(13, 12, 9, 0.62)),
+    linear-gradient(rgba(13, 12, 9, 0.62), rgba(13, 12, 9, 0.70)),
     url('../img/fond.jpg');
   background-position: center center;
   background-size: cover;
@@ -42,7 +42,7 @@ body {
    Léger dégradé sombre vers le haut juste pour la lisibilité du menu. */
 .site-header {
   padding: 30px 40px;
-  background: linear-gradient(to bottom, rgba(8, 8, 6, 0.72), rgba(8, 8, 6, 0));
+  background: linear-gradient(to bottom, rgba(8, 8, 6, 0.95) 0%, rgba(8, 8, 6, 0.6) 55%, rgba(8, 8, 6, 0) 100%);
 }
 
 .header-container {
@@ -651,7 +651,6 @@ main { flex: 1 0 auto; }
    POLICE PIXEL (VT323) sur TOUT l'habillage — comme les 3 maquettes
    (boutons, libellés d'icônes, titres de sections et de cartes…)
    ===================================================================== */
-.btn, .btn-link,
 .feature-item, .feature-item span,
 .page-contenu h1, .section-titre,
 .carte h2, .mini-carte h3, .pillar h3,
@@ -659,9 +658,9 @@ main { flex: 1 0 auto; }
   font-family: var(--font-hero);
   letter-spacing: 1px;
 }
-/* VT323 rend plus petit visuellement : on remonte les tailles */
-.btn { font-size: 1.3rem; padding: 8px 26px; }
-.btn-link { font-size: 1.2rem; }
+/* Boutons : police NETTE et lisible (Montserrat gras), pas le pixel */
+.btn { font-family: var(--font-nav); font-weight: 600; font-size: 1.05rem; letter-spacing: 1.5px; }
+.btn-link { font-family: var(--font-nav); font-weight: 600; font-size: 1rem; }
 .feature-item span { font-size: 1.15rem; }
 .page-contenu h1 { font-size: 2.8rem; }
 .section-titre { font-size: 2rem; }
