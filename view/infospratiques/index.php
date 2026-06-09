@@ -69,7 +69,7 @@
   <section id="tarifs" class="concept-section">
     <h2 class="sec-title">TARIFS</h2>
     <p class="sec-sub">Combien coûte une partie ?</p>
-    <div class="cartes">
+    <div class="cartes cartes-3">
       <div class="carte tarif-card">
         <span class="salle-tag">SALLE 1</span>
         <h2>Le Niveau 0</h2>

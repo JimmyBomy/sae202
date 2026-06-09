@@ -633,6 +633,10 @@ main { flex: 1 0 auto; }
 .form-switch a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
 .form-switch a:hover { text-decoration: underline; }
 
+/* Tarifs : toujours les 3 salles côte à côte (1 colonne en petit mobile) */
+.cartes-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 640px) { .cartes-3 { grid-template-columns: 1fr; } }
+
 /* Pages "formulaire" centrées au milieu de la page (contact, réservation) */
 .form-page { max-width: 720px; }
 .form-page > h1, .form-page > h2, .form-page > p, .form-page .form-switch { text-align: center; }
