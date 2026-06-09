@@ -1,4 +1,4 @@
-<main class="container">
+<main class="container form-page" style="padding-top: 50px;">
   <h1>Connexion</h1>
   <?php if (!empty($erreur)): ?>
     <div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div>
