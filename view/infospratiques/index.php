@@ -75,21 +75,42 @@
         <h2>Le Niveau 0</h2>
         <p>Exploration et cartographie. Aucune menace : l'initiation idéale.</p>
         <p class="tarif-prix">28,00 €<span>/ joueur</span></p>
-        <div class="diff"><span class="diff-label">Difficulté</span><div class="diff-bar"><span style="width:33%"></span></div></div>
+        <div class="diff">
+          <span class="diff-label">Niveau de difficulté</span>
+          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#d1b023" stroke-width="8" stroke-linecap="round" stroke-dasharray="44 200"/>
+          </svg>
+          <span class="diff-niv">Facile</span>
+        </div>
       </div>
       <div class="carte tarif-card">
         <span class="salle-tag">SALLE 2</span>
         <h2>Les Couloirs jaunes</h2>
         <p>Recherche de ressources et gestion du stress. Présence d'entités.</p>
         <p class="tarif-prix">34,00 €<span>/ joueur</span></p>
-        <div class="diff"><span class="diff-label">Difficulté</span><div class="diff-bar"><span style="width:66%"></span></div></div>
+        <div class="diff">
+          <span class="diff-label">Niveau de difficulté</span>
+          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#d1b023" stroke-width="8" stroke-linecap="round" stroke-dasharray="87 200"/>
+          </svg>
+          <span class="diff-niv">Moyen</span>
+        </div>
       </div>
       <div class="carte tarif-card">
         <span class="salle-tag salle-tag--hard">SALLE 3</span>
         <h2>Le Niveau !</h2>
         <p>Horreur extrême : traque continue par les comédiens, dans le noir.</p>
         <p class="tarif-prix">39,00 €<span>/ joueur</span></p>
-        <div class="diff"><span class="diff-label">Difficulté</span><div class="diff-bar"><span style="width:100%"></span></div></div>
+        <div class="diff">
+          <span class="diff-label">Niveau de difficulté</span>
+          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
+            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#c0392b" stroke-width="8" stroke-linecap="round" stroke-dasharray="132 200"/>
+          </svg>
+          <span class="diff-niv" style="color:#e0654f">Difficile</span>
+        </div>
       </div>
     </div>
   </section>

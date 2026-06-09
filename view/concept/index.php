@@ -13,12 +13,12 @@
 
     <div class="pillars">
       <div class="pillar">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v3l-2 2v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V7L6 5z"/><line x1="12" y1="11" x2="12" y2="13"/></svg>
         <h3>EXPLORER</h3>
         <p>Parcourez des salles immersives et flippantes&nbsp;; chaque détail peut être un indice.</p>
       </div>
       <div class="pillar">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a2 2 0 0 1 4 0c0 .5 0 1 .5 1H17a1 1 0 0 1 1 1v2.5c0 .5.5.5 1 .5a2 2 0 0 1 0 4c-.5 0-1 0-1 .5V19a1 1 0 0 1-1 1h-2.5c-.5 0-.5.5-.5 1a2 2 0 0 1-4 0c0-.5 0-1-.5-1H7a1 1 0 0 1-1-1v-2.5c0-.5-.5-.5-1-.5a2 2 0 0 1 0-4c.5 0 1 0 1-.5V6a1 1 0 0 1 1-1h2.5c.5 0 .5-.5.5-1z"/></svg>
         <h3>RÉSOUDRE</h3>
         <p>Affrontez des défis de logique, observez l'environnement et collaborez pour progresser.</p>
       </div>
@@ -47,12 +47,12 @@
         <p>Des décors réalistes et une ambiance sonore oppressante pour une expérience inoubliable.</p>
       </div>
       <div class="mini-carte">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a2 2 0 0 1 4 0c0 .5 0 1 .5 1H17a1 1 0 0 1 1 1v2.5c0 .5.5.5 1 .5a2 2 0 0 1 0 4c-.5 0-1 0-1 .5V19a1 1 0 0 1-1 1h-2.5c-.5 0-.5.5-.5 1a2 2 0 0 1-4 0c0-.5 0-1-.5-1H7a1 1 0 0 1-1-1v-2.5c0-.5-.5-.5-1-.5a2 2 0 0 1 0-4c.5 0 1 0 1-.5V6a1 1 0 0 1 1-1h2.5c.5 0 .5-.5.5-1z"/></svg>
         <h3>Épreuves collaboratives</h3>
         <p>Observation, logique et communication seront essentielles pour avancer ensemble.</p>
       </div>
       <div class="mini-carte">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C7 3 3 7 3 12c0 3 2 4 2 6h14c0-2 2-3 2-6 0-5-4-9-9-9z"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8v11l3-2 3 2 3-2 3 2V10a8 8 0 0 0-7-8z"/><circle cx="9.5" cy="11" r="1"/><circle cx="14.5" cy="11" r="1"/></svg>
         <h3>Frisson garanti</h3>
         <p>Des rencontres inattendues avec des « entités » qui mettront vos nerfs à rude épreuve.</p>
       </div>
@@ -115,7 +115,7 @@
         <li><svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Si vous entendez quelque chose d'inhabituel, restez silencieux.</li>
         <li><svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Chaque détail de votre environnement peut être un indice.</li>
         <li><svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Le temps joue contre vous, restez concentrés.</li>
-        <li><svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Certaines portes ne devraient jamais être ouvertes…</li>
+        <li><svg class="warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Certaines parties ne devraient pas être ouvertes.</li>
       </ul>
       <p class="rules-link"><a href="<?= BASE_URL ?>/regles" class="btn-link">VOIR TOUTES LES RÈGLES &gt;</a></p>
     </div>

@@ -603,10 +603,11 @@ main { flex: 1 0 auto; }
 .tarif-card { display: flex; flex-direction: column; }
 .tarif-prix { font-family: var(--font-hero); font-size: 2.2rem; color: var(--primary-color); margin: 14px 0 12px; }
 .tarif-prix span { font-family: var(--font-body); font-size: .9rem; color: #9a9a9a; margin-left: 6px; }
-.diff { margin-top: auto; }
+.diff { margin-top: auto; text-align: center; }
 .diff-label { display: block; font-size: .8rem; color: #9a9a9a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-.diff-bar { height: 9px; background: #2a2a20; border-radius: 5px; overflow: hidden; }
-.diff-bar span { display: block; height: 100%; background: linear-gradient(90deg, #d1b023, #e6c533); }
+/* Jauge de difficulté en demi-cercle (comme la maquette) */
+.gauge { width: 150px; height: auto; display: block; margin: 4px auto 2px; }
+.diff-niv { display: block; font-family: var(--font-hero); font-size: 1.35rem; color: var(--primary-color); letter-spacing: 1px; }
 
 .interdits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .interdit { text-align: center; }
