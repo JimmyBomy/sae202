@@ -4,7 +4,7 @@
 
     <h2>Éditeur du site</h2>
     <p>
-      Ce site est un projet pédagogique réalisé dans le cadre de la SAÉ 2.02 du
+      Ce site est un projet pédagogique réalisé dans le cadre de la SAÉ 202 du
       <strong>BUT MMI</strong> de l'IUT de Troyes, par l'agence étudiante <strong>Lumina Studio</strong>.
       Il met en scène un événement fictif&nbsp;: l'escape game nocturne « Backrooms ».
     </p>

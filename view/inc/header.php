@@ -15,14 +15,14 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Oswald:wght@400;500&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=4">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=5">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">
     <div class="header-container">
       <div class="logo">
         <a href="<?= BASE_URL ?>/">
-          <img src="<?= BASE_URL ?>/view/img/logo.png" alt="BACKROOMS — Escape game nocturne" class="logo-img">
+          <img src="<?= BASE_URL ?>/view/img/logo.png?v=2" alt="BACKROOMS — Escape game nocturne" class="logo-img">
         </a>
       </div>
       <nav class="main-nav">

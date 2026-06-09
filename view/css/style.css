@@ -409,3 +409,111 @@ main { flex: 1 0 auto; }
   .tableau { font-size: .85rem; }
   .tableau th, .tableau td { padding: 7px 8px; }
 }
+
+/* ======================================================================
+   PAGE CONCEPT (À PROPOS) — d'après la maquette (DA Entreprise)
+   ====================================================================== */
+
+/* Fond liminal sombre sur toute la page, fixe au défilement */
+body.page-concept {
+  background:
+    linear-gradient(rgba(8, 8, 6, 0.90), rgba(8, 8, 6, 0.95)),
+    url('../img/fond.jpg') center top / cover fixed;
+}
+
+.concept-page { max-width: 1120px; margin: 0 auto; padding: 0 20px 50px; }
+.concept-section { padding: 48px 0; }
+
+.sec-title {
+  font-family: var(--font-hero);
+  font-size: 3.2rem;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--text-light);
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6);
+}
+.sec-sub {
+  font-family: var(--font-nav);
+  font-style: italic;
+  letter-spacing: 1px;
+  color: var(--primary-color);
+  margin: 4px 0 30px;
+}
+
+.concept-lead { font-size: 1.12rem; color: #dcdcdc; max-width: 78ch; line-height: 1.6; }
+.lead-objectif { color: var(--primary-color); font-weight: 600; }
+
+/* Icônes SVG (jaunes via currentColor) */
+.ic { width: 46px; height: 46px; color: var(--primary-color); }
+
+/* Section 1 : piliers */
+.pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 34px; }
+.pillar { text-align: center; padding: 6px; }
+.pillar h3 { font-family: var(--font-nav); color: var(--primary-color); letter-spacing: 1px; margin: 14px 0 8px; }
+.pillar p { color: #cfcfcf; font-size: .95rem; line-height: 1.45; }
+
+/* Section 2 : mini-cartes */
+.mini-cartes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.mini-carte {
+  background: rgba(22, 20, 14, 0.72);
+  border: 1px solid #3a3320;
+  border-radius: 8px;
+  padding: 22px 14px;
+  text-align: center;
+}
+.mini-carte .ic { width: 40px; height: 40px; }
+.mini-carte h3 {
+  font-family: var(--font-nav);
+  color: var(--primary-color);
+  font-size: .98rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin: 12px 0 8px;
+}
+.mini-carte p { color: #c4c4c4; font-size: .85rem; line-height: 1.45; }
+
+/* Section 3 : statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  border: 1px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 30px 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+.stat-item { text-align: center; }
+.stat-item .ic { width: 40px; height: 40px; }
+.stat-num { display: block; font-family: var(--font-hero); font-size: 2.7rem; line-height: 1; color: var(--primary-color); margin: 8px 0 4px; }
+.stat-lbl { display: block; color: #cfcfcf; font-size: .82rem; line-height: 1.3; }
+
+/* Section 4 : règles de survie */
+.rules-box {
+  border: 1px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 26px 30px;
+  background: rgba(0, 0, 0, 0.42);
+  max-width: 780px;
+}
+.rules-box h3 { font-family: var(--font-nav); text-transform: uppercase; color: var(--primary-color); letter-spacing: 1px; margin-bottom: 16px; }
+.rules-list { list-style: none; }
+.rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  color: #e3e3e3;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.warn { width: 22px; height: 22px; color: var(--primary-color); flex-shrink: 0; margin-top: 1px; }
+.rules-link { margin-top: 18px; }
+
+@media (max-width: 900px) {
+  .pillars, .mini-cartes, .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .sec-title { font-size: 2.6rem; }
+}
+@media (max-width: 540px) {
+  .pillars, .mini-cartes, .stats-grid { grid-template-columns: 1fr; }
+  .sec-title { font-size: 2.2rem; }
+}
+
