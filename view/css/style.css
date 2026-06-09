@@ -181,12 +181,12 @@ body {
 }
 
 .hero-text {
-  font-size: 1.05rem;
   color: #eaeaea;
   margin-bottom: 40px;
-  font-family: var(--font-nav);
+  font-family: Georgia, 'Times New Roman', serif; /* intro en italique serif, comme la maquette */
   font-style: italic;
-  font-size: 1.15rem;
+  font-size: 1.18rem;
+  line-height: 1.55;
   text-align: left;
   text-shadow: 0 2px 5px rgba(0,0,0,0.8);
 }
@@ -645,4 +645,72 @@ main { flex: 1 0 auto; }
 .form-page { max-width: 720px; }
 .form-page > h1, .form-page > h2, .form-page > p, .form-page .form-switch { text-align: center; }
 .form-page form { margin-left: auto; margin-right: auto; }
+
+/* =====================================================================
+   POLICE PIXEL (VT323) sur TOUT l'habillage — comme les 3 maquettes
+   (boutons, libellés d'icônes, titres de sections et de cartes…)
+   ===================================================================== */
+.btn, .btn-link,
+.feature-item, .feature-item span,
+.page-contenu h1, .section-titre,
+.carte h2, .mini-carte h3, .pillar h3,
+.quick-link, .salle-tag, .footer-col h4 {
+  font-family: var(--font-hero);
+  letter-spacing: 1px;
+}
+/* VT323 rend plus petit visuellement : on remonte les tailles */
+.btn { font-size: 1.3rem; padding: 8px 26px; }
+.btn-link { font-size: 1.2rem; }
+.feature-item span { font-size: 1.15rem; }
+.page-contenu h1 { font-size: 2.8rem; }
+.section-titre { font-size: 2rem; }
+.carte h2 { font-size: 1.55rem; }
+.mini-carte h3 { font-size: 1.3rem; }
+.pillar h3 { font-size: 1.45rem; }
+.quick-link { font-size: 1.3rem; }
+.salle-tag { font-size: 1.1rem; padding: 2px 12px; }
+.footer-col h4 { font-size: 1.35rem; }
+
+/* =====================================================================
+   RESPONSIVE RENFORCÉ (mobile / tablette)
+   ===================================================================== */
+/* Fond fiable sur mobile : on enlève le "fixed" (bug iOS / zoom) */
+@media (max-width: 900px) {
+  body { background-attachment: scroll; }
+}
+
+/* Menu déroulant mobile lisible (panneau sombre derrière) */
+@media (max-width: 1200px) {
+  #menu-toggle:checked ~ .main-nav,
+  #menu-toggle:checked ~ .header-actions {
+    background: rgba(8, 8, 6, 0.96);
+    padding-left: 6px; padding-right: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header { padding: 16px 18px; }
+  .home-main { padding: 28px 20px; }
+  .page-contenu, .concept-page { padding-left: 16px; padding-right: 16px; }
+  .concept-section { padding: 34px 0; }
+  .hero-title { font-size: 3rem; }
+  .page-contenu h1 { font-size: 2.3rem; }
+  .feature-icon { height: 46px; }
+  .loc-map iframe { height: 260px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 2.5rem; }
+  .hero-buttons { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .btn-link { margin-left: 0; }
+  .hero-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+  .feature-item span { font-size: 0.9rem; }
+  .feature-icon { height: 38px; }
+  .sec-title { font-size: 1.8rem; }
+  .page-contenu h1 { font-size: 2rem; }
+  .container { padding: 16px; }
+  .rules-box, .mentions { padding: 20px 18px; }
+  .stats-grid { padding: 22px 12px; }
+  .footer-grid { padding: 30px 20px 24px; }
+}
 
