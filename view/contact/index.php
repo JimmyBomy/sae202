@@ -1,4 +1,4 @@
-<main class="container" style="padding-top: 50px;">
+<main class="container form-page" style="padding-top: 50px;">
     <h2>Nous contacter</h2>
     <p>Vous avez une question sur notre escape game ? N'hésitez pas à nous envoyer un message !</p>
 

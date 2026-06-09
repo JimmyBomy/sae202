@@ -633,3 +633,8 @@ main { flex: 1 0 auto; }
 .form-switch a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
 .form-switch a:hover { text-decoration: underline; }
 
+/* Pages "formulaire" centrées au milieu de la page (contact, réservation) */
+.form-page { max-width: 720px; }
+.form-page > h1, .form-page > h2, .form-page > p, .form-page .form-switch { text-align: center; }
+.form-page form { margin-left: auto; margin-right: auto; }
+

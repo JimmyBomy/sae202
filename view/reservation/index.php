@@ -1,4 +1,4 @@
-<main class="container page-contenu" style="padding-top: 40px;">
+<main class="container page-contenu form-page" style="padding-top: 40px;">
   <h1>Réserver une session</h1>
 
   <?php if (!empty($erreur)): ?>
