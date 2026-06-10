@@ -27,6 +27,9 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
     <section class="concept-section" style="padding-top:30px;">
       <h1 class="sec-title">INSCRIPTION</h1>
       <p class="sec-sub">Nous avons besoin de vos informations !</p>
+      <?php if (!$estConnecte): ?>
+        <p class="form-switch" style="margin:0 0 18px;">Déjà un compte&nbsp;? <a href="<?= BASE_URL ?>/compte/connexion">Connectez-vous</a></p>
+      <?php endif; ?>
 
       <div class="resa-grid">
         <div class="resa-col">
