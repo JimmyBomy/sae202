@@ -59,7 +59,7 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
     </section>
 
     <!-- ============ NOS DISPONIBILITÉS (calendrier) ============ -->
-    <section class="concept-section">
+    <section class="concept-section" id="disponibilites">
       <h2 class="sec-title">NOS DISPONIBILITÉS</h2>
       <p class="sec-sub">Venez jouer avec nous en <?= htmlspecialchars($nomMois) ?> !</p>
 
@@ -82,11 +82,11 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
         </div>
         <div class="cal-pagination">
           <?php if ($mois > $moisMin): ?>
-            <a class="btn-link" href="?mois=<?= $precedent ?>">&lsaquo; Mois précédent</a>
+            <a class="btn-link" href="?mois=<?= $precedent ?>#disponibilites">&lsaquo; Mois précédent</a>
           <?php else: ?>
             <span></span>
           <?php endif; ?>
-          <a class="btn-link" href="?mois=<?= $suivant ?>">Passer au mois suivant &rsaquo;</a>
+          <a class="btn-link" href="?mois=<?= $suivant ?>#disponibilites">Passer au mois suivant &rsaquo;</a>
         </div>
       </div>
     </section>
