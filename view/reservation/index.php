@@ -140,7 +140,6 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
           <button type="submit" name="paiement" value="sur_place" class="btn btn-outline pay-btn">JE FINALISE</button>
         </div>
       </div>
-      <p class="cal-aide" style="text-align:center;">Aucun débit réel n'est effectué : paiement de démonstration (projet étudiant).</p>
     </section>
 
   </form>
