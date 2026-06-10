@@ -100,6 +100,14 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
         form.inline label { font-size: 13px; display: block; margin-bottom: 3px; }
         form.inline input, form.inline select { width: 100%; padding: 7px; border: 1px solid #ccc; border-radius: 4px; }
         button { padding: 9px 14px; background: #d1b023; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        /* Responsive back-office : tableaux scrollables, grilles resserrées */
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .card { padding: 14px; }
+            table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            form.inline { grid-template-columns: 1fr 1fr; }
+            .stat { min-width: 120px; }
+        }
     </style>
 </head>
 <body>

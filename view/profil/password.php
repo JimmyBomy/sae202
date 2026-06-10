@@ -1,7 +1,7 @@
 <main class="container" style="padding-top: 50px;">
     <h2>Mon Profil</h2>
     
-    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+    <div class="profil-onglets">
         <a href="<?= BASE_URL ?>/profil" class="btn btn-outline">Informations personnelles</a>
         <a href="<?= BASE_URL ?>/profil/password" class="btn btn-primary">Mot de passe</a>
         <a href="<?= BASE_URL ?>/profil/commentaire" class="btn btn-outline">Laisser un avis</a>

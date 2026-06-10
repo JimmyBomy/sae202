@@ -473,14 +473,29 @@ main { flex: 1 0 auto; }
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.78);
 }
 
-/* Page Mentions légales : panneau sombre lisible (beaucoup de texte) */
-.mentions {
-  background: rgba(10, 10, 8, 0.62);
-  border: 1px solid #2a2a20;
-  border-radius: 10px;
-  padding: 30px 34px;
+/* ===================== PAGE MENTIONS LÉGALES (maquette) ===================== */
+.mentions-page p, .mentions-page li {
+  font-style: italic;             /* corps de texte en italique, comme la maquette */
+  color: #e3e3e3;
+  max-width: 80ch;
+  margin-bottom: 14px;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
 }
-.mentions h2 { color: var(--primary-color); }
+.mentions-titre {
+  font-family: var(--font-hero);  /* titres de sections en pixel VT323 */
+  font-size: 1.6rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin: 34px 0 12px;
+}
+.mentions-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 36px; align-items: start; }
+.mentions-grid .mentions-titre { margin-top: 20px; }
+.mentions-page a { color: var(--primary-color); }
+.mentions-droits { list-style: none; padding-left: 0; }
+.mentions-droits li { margin-bottom: 4px; }
+.mentions-maj { margin-top: 40px; font-size: .85rem; color: #9a9a8a; }
+@media (max-width: 760px) { .mentions-grid { grid-template-columns: 1fr; gap: 0; } }
 
 .concept-page { max-width: 1120px; margin: 0 auto; padding: 0 20px 50px; }
 .concept-section { padding: 48px 0; }
@@ -870,3 +885,26 @@ input:autofill {            /* version standard (Firefox récent) */
 @media (max-width: 600px) {
   .tableau { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
 }
+
+/* =====================================================================
+   RESPONSIVE GLOBAL — derniers ajustements toutes pages
+   ===================================================================== */
+img, svg, iframe { max-width: 100%; }
+
+@media (max-width: 480px) {
+  /* Calendrier : en-têtes de jours abrégés visuellement (taille réduite) */
+  .cal-jour { font-size: .55rem; }
+  .cal-grille { gap: 4px; }
+  .cal-pagination { flex-direction: column; align-items: stretch; text-align: center; }
+  /* Sections plus denses sur petit mobile */
+  .concept-page { padding-left: 12px; padding-right: 12px; }
+  .resa-dob { grid-template-columns: 1fr; }
+  .pay-ligne { grid-template-columns: 1fr; }
+  .ouinon { width: 100%; }
+  .ouinon label { flex: 1; justify-content: center; }
+  /* Boutons pleine largeur sur mobile (meilleure zone tactile) */
+  .cta-bloc .btn, .profil-champs .btn { width: 100%; text-align: center; }
+}
+
+/* Onglets du profil (pages mot de passe / avis) : retour à la ligne sur mobile */
+.profil-onglets { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
