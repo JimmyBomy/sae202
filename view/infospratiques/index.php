@@ -71,9 +71,9 @@
     <p class="sec-sub">Comment nous contacter ?</p>
     <div class="loc-grid">
       <div class="loc-info">
-        <div class="info-field"><span class="info-label">Adresse mail</span><p>backrooms.escape@lumina-studio.fr</p></div>
-        <div class="info-field"><span class="info-label">Téléphone</span><p>07 07 07 07 07</p></div>
-        <div class="info-field"><span class="info-label">Réseaux sociaux</span><p>Instagram · Discord · TikTok</p></div>
+        <div class="info-field"><span class="info-label">Adresse mail</span><p>backroomsescapegame@gmail.com</p></div>
+        <div class="info-field"><span class="info-label">Numéro de téléphone</span><p>07 07 07 07 07</p></div>
+        <div class="info-field"><span class="info-label">Réseaux sociaux</span><p>@backroomsescapegame (Instagram)<br>Backrooms Escape Game (Facebook)</p></div>
       </div>
       <!-- Le formulaire envoie vers le contrôleur Contact (qui envoie le mail) -->
       <form class="loc-form" action="<?= BASE_URL ?>/contact" method="post">
@@ -146,7 +146,7 @@
       <div class="interdit"><div class="interdit-ic">🍔</div><span>Nourriture</span></div>
       <div class="interdit"><div class="interdit-ic">🔫</div><span>Arme à feu</span></div>
       <div class="interdit"><div class="interdit-ic">🚬</div><span>Cigarette</span></div>
-      <div class="interdit"><div class="interdit-ic">🧨</div><span>Explosifs</span></div>
+      <div class="interdit"><div class="interdit-ic">🧨</div><span>Bombe</span></div>
       <div class="interdit"><div class="interdit-ic">🔪</div><span>Arme blanche</span></div>
       <div class="interdit"><div class="interdit-ic">🐾</div><span>Animaux</span></div>
       <div class="interdit"><div class="interdit-ic">☂️</div><span>Parapluie</span></div>

@@ -28,7 +28,7 @@
         <p>Quelque chose rôde dans les Backrooms… restez vigilants et ne faites pas de bruit inutile.</p>
       </div>
       <div class="pillar">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="4" r="2"/><path d="M13 7l-3 4 3 3v6"/><path d="M10 11l-4 1M13 10l4 1 3-2"/><path d="M10 14l-3 6"/></svg>
         <h3>S'ÉCHAPPER</h3>
         <p>Trouvez la sortie avant la fin du temps et inscrivez votre exploit dans le monde réel.</p>
       </div>
@@ -86,7 +86,7 @@
         <span class="stat-lbl">Joueurs par équipe</span>
       </div>
       <div class="stat-item">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4a1 1 0 0 1 1-1h8v18"/><path d="M13 3l6 2v16"/><path d="M4 21h18"/><circle cx="10.5" cy="12" r="1"/></svg>
         <span class="stat-num">3</span>
         <span class="stat-lbl">Salles à explorer</span>
       </div>
@@ -96,7 +96,7 @@
         <span class="stat-lbl">Taux de réussite</span>
       </div>
       <div class="stat-item">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3C7 3 3 7 3 12c0 3 2 4 2 6h14c0-2 2-3 2-6 0-5-4-9-9-9z"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M9 18v2M15 18v2"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 3 2 4.5 2 6h10c0-1.5 2-3 2-6a7 7 0 0 0-7-7z"/><circle cx="9.5" cy="9" r="1.2"/><circle cx="14.5" cy="9" r="1.2"/><path d="M3.5 19.5l5-3M20.5 19.5l-5-3M3.5 16.5l5 3M20.5 16.5l-5 3"/></svg>
         <span class="stat-num">100%</span>
         <span class="stat-lbl">Adrénaline garantie</span>
       </div>
