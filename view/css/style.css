@@ -721,6 +721,52 @@ select.resa-field { cursor: pointer; }
 }
 
 /* =====================================================================
+   PAGE MON PROFIL (espace privé, maquette)
+   ===================================================================== */
+.profil-bloc { display: flex; gap: 28px; align-items: flex-start; margin-top: 22px; }
+.profil-avatar { flex-shrink: 0; width: 140px; text-align: center; }
+.avatar-cercle {
+  width: 92px; height: 92px; border-radius: 50%;
+  background: rgba(20, 19, 14, 0.85); border: 2px solid var(--primary-color);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto;
+}
+.avatar-cercle svg { width: 46px; height: 46px; color: var(--primary-color); }
+.avatar-changer { display: block; margin-top: 10px; font-size: .78rem; color: #9a9a8a; font-family: var(--font-nav); text-transform: uppercase; letter-spacing: .5px; }
+.profil-champs { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+.champ {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(20, 19, 14, 0.85); border: 1px solid #3a3320; border-radius: 8px;
+  padding: 4px 16px;
+}
+.champ-label { color: #c9b86a; font-family: var(--font-nav); font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; min-width: 150px; }
+.champ input { flex: 1; background: transparent; border: none; outline: none; color: var(--text-light); font-family: var(--font-nav); font-size: .95rem; padding: 12px 0; }
+.champ input::placeholder { color: #7a7a70; }
+.champ-val { flex: 1; color: var(--text-light); font-family: var(--font-nav); padding: 12px 0; }
+.profil-champs .btn { align-self: flex-start; margin-top: 4px; }
+
+/* Zone sécurité */
+.zone-lien {
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(20, 19, 14, 0.85); border: 1px solid #3a3320; border-radius: 8px;
+  padding: 16px 20px; text-decoration: none; color: var(--text-light);
+  margin-bottom: 12px; transition: .2s;
+}
+.zone-lien:hover { border-color: var(--primary-color); background: rgba(209, 176, 35, .08); }
+.zone-lien > svg { width: 26px; height: 26px; color: var(--primary-color); flex-shrink: 0; }
+.zone-lien strong { color: var(--primary-color); font-family: var(--font-nav); text-transform: uppercase; letter-spacing: .5px; }
+.zone-lien small { color: #9a9a8a; }
+.zone-fleche { margin-left: auto; color: var(--primary-color); font-size: 1.6rem; }
+
+@media (max-width: 640px) {
+  .profil-bloc { flex-direction: column; align-items: center; }
+  .profil-champs { width: 100%; }
+  .champ { flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 14px; }
+  .champ-label { min-width: 0; }
+  .champ input, .champ-val { padding: 4px 0; width: 100%; }
+}
+
+/* =====================================================================
    POLICE PIXEL (VT323) sur TOUT l'habillage — comme les 3 maquettes
    (boutons, libellés d'icônes, titres de sections et de cartes…)
    ===================================================================== */

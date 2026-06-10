@@ -2,6 +2,7 @@
 require_once('model/utilisateur.php');
 require_once('model/equipe.php');
 require_once('model/score.php');
+require_once('model/reservation.php');
 
 function index() {
     if (!isset($_SESSION['user_id'])) {
@@ -10,41 +11,65 @@ function index() {
     }
 
     $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
-
     $erreur = '';
     $succes = '';
 
+    // --- "MODIFIER MES INFORMATIONS" (pseudo / email / téléphone / mot de passe) ---
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nom = htmlspecialchars(trim($_POST['nom'] ?? ''));
-        $prenom = htmlspecialchars(trim($_POST['prenom'] ?? ''));
-        $pseudo = htmlspecialchars(trim($_POST['pseudo'] ?? ''));
-        $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
-        $telephone = htmlspecialchars(trim($_POST['telephone'] ?? ''));
+        $pseudo      = htmlspecialchars(trim($_POST['pseudo'] ?? ''));
+        $email       = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
+        $telephone   = htmlspecialchars(trim($_POST['telephone'] ?? ''));
+        $nouveau_mdp = $_POST['mot_de_passe'] ?? '';
 
-        if (empty($nom) || empty($prenom) || empty($pseudo) || empty($email)) {
-            $erreur = 'Tous les champs avec * sont obligatoires.';
+        if (empty($pseudo) || empty($email)) {
+            $erreur = 'Le pseudo et l\'email sont obligatoires.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $erreur = 'L\'adresse email n\'est pas valide.';
+        } elseif ($nouveau_mdp !== '' && strlen($nouveau_mdp) < 6) {
+            $erreur = 'Le nouveau mot de passe doit faire au moins 6 caractères.';
         } else {
             $exist = get_utilisateur_by_email($email);
             if ($exist && $exist['id'] != $utilisateur['id']) {
                 $erreur = 'Cette adresse email est déjà utilisée.';
             } else {
-                if (update_utilisateur($utilisateur['id'], $nom, $prenom, $pseudo, $email, $telephone)) {
-                    $succes = 'Votre profil a été mis à jour avec succès.';
-                    $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
-                } else {
-                    $erreur = 'Une erreur est survenue lors de la mise à jour.';
+                // On garde le nom/prénom existants (la maquette ne les édite pas ici).
+                update_utilisateur($utilisateur['id'], $utilisateur['nom'], $utilisateur['prenom'], $pseudo, $email, $telephone);
+                if ($nouveau_mdp !== '') {
+                    update_utilisateur_password($utilisateur['id'], $nouveau_mdp);
                 }
+                $succes = 'Vos informations ont été mises à jour.';
+                $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
             }
         }
     }
 
-    // Équipe et scores du joueur (affichés en lecture seule dans l'espace privé).
-    $equipe = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
-    $scores = $equipe ? get_scores_by_equipe($equipe['id']) : [];
+    // --- Données de l'espace privé ---
+    $equipe       = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
+    $membres      = $equipe ? get_membres_equipe($equipe['id']) : [];
+    $scores       = $equipe ? get_scores_by_equipe($equipe['id']) : [];
+    $reservations = $equipe ? get_reservations_by_equipe($equipe['id']) : [];
 
-    $titrePage = 'Mon Profil';
+    // --- Statistiques calculées ---
+    $nbParties = count($scores);
+    $points    = array_sum(array_column($scores, 'points'));
+    $reussis   = array_filter($scores, fn($s) => $s['reussi']);
+    $taux      = $nbParties ? round(count($reussis) / $nbParties * 100) : 0;
+    $temps     = array_filter(array_column($reussis, 'temps_secondes'), fn($t) => $t !== null);
+    $tempsMoyen = $temps ? (int) (array_sum($temps) / count($temps)) : null;
+    $sallesExplorees = $reservations ? count(array_unique(array_column($reservations, 'salle'))) : 0;
+    // Niveau le plus difficile joué
+    $ordre = ['facile' => 1, 'standard' => 2, 'hardcore' => 3];
+    $niveauMax = '—';
+    $maxRang = 0;
+    foreach ($reservations as $r) {
+        if (isset($ordre[$r['salle']]) && $ordre[$r['salle']] > $maxRang) {
+            $maxRang = $ordre[$r['salle']];
+            $niveauMax = ucfirst($r['salle']);
+        }
+    }
+
+    $titrePage = 'Mon espace';
+    $page_class = 'page-concept';
     require('view/inc/header.php');
     require('view/profil/index.php');
     require('view/inc/footer.php');
