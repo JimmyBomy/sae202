@@ -32,9 +32,6 @@ $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
           <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>" required>
           <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>" required>
           <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>">
-          <?php if (!$estConnecte): ?>
-            <input class="resa-field" type="password" name="mot_de_passe" placeholder="MOT DE PASSE (espace privé)" minlength="6" required>
-          <?php endif; ?>
         </div>
         <div class="resa-col">
           <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
@@ -65,14 +62,9 @@ $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
       <p class="sec-sub">Venez jouer avec nous en <?= htmlspecialchars($nomMois) ?> !</p>
 
       <div class="calendrier">
-        <div class="cal-entete">
-          <a class="cal-nav" href="?mois=<?= $precedent ?>">‹</a>
-          <span class="cal-mois"><?= htmlspecialchars(ucfirst($nomMois)) ?></span>
-          <a class="cal-nav" href="?mois=<?= $suivant ?>">›</a>
-        </div>
         <div class="cal-grille">
-          <span class="cal-jour">Lun</span><span class="cal-jour">Mar</span><span class="cal-jour">Mer</span>
-          <span class="cal-jour">Jeu</span><span class="cal-jour">Ven</span><span class="cal-jour">Sam</span><span class="cal-jour">Dim</span>
+          <span class="cal-jour">Lundi</span><span class="cal-jour">Mardi</span><span class="cal-jour">Mercredi</span>
+          <span class="cal-jour">Jeudi</span><span class="cal-jour">Vendredi</span><span class="cal-jour">Samedi</span><span class="cal-jour">Dimanche</span>
           <?php for ($i = 0; $i < $decalage; $i++): ?><span class="cal-vide"></span><?php endfor; ?>
           <?php for ($jour = 1; $jour <= $nbJours; $jour++):
               $dateJour = $premier->format('Y-m') . '-' . str_pad($jour, 2, '0', STR_PAD_LEFT);
@@ -86,7 +78,7 @@ $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
             <?php endif; ?>
           <?php endfor; ?>
         </div>
-        <p class="cal-aide">Cliquez sur un jour disponible (sessions à 20h).</p>
+        <a class="cal-suivant btn-link" href="?mois=<?= $suivant ?>">Passer au mois suivant &rsaquo;</a>
       </div>
     </section>
 

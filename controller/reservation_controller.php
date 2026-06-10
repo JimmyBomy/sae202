@@ -22,7 +22,6 @@ function index() {
         $prenom    = trim($_POST['prenom'] ?? '');
         $email     = trim($_POST['email'] ?? '');
         $telephone = trim($_POST['telephone'] ?? '');
-        $mdp       = $_POST['mot_de_passe'] ?? '';
 
         $nom_equipe   = trim($_POST['nom_equipe'] ?? '');
         $nb_joueurs   = (int) ($_POST['nb_joueurs'] ?? 0);
@@ -47,14 +46,14 @@ function index() {
         } else {
             // --- Compte : création (visiteur) ou mise à jour (connecté) ---
             if (!$estConnecte) {
-                if (strlen($mdp) < 6) {
-                    $erreur = "Choisissez un mot de passe d'au moins 6 caractères (pour votre espace privé).";
-                } elseif (get_utilisateur_by_email($email)) {
+                if (get_utilisateur_by_email($email)) {
                     $erreur = "Un compte existe déjà avec cet email — connectez-vous d'abord.";
                 } else {
                     // Pseudo dérivé de l'email (l'unicité porte sur l'email).
                     $pseudo = substr(explode('@', $email)[0], 0, 60);
-                    creer_utilisateur($nom, $prenom, $pseudo, $email, $telephone, $mdp);
+                    // Réservation visiteur : mot de passe généré automatiquement.
+                    $mdpAuto = bin2hex(random_bytes(5));
+                    creer_utilisateur($nom, $prenom, $pseudo, $email, $telephone, $mdpAuto);
                     $utilisateur = get_utilisateur_by_email($email);
                     $_SESSION['user_id']   = $utilisateur['id'];
                     $_SESSION['user_role'] = $utilisateur['role'];

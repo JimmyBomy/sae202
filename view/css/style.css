@@ -680,7 +680,8 @@ select.resa-field { cursor: pointer; }
 .cal-nav { color: var(--primary-color); font-size: 1.5rem; line-height: 1; text-decoration: none; padding: 4px 14px; border: 1px solid #3a3320; border-radius: 6px; }
 .cal-nav:hover { background: rgba(209, 176, 35, .12); }
 .cal-grille { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-.cal-jour { text-align: center; font-family: var(--font-nav); font-weight: 600; color: #9a9a8a; font-size: .78rem; text-transform: uppercase; padding-bottom: 4px; }
+.cal-jour { text-align: center; font-family: var(--font-nav); font-weight: 600; color: #9a9a8a; font-size: .68rem; text-transform: uppercase; padding-bottom: 4px; letter-spacing: .3px; }
+.cal-suivant { display: block; text-align: right; margin-top: 14px; }
 .cal-case {
   display: flex; align-items: center; justify-content: center;
   aspect-ratio: 1 / 1;
