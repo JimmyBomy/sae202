@@ -68,7 +68,7 @@
     <h2 class="sec-title">MES STATISTIQUES</h2>
     <p class="sec-sub">Voici vos statistiques durant vos parties !</p>
 
-    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+    <div class="stats-grid stats-grid--4">
       <div class="stat-item">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <span class="stat-num"><?= $tempsMoyen !== null ? floor($tempsMoyen/3600) . 'h' . str_pad(floor(($tempsMoyen%3600)/60), 2, '0', STR_PAD_LEFT) : '—' ?></span>

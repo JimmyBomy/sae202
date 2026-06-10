@@ -17,7 +17,16 @@ function index() {
     // Mois affiché dans le calendrier (par défaut juin 2026, mois de l'événement).
     $mois = (isset($_GET['mois']) && preg_match('/^\d{4}-\d{2}$/', $_GET['mois'])) ? $_GET['mois'] : '2026-06';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Navigation du calendrier : on change SEULEMENT le mois affiché.
+    // La saisie de l'utilisateur est renvoyée dans $_POST et re-remplie par la vue.
+    $changeMois = ($_SERVER['REQUEST_METHOD'] === 'POST'
+                   && isset($_POST['mois_aff'])
+                   && preg_match('/^\d{4}-\d{2}$/', $_POST['mois_aff']));
+    if ($changeMois) {
+        $mois = $_POST['mois_aff'];
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$changeMois) {
         $nom       = trim($_POST['nom'] ?? '');
         $prenom    = trim($_POST['prenom'] ?? '');
         $email     = trim($_POST['email'] ?? '');

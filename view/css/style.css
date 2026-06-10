@@ -683,6 +683,8 @@ select.resa-field { cursor: pointer; }
 .cal-jour { text-align: center; font-family: var(--font-nav); font-weight: 600; color: #9a9a8a; font-size: .68rem; text-transform: uppercase; padding-bottom: 4px; letter-spacing: .3px; }
 .cal-pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 12px; }
 .cal-pagination .btn-link { margin-left: 0; }
+/* Boutons de navigation du calendrier : même apparence que les liens */
+.cal-btn { background: none; border-top: none; border-left: none; border-right: none; cursor: pointer; }
 .cal-case {
   display: flex; align-items: center; justify-content: center;
   aspect-ratio: 1 / 1;
@@ -852,4 +854,20 @@ textarea:-webkit-autofill {
 input:autofill {            /* version standard (Firefox récent) */
   -webkit-text-fill-color: var(--text-light);
   box-shadow: 0 0 0 1000px #1d1c15 inset;
+}
+
+/* ===================== "Les règles de survie" : version mystère ===================== */
+.rules-box--mystere { display: flex; align-items: center; justify-content: space-between; gap: 20px; text-decoration: none; max-width: 780px; transition: .2s; }
+.rules-box--mystere:hover { border-color: var(--primary-color); background: rgba(209, 176, 35, .08); }
+.rules-box--mystere h3 { margin-bottom: 0; }
+.rules-mystere { width: 52px; height: 52px; color: var(--primary-color); flex-shrink: 0; }
+
+/* Stats du profil : 4 colonnes, responsives */
+.stats-grid--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .stats-grid--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .stats-grid--4 { grid-template-columns: 1fr; } }
+
+/* Tableaux : scroll horizontal sur mobile au lieu de déborder */
+@media (max-width: 600px) {
+  .tableau { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
 }

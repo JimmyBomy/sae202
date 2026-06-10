@@ -11,6 +11,10 @@ $precedent = (clone $premier)->modify('-1 month')->format('Y-m');
 $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
 // Mois minimum affichable : le mois en cours (on ne réserve pas dans le passé).
 $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
+
+// Pré-remplissage : ce que l'utilisateur vient de saisir ($_POST) prime,
+// sinon les infos de son compte. Ainsi, changer de mois ne perd RIEN.
+$champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $defaut);
 ?>
 <main class="concept-page resa-page">
 
@@ -33,28 +37,28 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
 
       <div class="resa-grid">
         <div class="resa-col">
-          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= htmlspecialchars($utilisateur['nom'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>" required>
-          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>">
+          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
+          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
         </div>
         <div class="resa-col">
           <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
-                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : '' ?>" <?= $equipe ? 'readonly' : 'required' ?>>
-          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" required>
+                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : 'required' ?>>
+          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
           <label class="resa-dob-label">Date de naissance</label>
           <div class="resa-dob">
             <select class="resa-field" name="naiss_jour" aria-label="Jour">
               <option value="">Jour</option>
-              <?php for ($j = 1; $j <= 31; $j++): ?><option><?= $j ?></option><?php endfor; ?>
+              <?php for ($j = 1; $j <= 31; $j++): ?><option <?= ($_POST['naiss_jour'] ?? '') == $j ? 'selected' : '' ?>><?= $j ?></option><?php endfor; ?>
             </select>
             <select class="resa-field" name="naiss_mois" aria-label="Mois">
               <option value="">Mois</option>
-              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>"><?= ucfirst($m) ?></option><?php endforeach; ?>
+              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>" <?= ($_POST['naiss_mois'] ?? '') == $n ? 'selected' : '' ?>><?= ucfirst($m) ?></option><?php endforeach; ?>
             </select>
             <select class="resa-field" name="naiss_annee" aria-label="Année">
               <option value="">Année</option>
-              <?php for ($a = 2010; $a >= 1940; $a--): ?><option><?= $a ?></option><?php endfor; ?>
+              <?php for ($a = 2010; $a >= 1940; $a--): ?><option <?= ($_POST['naiss_annee'] ?? '') == $a ? 'selected' : '' ?>><?= $a ?></option><?php endfor; ?>
             </select>
           </div>
         </div>
@@ -78,18 +82,23 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
             <?php if ($passe): ?>
               <span class="cal-case cal-passe"><?= $jour ?></span>
             <?php else: ?>
-              <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio">
+              <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio"
+                     <?= ($_POST['date_session'] ?? '') === $dateJour ? 'checked' : '' ?>>
               <label for="cal<?= $dateJour ?>" class="cal-case"><?= $jour ?></label>
             <?php endif; ?>
           <?php endfor; ?>
         </div>
         <div class="cal-pagination">
           <?php if ($mois > $moisMin): ?>
-            <a class="btn-link" href="?mois=<?= $precedent ?>#disponibilites">&lsaquo; Mois précédent</a>
+            <!-- Boutons submit (et non liens) : la saisie du formulaire est conservée.
+                 formnovalidate = ne pas bloquer sur les champs requis pendant la navigation. -->
+            <button type="submit" name="mois_aff" value="<?= $precedent ?>" class="btn-link cal-btn"
+                    formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate>&lsaquo; Mois précédent</button>
           <?php else: ?>
             <span></span>
           <?php endif; ?>
-          <a class="btn-link" href="?mois=<?= $suivant ?>#disponibilites">Passer au mois suivant &rsaquo;</a>
+          <button type="submit" name="mois_aff" value="<?= $suivant ?>" class="btn-link cal-btn"
+                  formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate>Passer au mois suivant &rsaquo;</button>
         </div>
       </div>
     </section>
@@ -110,8 +119,8 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
         <div class="sante-q">
           <span class="sante-libelle"><?= $libelle ?></span>
           <div class="ouinon">
-            <label><input type="radio" name="<?= $nomQ ?>" value="oui"> OUI</label>
-            <label><input type="radio" name="<?= $nomQ ?>" value="non" checked> NON</label>
+            <label><input type="radio" name="<?= $nomQ ?>" value="oui" <?= ($_POST[$nomQ] ?? '') === 'oui' ? 'checked' : '' ?>> OUI</label>
+            <label><input type="radio" name="<?= $nomQ ?>" value="non" <?= ($_POST[$nomQ] ?? '') === 'non' ? 'checked' : '' ?>> NON</label>
           </div>
         </div>
       <?php endforeach; ?>
@@ -125,12 +134,12 @@ $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
       <div class="paiement-grid">
         <div class="pay-col">
           <h3 class="pay-titre">Je paye par carte dès maintenant</h3>
-          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off">
+          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" value="<?= $champ('cb_numero') ?>">
           <div class="pay-ligne">
-            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" autocomplete="off">
-            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" autocomplete="off">
+            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" autocomplete="off" value="<?= $champ('cb_exp') ?>">
+            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" autocomplete="off" value="<?= $champ('cb_cvv') ?>">
           </div>
-          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" autocomplete="off">
+          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" autocomplete="off" value="<?= $champ('cb_tel') ?>">
           <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn">PAYER</button>
         </div>
 
