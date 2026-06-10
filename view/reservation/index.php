@@ -9,6 +9,8 @@ $aujour    = new DateTime('today');
 $suivant   = (clone $premier)->modify('+1 month')->format('Y-m');
 $precedent = (clone $premier)->modify('-1 month')->format('Y-m');
 $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
+// Mois minimum affichable : le mois en cours (on ne réserve pas dans le passé).
+$moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
 ?>
 <main class="concept-page resa-page">
 
@@ -78,7 +80,14 @@ $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
             <?php endif; ?>
           <?php endfor; ?>
         </div>
-        <a class="cal-suivant btn-link" href="?mois=<?= $suivant ?>">Passer au mois suivant &rsaquo;</a>
+        <div class="cal-pagination">
+          <?php if ($mois > $moisMin): ?>
+            <a class="btn-link" href="?mois=<?= $precedent ?>">&lsaquo; Mois précédent</a>
+          <?php else: ?>
+            <span></span>
+          <?php endif; ?>
+          <a class="btn-link" href="?mois=<?= $suivant ?>">Passer au mois suivant &rsaquo;</a>
+        </div>
       </div>
     </section>
 
