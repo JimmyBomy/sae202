@@ -1,5 +1,16 @@
-<main class="container page-contenu form-page" style="padding-top: 40px;">
-  <h1>Réserver une session</h1>
+<?php
+// --- Préparation du calendrier (mois affiché, transmis par le contrôleur) ---
+$moisFr = [1=>'janvier',2=>'février',3=>'mars',4=>'avril',5=>'mai',6=>'juin',
+           7=>'juillet',8=>'août',9=>'septembre',10=>'octobre',11=>'novembre',12=>'décembre'];
+$premier   = DateTime::createFromFormat('Y-m-d', $mois . '-01');
+$nbJours   = (int) $premier->format('t');
+$decalage  = ((int) $premier->format('N')) - 1;          // 0 = lundi
+$aujour    = new DateTime('today');
+$suivant   = (clone $premier)->modify('+1 month')->format('Y-m');
+$precedent = (clone $premier)->modify('-1 month')->format('Y-m');
+$nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
+?>
+<main class="concept-page resa-page">
 
   <?php if (!empty($erreur)): ?>
     <div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div>
@@ -8,123 +19,145 @@
     <div class="alert alert-success"><?= $succes ?></div>
   <?php endif; ?>
 
-  <?php if (!$equipe): ?>
-    <!-- L'utilisateur n'a pas encore d'équipe : il en crée une ou en rejoint une. -->
-    <p class="page-intro">
-      L'aventure se vit en équipe&nbsp;! Créez la vôtre et invitez vos amis grâce à un code,
-      ou rejoignez une équipe déjà créée.
-    </p>
+  <form method="post" action="<?= BASE_URL ?>/reservation" class="resa-form">
 
-    <div class="cartes">
-      <div class="carte">
-        <h2>Créer une équipe</h2>
-        <form method="post" class="form-bloc">
-          <input type="hidden" name="form_type" value="creer_equipe">
-          <div class="form-group">
-            <label for="nom_equipe">Nom de l'équipe *</label>
-            <input type="text" name="nom_equipe" id="nom_equipe" maxlength="80" required>
+    <!-- ============ INSCRIPTION ============ -->
+    <section class="concept-section" style="padding-top:30px;">
+      <h1 class="sec-title">INSCRIPTION</h1>
+      <p class="sec-sub">Nous avons besoin de vos informations !</p>
+
+      <div class="resa-grid">
+        <div class="resa-col">
+          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= htmlspecialchars($utilisateur['nom']) ?>" required>
+          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= htmlspecialchars($utilisateur['prenom']) ?>" required>
+          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= htmlspecialchars($utilisateur['email']) ?>" required>
+          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>">
+        </div>
+        <div class="resa-col">
+          <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
+                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : '' ?>" <?= $equipe ? 'readonly' : 'required' ?>>
+          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" required>
+          <label class="resa-dob-label">Date de naissance</label>
+          <div class="resa-dob">
+            <select class="resa-field" name="naiss_jour" aria-label="Jour">
+              <option value="">Jour</option>
+              <?php for ($j = 1; $j <= 31; $j++): ?><option><?= $j ?></option><?php endfor; ?>
+            </select>
+            <select class="resa-field" name="naiss_mois" aria-label="Mois">
+              <option value="">Mois</option>
+              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>"><?= ucfirst($m) ?></option><?php endforeach; ?>
+            </select>
+            <select class="resa-field" name="naiss_annee" aria-label="Année">
+              <option value="">Année</option>
+              <?php for ($a = 2010; $a >= 1940; $a--): ?><option><?= $a ?></option><?php endfor; ?>
+            </select>
           </div>
-          <button type="submit" class="btn btn-primary">Créer mon équipe</button>
-        </form>
+        </div>
       </div>
+    </section>
 
-      <div class="carte">
-        <h2>Rejoindre une équipe</h2>
-        <form method="post" class="form-bloc">
-          <input type="hidden" name="form_type" value="rejoindre_equipe">
-          <div class="form-group">
-            <label for="code_invite">Code d'invitation (6 caractères) *</label>
-            <input type="text" name="code_invite" id="code_invite" maxlength="6"
-                   style="text-transform:uppercase; letter-spacing:3px;" required>
+    <!-- ============ NOS DISPONIBILITÉS (calendrier) ============ -->
+    <section class="concept-section">
+      <h2 class="sec-title">NOS DISPONIBILITÉS</h2>
+      <p class="sec-sub">Venez jouer avec nous en <?= htmlspecialchars($nomMois) ?> !</p>
+
+      <div class="calendrier">
+        <div class="cal-entete">
+          <a class="cal-nav" href="?mois=<?= $precedent ?>">‹</a>
+          <span class="cal-mois"><?= htmlspecialchars(ucfirst($nomMois)) ?></span>
+          <a class="cal-nav" href="?mois=<?= $suivant ?>">›</a>
+        </div>
+        <div class="cal-grille">
+          <span class="cal-jour">Lun</span><span class="cal-jour">Mar</span><span class="cal-jour">Mer</span>
+          <span class="cal-jour">Jeu</span><span class="cal-jour">Ven</span><span class="cal-jour">Sam</span><span class="cal-jour">Dim</span>
+          <?php for ($i = 0; $i < $decalage; $i++): ?><span class="cal-vide"></span><?php endfor; ?>
+          <?php for ($jour = 1; $jour <= $nbJours; $jour++):
+              $dateJour = $premier->format('Y-m') . '-' . str_pad($jour, 2, '0', STR_PAD_LEFT);
+              $passe = ($dateJour < $aujour->format('Y-m-d'));
+          ?>
+            <?php if ($passe): ?>
+              <span class="cal-case cal-passe"><?= $jour ?></span>
+            <?php else: ?>
+              <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio">
+              <label for="cal<?= $dateJour ?>" class="cal-case"><?= $jour ?></label>
+            <?php endif; ?>
+          <?php endfor; ?>
+        </div>
+        <p class="cal-aide">Cliquez sur un jour disponible (sessions à 20h).</p>
+      </div>
+    </section>
+
+    <!-- ============ SANTÉ ET SÉCURITÉ ============ -->
+    <section class="concept-section">
+      <h2 class="sec-title">SANTÉ ET SÉCURITÉ</h2>
+      <p class="sec-sub">Votre santé et votre sécurité sont notre priorité !</p>
+
+      <?php
+      $questions = [
+        'sante_cardiaque'    => 'Avez-vous des problèmes cardiaques ?',
+        'sante_epilepsie'    => 'Souffrez-vous d\'épilepsie ou de sensibilité aux lumières stroboscopiques ?',
+        'sante_respiratoire' => 'Avez-vous des difficultés respiratoires ou de l\'asthme ?',
+        'sante_claustro'     => 'Souffrez-vous de claustrophobie ?',
+      ];
+      foreach ($questions as $nomQ => $libelle): ?>
+        <div class="sante-q">
+          <span class="sante-libelle"><?= $libelle ?></span>
+          <div class="ouinon">
+            <label><input type="radio" name="<?= $nomQ ?>" value="oui"> OUI</label>
+            <label><input type="radio" name="<?= $nomQ ?>" value="non" checked> NON</label>
           </div>
-          <button type="submit" class="btn btn-outline">Rejoindre</button>
-        </form>
+        </div>
+      <?php endforeach; ?>
+    </section>
+
+    <!-- ============ PAIEMENT ============ -->
+    <section class="concept-section">
+      <h2 class="sec-title">PAIEMENT</h2>
+      <p class="sec-sub">Plus qu'une étape avant de plonger dans les Backrooms !</p>
+
+      <div class="paiement-grid">
+        <div class="pay-col">
+          <h3 class="pay-titre">Je paye par carte dès maintenant</h3>
+          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off">
+          <div class="pay-ligne">
+            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" autocomplete="off">
+            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" autocomplete="off">
+          </div>
+          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" autocomplete="off">
+          <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn">PAYER</button>
+        </div>
+
+        <div class="pay-col">
+          <h3 class="pay-titre">Je souhaite payer sur place</h3>
+          <p class="pay-info">Réglez votre session directement à l'accueil le soir de l'événement.</p>
+          <div class="pay-logos">
+            <span>VISA</span><span>Mastercard</span><span>AMEX</span><span>ANCV</span><span> Pay</span>
+          </div>
+          <button type="submit" name="paiement" value="sur_place" class="btn btn-outline pay-btn">JE FINALISE</button>
+        </div>
       </div>
-    </div>
+      <p class="cal-aide" style="text-align:center;">Aucun débit réel n'est effectué : paiement de démonstration (projet étudiant).</p>
+    </section>
 
-  <?php else: ?>
-    <!-- L'utilisateur a une équipe : tableau de bord d'équipe + réservation. -->
-    <div class="carte equipe-entete">
-      <h2>Équipe «&nbsp;<?= htmlspecialchars($equipe['nom']) ?>&nbsp;»</h2>
-      <p>Code d'invitation à partager&nbsp;:
-        <span class="code-invite"><?= htmlspecialchars($equipe['code_invite']) ?></span>
-      </p>
-      <p><strong>Membres (<?= count($membres) ?>)&nbsp;:</strong>
-        <?php
-          $noms = array_map(fn($m) => htmlspecialchars($m['pseudo']), $membres);
-          echo implode(', ', $noms);
-        ?>
-      </p>
-    </div>
+  </form>
 
-    <div class="carte">
-      <h2>Nouvelle réservation</h2>
-      <form method="post" class="form-bloc">
-        <input type="hidden" name="form_type" value="reserver">
-        <div class="form-group">
-          <label for="salle">Salle *</label>
-          <select name="salle" id="salle" required>
-            <option value="facile">Facile — « Le Niveau 0 » (débutants)</option>
-            <option value="standard" selected>Standard — « Les Couloirs jaunes »</option>
-            <option value="hardcore">Hardcore — « Le Niveau ! » (experts)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="date_session">Date et heure de la session *</label>
-          <input type="datetime-local" name="date_session" id="date_session" required>
-        </div>
-        <div class="form-group">
-          <label for="nb_joueurs">Nombre de joueurs (2 à 6) *</label>
-          <input type="number" name="nb_joueurs" id="nb_joueurs" min="2" max="6" value="<?= count($membres) ?>" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Réserver</button>
-      </form>
-    </div>
-
-    <div class="carte">
-      <h2>Mes réservations</h2>
-      <?php if (empty($reservations)): ?>
-        <p>Aucune réservation pour le moment.</p>
-      <?php else: ?>
-        <table class="tableau">
-          <thead>
-            <tr><th>Salle</th><th>Date</th><th>Joueurs</th><th>Statut</th></tr>
-          </thead>
-          <tbody>
-            <?php foreach ($reservations as $r): ?>
-              <tr>
-                <td><?= htmlspecialchars(ucfirst($r['salle'])) ?></td>
-                <td><?= htmlspecialchars(date('d/m/Y à H\hi', strtotime($r['date_session']))) ?></td>
-                <td><?= htmlspecialchars($r['nb_joueurs']) ?></td>
-                <td><span class="badge badge-<?= htmlspecialchars($r['statut']) ?>"><?= htmlspecialchars(str_replace('_', ' ', $r['statut'])) ?></span></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      <?php endif; ?>
-    </div>
-
-    <div class="carte">
-      <h2>Scores de l'équipe</h2>
-      <?php if (empty($scores)): ?>
-        <p>Vos scores apparaîtront ici après votre partie.</p>
-      <?php else: ?>
-        <table class="tableau">
-          <thead>
-            <tr><th>Date</th><th>Points</th><th>Temps</th><th>Résultat</th></tr>
-          </thead>
-          <tbody>
-            <?php foreach ($scores as $s): ?>
-              <tr>
-                <td><?= htmlspecialchars(date('d/m/Y', strtotime($s['date_partie']))) ?></td>
-                <td><?= htmlspecialchars($s['points']) ?> pts</td>
-                <td><?= $s['temps_secondes'] !== null ? floor($s['temps_secondes'] / 60) . ' min ' . ($s['temps_secondes'] % 60) . ' s' : '—' ?></td>
-                <td><?= $s['reussi'] ? '✅ Sortis !' : '❌ Coincés' ?></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      <?php endif; ?>
-    </div>
+  <!-- Récapitulatif des réservations de l'équipe -->
+  <?php if (!empty($reservations)): ?>
+    <section class="concept-section">
+      <h2 class="sec-title">MES RÉSERVATIONS</h2>
+      <table class="tableau">
+        <thead><tr><th>Salle</th><th>Date</th><th>Joueurs</th><th>Statut</th></tr></thead>
+        <tbody>
+          <?php foreach ($reservations as $r): ?>
+            <tr>
+              <td><?= htmlspecialchars(ucfirst($r['salle'])) ?></td>
+              <td><?= htmlspecialchars(date('d/m/Y à H\hi', strtotime($r['date_session']))) ?></td>
+              <td><?= htmlspecialchars($r['nb_joueurs']) ?></td>
+              <td><span class="badge badge-<?= htmlspecialchars($r['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$r['statut'])) ?></span></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </section>
   <?php endif; ?>
 </main>

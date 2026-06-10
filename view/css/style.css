@@ -648,6 +648,77 @@ main { flex: 1 0 auto; }
 .form-page form { margin-left: auto; margin-right: auto; }
 
 /* =====================================================================
+   PAGE RÉSERVATION / INSCRIPTION (maquette : infos, calendrier, santé, paiement)
+   ===================================================================== */
+.resa-page .concept-section { padding: 38px 0; }
+
+/* Champs sombres avec libellé en placeholder jaune */
+.resa-field {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(20, 19, 14, 0.88);
+  border: 1px solid #3a3320;
+  border-radius: 8px;
+  color: var(--text-light);
+  font-family: var(--font-nav);
+  letter-spacing: 1px;
+  font-size: .95rem;
+}
+.resa-field::placeholder { color: #c9b86a; text-transform: uppercase; letter-spacing: 1px; opacity: .9; }
+.resa-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 6px rgba(209, 176, 35, .25); }
+select.resa-field { cursor: pointer; }
+
+.resa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 24px; }
+.resa-col { display: flex; flex-direction: column; gap: 16px; }
+.resa-dob-label { color: #c9b86a; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-nav); font-weight: 600; font-size: .85rem; }
+.resa-dob { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+/* Calendrier des disponibilités */
+.calendrier { max-width: 640px; margin: 10px auto 0; }
+.cal-entete { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.cal-mois { font-family: var(--font-hero); font-size: 1.7rem; color: var(--primary-color); text-transform: capitalize; }
+.cal-nav { color: var(--primary-color); font-size: 1.5rem; line-height: 1; text-decoration: none; padding: 4px 14px; border: 1px solid #3a3320; border-radius: 6px; }
+.cal-nav:hover { background: rgba(209, 176, 35, .12); }
+.cal-grille { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-jour { text-align: center; font-family: var(--font-nav); font-weight: 600; color: #9a9a8a; font-size: .78rem; text-transform: uppercase; padding-bottom: 4px; }
+.cal-case {
+  display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 1 / 1;
+  background: rgba(20, 19, 14, 0.82);
+  border: 1px solid #3a3320; border-radius: 6px;
+  color: #e6e6e6; font-family: var(--font-hero); font-size: 1.3rem;
+  cursor: pointer; transition: .15s;
+}
+.cal-case:hover { border-color: var(--primary-color); color: var(--primary-color); }
+.cal-passe { opacity: .28; cursor: not-allowed; }
+.cal-radio { position: absolute; opacity: 0; width: 0; height: 0; }
+.cal-radio:checked + .cal-case { background: var(--primary-color); color: #1a1a1a; border-color: var(--primary-color); }
+.cal-aide { text-align: center; color: #9a9a8a; font-size: .85rem; margin-top: 10px; }
+
+/* Questionnaire santé */
+.sante-q { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); flex-wrap: wrap; }
+.sante-libelle { color: #e3e3e3; }
+.ouinon { display: flex; gap: 10px; flex-shrink: 0; }
+.ouinon label { display: inline-flex; align-items: center; gap: 6px; background: rgba(20, 19, 14, .85); border: 1px solid #3a3320; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-family: var(--font-nav); font-weight: 600; color: #cfcfcf; }
+.ouinon input { accent-color: var(--primary-color); }
+
+/* Paiement */
+.paiement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.pay-col { background: rgba(0, 0, 0, .42); border: 1px solid #3a3320; border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.pay-titre { font-family: var(--font-nav); color: var(--primary-color); text-transform: uppercase; letter-spacing: 1px; font-size: 1.05rem; font-weight: 600; }
+.pay-ligne { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pay-info { color: #bdbdb2; }
+.pay-logos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.pay-logos span { border: 1px solid #4a4330; border-radius: 6px; padding: 6px 10px; font-family: var(--font-nav); font-weight: 600; font-size: .8rem; color: #d8d8d8; background: #15140f; }
+.pay-btn { width: 100%; text-align: center; }
+
+@media (max-width: 760px) {
+  .resa-grid, .paiement-grid { grid-template-columns: 1fr; }
+  .cal-case { font-size: 1.05rem; }
+  .sante-q { flex-direction: column; align-items: flex-start; }
+}
+
+/* =====================================================================
    POLICE PIXEL (VT323) sur TOUT l'habillage — comme les 3 maquettes
    (boutons, libellés d'icônes, titres de sections et de cartes…)
    ===================================================================== */

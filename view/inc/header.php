@@ -15,7 +15,7 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=18">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=19">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">

@@ -1,12 +1,12 @@
 <?php
 /**
- * Contrôleur Réservation : inscription PAR ÉQUIPE puis réservation d'une session.
- * Accessible uniquement aux utilisateurs connectés.
+ * Contrôleur Réservation : page complète d'inscription à une session
+ * (infos joueur + équipe, calendrier des disponibilités, questionnaire
+ * santé & sécurité, paiement). Accessible uniquement connecté.
  */
 require_once('model/utilisateur.php');
 require_once('model/equipe.php');
 require_once('model/reservation.php');
-require_once('model/score.php');
 
 function index() {
     // Garde d'accès : il faut être connecté pour réserver.
@@ -19,76 +19,81 @@ function index() {
     $erreur = '';
     $succes = '';
 
+    // Mois affiché dans le calendrier (par défaut juin 2026, mois de l'événement).
+    $mois = (isset($_GET['mois']) && preg_match('/^\d{4}-\d{2}$/', $_GET['mois'])) ? $_GET['mois'] : '2026-06';
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $form = $_POST['form_type'] ?? '';
+        // --- 1) Infos personnelles (on met à jour le compte) ---
+        $nom       = trim($_POST['nom'] ?? '');
+        $prenom    = trim($_POST['prenom'] ?? '');
+        $email     = trim($_POST['email'] ?? '');
+        $telephone = trim($_POST['telephone'] ?? '');
 
-        // --- Créer une nouvelle équipe ---
-        if ($form === 'creer_equipe') {
-            $nom = trim($_POST['nom_equipe'] ?? '');
-            if (!empty($utilisateur['equipe_id'])) {
-                $erreur = "Vous faites déjà partie d'une équipe.";
-            } elseif (empty($nom)) {
-                $erreur = "Le nom de l'équipe est obligatoire.";
-            } elseif (get_equipe_by_nom($nom)) {
-                $erreur = "Ce nom d'équipe est déjà pris, choisissez-en un autre.";
-            } else {
-                $equipe_id = creer_equipe($nom, $utilisateur['id']);
-                assigner_equipe($utilisateur['id'], $equipe_id);
-                $succes = "Équipe créée ! Partagez le code d'invitation avec vos coéquipiers.";
-            }
+        // --- 2) Équipe + session ---
+        $nom_equipe   = trim($_POST['nom_equipe'] ?? '');
+        $nb_joueurs   = (int) ($_POST['nb_joueurs'] ?? 0);
+        $date_session = $_POST['date_session'] ?? '';      // format AAAA-MM-JJ (calendrier)
+        $paiement     = $_POST['paiement'] ?? 'sur_place'; // 'carte' ou 'sur_place'
 
-        // --- Rejoindre une équipe existante via son code ---
-        } elseif ($form === 'rejoindre_equipe') {
-            $code = strtoupper(trim($_POST['code_invite'] ?? ''));
-            if (!empty($utilisateur['equipe_id'])) {
-                $erreur = "Vous faites déjà partie d'une équipe.";
-            } elseif ($code === '') {
-                $erreur = "Veuillez saisir un code d'invitation.";
+        // --- Validations ---
+        if ($nom === '' || $prenom === '' || $email === '') {
+            $erreur = "Merci de remplir vos nom, prénom et email.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $erreur = "L'adresse email n'est pas valide.";
+        } elseif (empty($utilisateur['equipe_id']) && $nom_equipe === '') {
+            $erreur = "Indiquez un nom d'équipe.";
+        } elseif (empty($utilisateur['equipe_id']) && get_equipe_by_nom($nom_equipe)) {
+            $erreur = "Ce nom d'équipe est déjà pris.";
+        } elseif ($date_session === '' || strtotime($date_session) === false) {
+            $erreur = "Choisissez une date dans le calendrier des disponibilités.";
+        } elseif (strtotime($date_session . ' 20:00:00') < time()) {
+            $erreur = "Cette date est déjà passée, choisissez-en une autre.";
+        } elseif ($nb_joueurs < 2 || $nb_joueurs > 6) {
+            $erreur = "Le nombre de participants doit être compris entre 2 et 6.";
+        } else {
+            // Email déjà pris par quelqu'un d'autre ?
+            $autre = get_utilisateur_by_email($email);
+            if ($autre && (int)$autre['id'] !== (int)$utilisateur['id']) {
+                $erreur = "Cette adresse email est déjà utilisée par un autre compte.";
             } else {
-                $equipe = get_equipe_by_code($code);
-                if (!$equipe) {
-                    $erreur = "Code d'invitation invalide.";
+                // Mise à jour des infos du compte (pseudo inchangé).
+                update_utilisateur($utilisateur['id'], $nom, $prenom, $utilisateur['pseudo'], $email, $telephone);
+
+                // Équipe : on prend celle de l'utilisateur, sinon on la crée.
+                if (!empty($utilisateur['equipe_id'])) {
+                    $equipe_id = (int) $utilisateur['equipe_id'];
                 } else {
-                    assigner_equipe($utilisateur['id'], $equipe['id']);
-                    $succes = "Vous avez rejoint l'équipe « " . htmlspecialchars($equipe['nom']) . " ».";
+                    $equipe_id = creer_equipe($nom_equipe, $utilisateur['id']);
+                    assigner_equipe($utilisateur['id'], $equipe_id);
                 }
-            }
 
-        // --- Réserver une session (il faut déjà avoir une équipe) ---
-        } elseif ($form === 'reserver') {
-            $utilisateur = get_utilisateur_by_id($_SESSION['user_id']); // données à jour
-            $salle = $_POST['salle'] ?? '';
-            $date_session = $_POST['date_session'] ?? '';
-            $nb_joueurs = (int) ($_POST['nb_joueurs'] ?? 0);
-            $salles_valides = ['facile', 'standard', 'hardcore'];
+                // Réservation (heure par défaut 20h, salle standard par défaut).
+                $date_sql = date('Y-m-d', strtotime($date_session)) . ' 20:00:00';
+                creer_reservation($equipe_id, 'standard', $date_sql, $nb_joueurs);
 
-            if (empty($utilisateur['equipe_id'])) {
-                $erreur = "Vous devez d'abord créer ou rejoindre une équipe.";
-            } elseif (!in_array($salle, $salles_valides, true)) {
-                $erreur = "Veuillez choisir une salle valide.";
-            } elseif (empty($date_session) || strtotime($date_session) === false || strtotime($date_session) < time()) {
-                $erreur = "Veuillez choisir une date et une heure dans le futur.";
-            } elseif ($nb_joueurs < 2 || $nb_joueurs > 6) {
-                $erreur = "Le nombre de joueurs doit être compris entre 2 et 6.";
-            } else {
-                // Conversion du format "datetime-local" (2026-06-20T20:00) vers DATETIME MySQL.
-                $date_sql = date('Y-m-d H:i:s', strtotime($date_session));
-                creer_reservation($utilisateur['equipe_id'], $salle, $date_sql, $nb_joueurs);
-                $succes = "Votre réservation a bien été enregistrée (en attente de confirmation).";
+                // Paiement par carte = confirmée tout de suite ; sur place = en attente.
+                if ($paiement === 'carte') {
+                    $pdo = getBdd();
+                    $rid = (int) $pdo->lastInsertId();
+                    update_statut_reservation($rid, 'confirmee');
+                    $succes = "Paiement accepté et réservation confirmée ! Rendez-vous le "
+                            . htmlspecialchars(date('d/m/Y', strtotime($date_session))) . " à 20h.";
+                } else {
+                    $succes = "Réservation enregistrée (paiement sur place) pour le "
+                            . htmlspecialchars(date('d/m/Y', strtotime($date_session))) . " à 20h.";
+                }
+
+                $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
             }
         }
-
-        // On recharge l'utilisateur (son équipe a pu changer).
-        $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
     }
 
-    // Données à afficher dans la vue.
-    $equipe        = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
-    $membres       = $equipe ? get_membres_equipe($equipe['id']) : [];
-    $reservations  = $equipe ? get_reservations_by_equipe($equipe['id']) : [];
-    $scores        = $equipe ? get_scores_by_equipe($equipe['id']) : [];
+    // Données pour la vue.
+    $equipe       = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
+    $reservations = $equipe ? get_reservations_by_equipe($equipe['id']) : [];
 
     $titrePage = 'Réserver une session';
+    $page_class = 'page-concept'; // même fond liminal
     require('view/inc/header.php');
     require('view/reservation/index.php');
     require('view/inc/footer.php');
