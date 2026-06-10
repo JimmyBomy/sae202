@@ -4,6 +4,7 @@
     <div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div>
   <?php endif; ?>
   <form action="<?= BASE_URL ?>/compte/connexion" method="post">
+    <?= csrf_input() ?>
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" name="email" id="email" required>

@@ -40,3 +40,27 @@ if (session_status() === PHP_SESSION_NONE) {
 // define('DEBUG', true);
 error_reporting(E_ALL);
 ini_set('display_errors', '0'); // 0 en prod ; passer à 1 en dev local
+
+// --- Protection CSRF ---
+// Un jeton secret est stocké en session et glissé dans chaque formulaire.
+// Au POST, on vérifie que le jeton reçu correspond : un site tiers ne peut
+// pas forger de requête à la place de l'utilisateur.
+
+// Renvoie (et crée si besoin) le jeton CSRF de la session.
+function csrf_token() {
+    if (empty($_SESSION['csrf'])) {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf'];
+}
+
+// Champ caché à insérer dans chaque formulaire POST.
+function csrf_input() {
+    return '<input type="hidden" name="csrf" value="' . csrf_token() . '">';
+}
+
+// Vérifie le jeton reçu (à appeler au début de chaque traitement POST).
+function csrf_verifie() {
+    return isset($_POST['csrf'], $_SESSION['csrf'])
+        && hash_equals($_SESSION['csrf'], $_POST['csrf']);
+}

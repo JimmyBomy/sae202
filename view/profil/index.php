@@ -2,6 +2,10 @@
 
   <?php if (!empty($erreur)): ?><div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div><?php endif; ?>
   <?php if (!empty($succes)): ?><div class="alert alert-success"><?= $succes ?></div><?php endif; ?>
+  <?php if (!empty($_SESSION['mdp_auto'])): ?>
+    <div class="alert alert-error">⚠️ Votre compte a été créé automatiquement lors de votre réservation :
+    <strong>définissez un mot de passe ci-dessous</strong> pour pouvoir vous reconnecter plus tard.</div>
+  <?php endif; ?>
 
   <!-- ============ MON PROFIL ============ -->
   <section class="concept-section" style="padding-top:30px;">
@@ -9,6 +13,7 @@
     <p class="sec-sub">Gérez vos informations et vos réservations !</p>
 
     <form method="post" action="<?= BASE_URL ?>/profil" class="profil-bloc">
+      <?= csrf_input() ?>
       <div class="profil-avatar">
         <div class="avatar-cercle">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg>

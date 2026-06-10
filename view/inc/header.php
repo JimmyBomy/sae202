@@ -12,10 +12,8 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <title><?= htmlspecialchars($titrePage ?? NOM_SITE) ?> — <?= NOM_SITE ?></title>
   <meta name="description" content="<?= htmlspecialchars($metaDesc ?? SLOGAN) ?>">
   <link rel="icon" type="image/png" href="<?= BASE_URL ?>/view/img/favicon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=28">
+  <!-- Polices auto-hébergées (view/fonts/) : aucune requête externe (éco + RGPD) -->
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=29">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <header class="site-header">

@@ -77,6 +77,7 @@
       </div>
       <!-- Le formulaire envoie vers le contrôleur Contact (qui envoie le mail) -->
       <form class="loc-form" action="<?= BASE_URL ?>/contact" method="post">
+        <?= csrf_input() ?>
         <input type="hidden" name="sujet" value="Message depuis la page Infos pratiques">
         <div class="form-group"><input type="text" name="nom" placeholder="Nom *" required></div>
         <div class="form-group"><input type="email" name="email" placeholder="Email *" required></div>

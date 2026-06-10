@@ -26,6 +26,7 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
   <?php endif; ?>
 
   <form method="post" action="<?= BASE_URL ?>/reservation" class="resa-form">
+    <?= csrf_input() ?>
 
     <!-- ============ INSCRIPTION ============ -->
     <section class="concept-section" style="padding-top:30px;">
@@ -44,8 +45,19 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
         </div>
         <div class="resa-col">
           <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
-                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : 'required' ?>>
+                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : '' ?>>
+          <?php if (!$equipe): ?>
+            <input class="resa-field" type="text" name="code_invite" maxlength="6"
+                   placeholder="OU CODE D'INVITATION (rejoindre une équipe)"
+                   value="<?= $champ('code_invite') ?>" style="text-transform:uppercase;">
+          <?php endif; ?>
           <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
+          <select class="resa-field" name="salle" required aria-label="Salle">
+            <option value="">CHOISIR UNE SALLE…</option>
+            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile)</option>
+            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>>Salle 2 — Les Couloirs jaunes (standard)</option>
+            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>>Salle 3 — Le Niveau ! (hardcore)</option>
+          </select>
           <label class="resa-dob-label">Date de naissance</label>
           <div class="resa-dob">
             <select class="resa-field" name="naiss_jour" aria-label="Jour">

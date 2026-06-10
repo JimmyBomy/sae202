@@ -21,7 +21,9 @@ function index() {
         $telephone   = htmlspecialchars(trim($_POST['telephone'] ?? ''));
         $nouveau_mdp = $_POST['mot_de_passe'] ?? '';
 
-        if (empty($pseudo) || empty($email)) {
+        if (!csrf_verifie()) {
+            $erreur = 'Session expirée, veuillez renvoyer le formulaire.';
+        } elseif (empty($pseudo) || empty($email)) {
             $erreur = 'Le pseudo et l\'email sont obligatoires.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $erreur = 'L\'adresse email n\'est pas valide.';
@@ -36,6 +38,7 @@ function index() {
                 update_utilisateur($utilisateur['id'], $utilisateur['nom'], $utilisateur['prenom'], $pseudo, $email, $telephone);
                 if ($nouveau_mdp !== '') {
                     update_utilisateur_password($utilisateur['id'], $nouveau_mdp);
+                    unset($_SESSION['mdp_auto']); // il connaît désormais son mot de passe
                 }
                 $succes = 'Vos informations ont été mises à jour.';
                 $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
@@ -90,7 +93,9 @@ function password() {
         $nouveau_mdp = $_POST['nouveau_mot_de_passe'] ?? '';
         $confirm_mdp = $_POST['confirmation_mot_de_passe'] ?? '';
 
-        if (empty($mdp_actuel) || empty($nouveau_mdp) || empty($confirm_mdp)) {
+        if (!csrf_verifie()) {
+            $erreur = 'Session expirée, veuillez renvoyer le formulaire.';
+        } elseif (empty($mdp_actuel) || empty($nouveau_mdp) || empty($confirm_mdp)) {
             $erreur = 'Tous les champs sont obligatoires.';
         } elseif (!password_verify($mdp_actuel, $utilisateur['mot_de_passe'])) {
             $erreur = 'Le mot de passe actuel est incorrect.';
@@ -100,6 +105,7 @@ function password() {
             $erreur = 'Le nouveau mot de passe doit contenir au moins 6 caractères.';
         } else {
             if (update_utilisateur_password($utilisateur['id'], $nouveau_mdp)) {
+                unset($_SESSION['mdp_auto']); // il connaît désormais son mot de passe
                 $succes = 'Mot de passe mis à jour avec succès.';
             } else {
                 $erreur = 'Erreur lors de la mise à jour du mot de passe.';
@@ -127,7 +133,9 @@ function commentaire() {
         $note = (int)($_POST['note'] ?? 0);
         $texte = htmlspecialchars(trim($_POST['texte'] ?? ''));
 
-        if ($note < 1 || $note > 5 || empty($texte)) {
+        if (!csrf_verifie()) {
+            $erreur = 'Session expirée, veuillez renvoyer le formulaire.';
+        } elseif ($note < 1 || $note > 5 || empty($texte)) {
             $erreur = 'Veuillez remplir tous les champs correctement.';
         } else {
             if (ajouter_commentaire($_SESSION['user_id'], $note, $texte)) {

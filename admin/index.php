@@ -21,27 +21,27 @@ require_once('model/equipe.php');
 require_once('model/reservation.php');
 require_once('model/score.php');
 
-// --- Traitements (modération avis) ---
-if (isset($_GET['action'], $_GET['id'])) {
-    $id = (int) $_GET['id'];
-    if ($_GET['action'] === 'approuver') update_statut_commentaire($id, 'approuve');
-    if ($_GET['action'] === 'refuser')   update_statut_commentaire($id, 'refuse');
+// --- Traitements (modération avis) — en POST + jeton CSRF (pas de lien GET forgeable) ---
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id']) && csrf_verifie()) {
+    $id = (int) $_POST['id'];
+    if ($_POST['action'] === 'approuver') update_statut_commentaire($id, 'approuve');
+    if ($_POST['action'] === 'refuser')   update_statut_commentaire($id, 'refuse');
     header('Location: ' . BASE_URL . '/gestion');
     exit;
 }
 
 // --- Traitements (statut d'une réservation) ---
-if (isset($_GET['resa'], $_GET['statut'])) {
-    $id = (int) $_GET['resa'];
-    if (in_array($_GET['statut'], ['confirmee', 'annulee', 'en_attente'], true)) {
-        update_statut_reservation($id, $_GET['statut']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['resa'], $_POST['statut']) && csrf_verifie()) {
+    $id = (int) $_POST['resa'];
+    if (in_array($_POST['statut'], ['confirmee', 'annulee', 'en_attente'], true)) {
+        update_statut_reservation($id, $_POST['statut']);
     }
     header('Location: ' . BASE_URL . '/gestion');
     exit;
 }
 
 // --- Traitements (saisie d'un score) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_type'] ?? '') === 'score') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_type'] ?? '') === 'score' && csrf_verifie()) {
     $equipe_id = (int) ($_POST['equipe_id'] ?? 0);
     $points    = (int) ($_POST['points'] ?? 0);
     $minutes   = (int) ($_POST['minutes'] ?? 0);
@@ -91,7 +91,7 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
         .stat { flex: 1; min-width: 150px; background: #1a1a1a; color: #fff; padding: 16px; border-radius: 8px; text-align: center; }
         .stat .num { font-size: 2rem; font-weight: bold; color: #d1b023; display: block; }
         .stat .lbl { font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .btn { padding: 5px 10px; text-decoration: none; color: #fff; border-radius: 4px; font-size: 13px; display: inline-block; }
+        .btn { padding: 5px 10px; text-decoration: none; color: #fff; border-radius: 4px; font-size: 13px; display: inline-block; border: none; cursor: pointer; font-family: inherit; }
         .btn-success { background: #2ecc71; } .btn-danger { background: #e74c3c; } .btn-info { background: #3498db; }
         .badge { padding: 3px 8px; border-radius: 10px; font-size: 12px; color:#fff; text-transform: capitalize; }
         .badge.en_attente { background:#e67e22; } .badge.confirmee, .badge.approuve { background:#27ae60; }
@@ -142,12 +142,16 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
                     <td><?= htmlspecialchars($c['date_creation']) ?></td>
                     <td><span class="badge <?= htmlspecialchars($c['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$c['statut'])) ?></span></td>
                     <td>
-                        <?php if ($c['statut'] === 'en_attente'): ?>
-                            <a href="?action=approuver&id=<?= $c['id'] ?>" class="btn btn-success">Approuver</a>
-                            <a href="?action=refuser&id=<?= $c['id'] ?>" class="btn btn-danger">Refuser</a>
-                        <?php else: ?>
-                            <a href="?action=approuver&id=<?= $c['id'] ?>" class="btn btn-info">Re-publier</a>
-                        <?php endif; ?>
+                        <form method="post" style="display:inline-flex; gap:6px;">
+                            <?= csrf_input() ?>
+                            <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                            <?php if ($c['statut'] === 'en_attente'): ?>
+                                <button type="submit" name="action" value="approuver" class="btn btn-success">Approuver</button>
+                                <button type="submit" name="action" value="refuser" class="btn btn-danger">Refuser</button>
+                            <?php else: ?>
+                                <button type="submit" name="action" value="approuver" class="btn btn-info">Re-publier</button>
+                            <?php endif; ?>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -170,8 +174,12 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
                     <td><?= htmlspecialchars($r['nb_joueurs']) ?></td>
                     <td><span class="badge <?= htmlspecialchars($r['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$r['statut'])) ?></span></td>
                     <td>
-                        <a href="?resa=<?= $r['id'] ?>&statut=confirmee" class="btn btn-success">Confirmer</a>
-                        <a href="?resa=<?= $r['id'] ?>&statut=annulee" class="btn btn-danger">Annuler</a>
+                        <form method="post" style="display:inline-flex; gap:6px;">
+                            <?= csrf_input() ?>
+                            <input type="hidden" name="resa" value="<?= $r['id'] ?>">
+                            <button type="submit" name="statut" value="confirmee" class="btn btn-success">Confirmer</button>
+                            <button type="submit" name="statut" value="annulee" class="btn btn-danger">Annuler</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -187,6 +195,7 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
             <p>Aucune équipe pour le moment.</p>
         <?php else: ?>
             <form method="post" class="inline">
+                <?= csrf_input() ?>
                 <input type="hidden" name="form_type" value="score">
                 <div><label>Équipe</label>
                     <select name="equipe_id" required>

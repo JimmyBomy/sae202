@@ -10,6 +10,7 @@
     <?php endif; ?>
 
     <form action="" method="post" style="max-width: 600px; background: #222; padding: 20px; border-radius: 5px;">
+    <?= csrf_input() ?>
         <div class="form-group">
             <label for="nom">Votre nom *</label>
             <input type="text" name="nom" id="nom" required>

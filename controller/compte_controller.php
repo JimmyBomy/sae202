@@ -11,7 +11,9 @@ function inscription() {
         $telephone = $_POST['telephone'] ?? '';
         $password = $_POST['mot_de_passe'] ?? '';
 
-        if (!empty($nom) && !empty($prenom) && !empty($pseudo) && !empty($email) && !empty($password)) {
+        if (!csrf_verifie()) {
+            $erreur = "Session expirée, veuillez renvoyer le formulaire.";
+        } elseif (!empty($nom) && !empty($prenom) && !empty($pseudo) && !empty($email) && !empty($password)) {
             if (!get_utilisateur_by_email($email)) {
                 creer_utilisateur($nom, $prenom, $pseudo, $email, $telephone, $password);
                 header('Location: ' . BASE_URL . '/compte/connexion');
@@ -36,14 +38,28 @@ function connexion() {
         $email = $_POST['email'] ?? '';
         $password = $_POST['mot_de_passe'] ?? '';
 
-        if (!empty($email) && !empty($password)) {
+        // --- Anti-bruteforce : après 5 échecs, on impose 60 s d'attente. ---
+        $essais  = $_SESSION['login_essais'] ?? 0;
+        $dernier = $_SESSION['login_dernier'] ?? 0;
+        if ($essais >= 5 && (time() - $dernier) < 60) {
+            $erreur = "Trop de tentatives. Réessayez dans une minute.";
+        } elseif (!csrf_verifie()) {
+            $erreur = "Session expirée, veuillez renvoyer le formulaire.";
+        } elseif (!empty($email) && !empty($password)) {
+            if ($essais >= 5) { // la minute est passée, on remet le compteur à zéro
+                $_SESSION['login_essais'] = 0;
+            }
             $user = get_utilisateur_by_email($email);
             if ($user && password_verify($password, $user['mot_de_passe'])) {
+                session_regenerate_id(true); // évite la fixation de session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_role'] = $user['role'];
+                unset($_SESSION['login_essais'], $_SESSION['login_dernier']);
                 header('Location: ' . BASE_URL . '/profil');
                 exit;
             } else {
+                $_SESSION['login_essais']  = ($_SESSION['login_essais'] ?? 0) + 1;
+                $_SESSION['login_dernier'] = time();
                 $erreur = "Identifiants incorrects.";
             }
         } else {

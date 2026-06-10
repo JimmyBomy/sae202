@@ -10,7 +10,9 @@ function index() {
         $sujet = htmlspecialchars(trim($_POST['sujet'] ?? ''));
         $message = htmlspecialchars(trim($_POST['message'] ?? ''));
 
-        if (empty($nom) || empty($email) || empty($sujet) || empty($message)) {
+        if (!csrf_verifie()) {
+            $erreur = 'Session expirée, veuillez renvoyer le formulaire.';
+        } elseif (empty($nom) || empty($email) || empty($sujet) || empty($message)) {
             $erreur = 'Tous les champs sont obligatoires.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $erreur = 'L\'adresse email n\'est pas valide.';

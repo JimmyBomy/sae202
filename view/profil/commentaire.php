@@ -22,6 +22,7 @@ $texte = $texte ?? '';
     <p>Avez-vous réussi à sortir des Backrooms ? Laissez-nous votre avis sur l'expérience !</p>
 
     <form action="" method="post" style="max-width: 600px; background: #222; padding: 20px; border-radius: 5px;">
+    <?= csrf_input() ?>
         <div class="form-group">
             <label for="note">Note (sur 5) *</label>
             <select name="note" id="note" required style="width: 100%; padding: 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #444;">

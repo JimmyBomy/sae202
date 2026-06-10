@@ -16,6 +16,7 @@
     <?php endif; ?>
 
     <form action="" method="post" style="max-width: 600px; background: #222; padding: 20px; border-radius: 5px;">
+    <?= csrf_input() ?>
         <div class="form-group">
             <label for="mot_de_passe_actuel">Mot de passe actuel *</label>
             <input type="password" name="mot_de_passe_actuel" id="mot_de_passe_actuel" required>
