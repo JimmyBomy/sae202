@@ -28,10 +28,13 @@ $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
 
       <div class="resa-grid">
         <div class="resa-col">
-          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= htmlspecialchars($utilisateur['nom']) ?>" required>
-          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= htmlspecialchars($utilisateur['prenom']) ?>" required>
-          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= htmlspecialchars($utilisateur['email']) ?>" required>
+          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= htmlspecialchars($utilisateur['nom'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= htmlspecialchars($utilisateur['prenom'] ?? '') ?>" required>
+          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= htmlspecialchars($utilisateur['email'] ?? '') ?>" required>
           <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= htmlspecialchars($utilisateur['telephone'] ?? '') ?>">
+          <?php if (!$estConnecte): ?>
+            <input class="resa-field" type="password" name="mot_de_passe" placeholder="MOT DE PASSE (espace privé)" minlength="6" required>
+          <?php endif; ?>
         </div>
         <div class="resa-col">
           <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
