@@ -856,11 +856,10 @@ input:autofill {            /* version standard (Firefox récent) */
   box-shadow: 0 0 0 1000px #1d1c15 inset;
 }
 
-/* ===================== "Les règles de survie" : version mystère ===================== */
-.rules-box--mystere { display: flex; align-items: center; justify-content: space-between; gap: 20px; text-decoration: none; max-width: 780px; transition: .2s; }
-.rules-box--mystere:hover { border-color: var(--primary-color); background: rgba(209, 176, 35, .08); }
-.rules-box--mystere h3 { margin-bottom: 0; }
-.rules-mystere { width: 52px; height: 52px; color: var(--primary-color); flex-shrink: 0; }
+/* ===================== "Les règles de survie" : un seul triangle, à côté du titre ===================== */
+.rules-titre { display: flex; align-items: center; gap: 12px; }
+.rules-titre .warn { width: 26px; height: 26px; }
+.rules-list li { padding-left: 4px; }
 
 /* Stats du profil : 4 colonnes, responsives */
 .stats-grid--4 { grid-template-columns: repeat(4, 1fr); }
