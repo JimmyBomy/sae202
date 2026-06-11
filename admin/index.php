@@ -21,6 +21,23 @@ require_once('model/equipe.php');
 require_once('model/reservation.php');
 require_once('model/score.php');
 
+// --- Export CSV des inscrits (bouton dans la carte "Utilisateurs inscrits") ---
+if (($_GET['export'] ?? '') === 'csv') {
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename="inscrits_backrooms_' . date('Ymd') . '.csv"');
+    $sortie = fopen('php://output', 'w');
+    fputs($sortie, "\xEF\xBB\xBF"); // BOM : accents corrects dans Excel
+    fputcsv($sortie, ['ID', 'Pseudo', 'Nom', 'Prénom', 'Email', 'Téléphone', 'Naissance', 'Équipe', 'Rôle', 'Inscrit le',
+                      'Cardiaque', 'Épilepsie', 'Respiratoire', 'Claustrophobie'], ';');
+    foreach (get_tous_utilisateurs() as $u) {
+        fputcsv($sortie, [$u['id'], $u['pseudo'], $u['nom'], $u['prenom'], $u['email'], $u['telephone'],
+                          $u['date_naissance'], $u['equipe_nom'] ?? '', $u['role'], $u['date_inscription'],
+                          $u['sante_cardiaque'], $u['sante_epilepsie'], $u['sante_respiratoire'], $u['sante_claustro']], ';');
+    }
+    fclose($sortie);
+    exit;
+}
+
 // --- Traitements (modération avis) — en POST + jeton CSRF (pas de lien GET forgeable) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id']) && csrf_verifie()) {
     $id = (int) $_POST['id'];
@@ -253,15 +270,25 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
     <!-- INSCRITS -->
     <div class="card">
         <h2>Utilisateurs inscrits</h2>
+        <p><a href="?export=csv" class="btn btn-info">⬇ Exporter en CSV</a></p>
         <table>
-            <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
+            <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Naissance</th><th>Santé</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
             <tbody>
-            <?php foreach ($utilisateurs as $u): ?>
+            <?php foreach ($utilisateurs as $u):
+                // Alerte santé : liste des contre-indications déclarées "oui"
+                $alertes = [];
+                if (($u['sante_cardiaque'] ?? '') === 'oui')    $alertes[] = 'cardiaque';
+                if (($u['sante_epilepsie'] ?? '') === 'oui')    $alertes[] = 'épilepsie';
+                if (($u['sante_respiratoire'] ?? '') === 'oui') $alertes[] = 'respiratoire';
+                if (($u['sante_claustro'] ?? '') === 'oui')     $alertes[] = 'claustrophobie';
+            ?>
                 <tr>
                     <td><?= htmlspecialchars($u['id']) ?></td>
                     <td><?= htmlspecialchars($u['pseudo']) ?></td>
                     <td><?= htmlspecialchars($u['prenom'].' '.$u['nom']) ?></td>
                     <td><?= htmlspecialchars($u['email']) ?></td>
+                    <td><?= $u['date_naissance'] ? htmlspecialchars(date('d/m/Y', strtotime($u['date_naissance']))) : '—' ?></td>
+                    <td><?= $alertes ? '<span style="color:#c0392b;font-weight:bold;">⚠ ' . htmlspecialchars(implode(', ', $alertes)) . '</span>' : 'RAS' ?></td>
                     <td><?= htmlspecialchars($u['equipe_nom'] ?? '—') ?></td>
                     <td><?= htmlspecialchars($u['role']) ?></td>
                     <td><?= htmlspecialchars(date('d/m/Y', strtotime($u['date_inscription']))) ?></td>

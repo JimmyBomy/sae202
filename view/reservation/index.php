@@ -38,20 +38,20 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
 
       <div class="resa-grid">
         <div class="resa-col">
-          <input class="resa-field" type="text"  name="nom"       placeholder="NOM"       value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM"    value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
-          <input class="resa-field" type="email" name="email"     placeholder="EMAIL"     value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
+          <input class="resa-field" type="text"  name="nom"       placeholder="NOM" aria-label="NOM"       value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM" aria-label="PRÉNOM"    value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
+          <input class="resa-field" type="email" name="email"     placeholder="EMAIL" aria-label="EMAIL"     value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" aria-label="TÉLÉPHONE" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
         </div>
         <div class="resa-col">
-          <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE"
+          <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE" aria-label="NOM DE L'ÉQUIPE"
                  value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : '' ?>>
           <?php if (!$equipe): ?>
             <input class="resa-field" type="text" name="code_invite" maxlength="6"
-                   placeholder="OU CODE D'INVITATION (rejoindre une équipe)"
+                   placeholder="OU CODE D'INVITATION (rejoindre une équipe)" aria-label="OU CODE D'INVITATION (rejoindre une équipe)"
                    value="<?= $champ('code_invite') ?>" style="text-transform:uppercase;">
           <?php endif; ?>
-          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
+          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" aria-label="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
           <select class="resa-field" name="salle" required aria-label="Salle">
             <option value="">CHOISIR UNE SALLE…</option>
             <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile)</option>
@@ -146,12 +146,12 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
       <div class="paiement-grid">
         <div class="pay-col">
           <h3 class="pay-titre">Je paye par carte dès maintenant</h3>
-          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" value="<?= $champ('cb_numero') ?>">
+          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" aria-label="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" value="<?= $champ('cb_numero') ?>">
           <div class="pay-ligne">
-            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" autocomplete="off" value="<?= $champ('cb_exp') ?>">
-            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" autocomplete="off" value="<?= $champ('cb_cvv') ?>">
+            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" aria-label="MM / AA" autocomplete="off" value="<?= $champ('cb_exp') ?>">
+            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" aria-label="CVV" autocomplete="off" value="<?= $champ('cb_cvv') ?>">
           </div>
-          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" autocomplete="off" value="<?= $champ('cb_tel') ?>">
+          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" aria-label="TÉLÉPHONE" autocomplete="off" value="<?= $champ('cb_tel') ?>">
           <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn">PAYER</button>
         </div>
 

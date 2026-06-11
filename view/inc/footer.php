@@ -13,6 +13,7 @@
           <li><a href="<?= BASE_URL ?>/concept">À propos</a></li>
           <li><a href="<?= BASE_URL ?>/infos">Les salles</a></li>
           <li><a href="<?= BASE_URL ?>/regles">Règles</a></li>
+          <li><a href="<?= BASE_URL ?>/classement">Classement</a></li>
           <li><a href="<?= BASE_URL ?>/contact">Contact</a></li>
           <?php if (isset($_SESSION['user_id'])): ?>
             <li><a href="<?= BASE_URL ?>/profil">Mon espace</a></li>

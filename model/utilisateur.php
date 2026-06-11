@@ -50,3 +50,34 @@ function get_tous_utilisateurs() {
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
 }
+
+// Enregistre la date de naissance et le questionnaire santé (saisis à la réservation).
+function update_sante_naissance($id, $date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro) {
+    $pdo = getBdd();
+    $sql = "UPDATE utilisateurs SET date_naissance = ?, sante_cardiaque = ?, sante_epilepsie = ?,
+            sante_respiratoire = ?, sante_claustro = ? WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    return $stmt->execute([$date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro, $id]);
+}
+
+// --- Réinitialisation du mot de passe (lien par email, valable 1 h) ---
+function set_reset_token($id, $token) {
+    $pdo = getBdd();
+    $sql = "UPDATE utilisateurs SET reset_token = ?, reset_expire = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    return $stmt->execute([$token, $id]);
+}
+
+function get_utilisateur_by_reset_token($token) {
+    $pdo = getBdd();
+    $sql = "SELECT * FROM utilisateurs WHERE reset_token = ? AND reset_expire > NOW()";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$token]);
+    return $stmt->fetch();
+}
+
+function clear_reset_token($id) {
+    $pdo = getBdd();
+    $stmt = $pdo->prepare("UPDATE utilisateurs SET reset_token = NULL, reset_expire = NULL WHERE id = ?");
+    return $stmt->execute([$id]);
+}

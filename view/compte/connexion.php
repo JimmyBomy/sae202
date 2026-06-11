@@ -17,5 +17,6 @@
   </form>
   <p class="form-switch">Pas encore de compte&nbsp;?
     <a href="<?= BASE_URL ?>/compte/inscription">Créez-en un</a>
+    · <a href="<?= BASE_URL ?>/compte/mdp_oublie">Mot de passe oublié&nbsp;?</a>
   </p>
 </main>

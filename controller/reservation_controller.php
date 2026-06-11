@@ -107,6 +107,15 @@ function index() {
                     assigner_equipe($utilisateur['id'], $equipe_id);
                 }
 
+                // Date de naissance (3 listes) + questionnaire santé : on les conserve
+                // sur le compte (l'organisateur doit connaître les contre-indications).
+                $j = (int)($_POST['naiss_jour'] ?? 0); $m = (int)($_POST['naiss_mois'] ?? 0); $a = (int)($_POST['naiss_annee'] ?? 0);
+                $naissance = checkdate($m, $j, $a) ? sprintf('%04d-%02d-%02d', $a, $m, $j) : null;
+                $sante = fn($k) => in_array($_POST[$k] ?? '', ['oui', 'non'], true) ? $_POST[$k] : null;
+                update_sante_naissance($utilisateur['id'], $naissance,
+                    $sante('sante_cardiaque'), $sante('sante_epilepsie'),
+                    $sante('sante_respiratoire'), $sante('sante_claustro'));
+
                 $date_sql = date('Y-m-d', strtotime($date_session)) . ' 20:00:00';
                 creer_reservation($equipe_id, $salle, $date_sql, $nb_joueurs);
 

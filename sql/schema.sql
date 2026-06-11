@@ -21,10 +21,19 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
     pseudo        VARCHAR(60)  NOT NULL,
     email         VARCHAR(160) NOT NULL UNIQUE,
     telephone     VARCHAR(20)  NULL,
+    date_naissance DATE        NULL,                 -- saisie lors de la réservation
     mot_de_passe  VARCHAR(255) NOT NULL,            -- haché avec password_hash()
     role          ENUM('membre','admin') NOT NULL DEFAULT 'membre',
     equipe_id     INT UNSIGNED NULL,
     date_inscription DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- Questionnaire santé (déclaré volontairement, visible par l'organisateur)
+    sante_cardiaque    ENUM('oui','non') NULL,
+    sante_epilepsie    ENUM('oui','non') NULL,
+    sante_respiratoire ENUM('oui','non') NULL,
+    sante_claustro     ENUM('oui','non') NULL,
+    -- Réinitialisation du mot de passe (lien envoyé par email, durée limitée)
+    reset_token   VARCHAR(64)  NULL,
+    reset_expire  DATETIME     NULL,
     CONSTRAINT fk_user_equipe FOREIGN KEY (equipe_id) REFERENCES equipes(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

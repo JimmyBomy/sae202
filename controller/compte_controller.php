@@ -78,3 +78,68 @@ function deconnexion() {
     header('Location: ' . BASE_URL . '/');
     exit;
 }
+
+// --- Mot de passe oublié : demande d'un lien de réinitialisation par email ---
+function mdp_oublie() {
+    $erreur = '';
+    $succes = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = trim($_POST['email'] ?? '');
+        if (!csrf_verifie()) {
+            $erreur = "Session expirée, veuillez renvoyer le formulaire.";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $erreur = "Adresse email invalide.";
+        } else {
+            $user = get_utilisateur_by_email($email);
+            if ($user) {
+                // Jeton aléatoire, valable 1 h (stocké en BDD).
+                $token = bin2hex(random_bytes(32));
+                set_reset_token($user['id'], $token);
+                $lien = 'https://' . $_SERVER['HTTP_HOST'] . BASE_URL . '/compte/reinitialiser/' . $token;
+                $corps = "Bonjour " . $user['prenom'] . ",\n\n"
+                       . "Pour choisir un nouveau mot de passe, cliquez sur ce lien (valable 1 heure) :\n"
+                       . $lien . "\n\n"
+                       . "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n\n"
+                       . "L'équipe BACKROOMS";
+                $headers = "From: BACKROOMS <no-reply@sae202.mmi25c02.mmi-troyes.fr>\r\n"
+                         . "Content-type: text/plain; charset=utf-8\r\n";
+                @mail($email, 'BACKROOMS — Réinitialisation du mot de passe', $corps, $headers);
+            }
+            // Même message que le compte existe ou non (on ne révèle rien).
+            $succes = "Si un compte existe avec cette adresse, un email de réinitialisation vient d'être envoyé.";
+        }
+    }
+    $titrePage = 'Mot de passe oublié';
+    require_once('view/inc/header.php');
+    require_once('view/compte/mdp_oublie.php');
+    require_once('view/inc/footer.php');
+}
+
+// --- Choix du nouveau mot de passe via le lien reçu par email ---
+function reinitialiser($token = '') {
+    $erreur = '';
+    $succes = '';
+    $user = preg_match('/^[a-f0-9]{64}$/', $token) ? get_utilisateur_by_reset_token($token) : false;
+
+    if (!$user) {
+        $erreur = "Lien invalide ou expiré. Refaites une demande de réinitialisation.";
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $mdp     = $_POST['mot_de_passe'] ?? '';
+        $confirm = $_POST['confirmation'] ?? '';
+        if (!csrf_verifie()) {
+            $erreur = "Session expirée, veuillez renvoyer le formulaire.";
+        } elseif (strlen($mdp) < 6) {
+            $erreur = "Le mot de passe doit contenir au moins 6 caractères.";
+        } elseif ($mdp !== $confirm) {
+            $erreur = "Les deux mots de passe ne correspondent pas.";
+        } else {
+            update_utilisateur_password($user['id'], $mdp);
+            clear_reset_token($user['id']); // le lien ne doit servir qu'une fois
+            $succes = "Mot de passe modifié ! Vous pouvez maintenant vous connecter.";
+        }
+    }
+    $titrePage = 'Nouveau mot de passe';
+    require_once('view/inc/header.php');
+    require_once('view/compte/reinitialiser.php');
+    require_once('view/inc/footer.php');
+}

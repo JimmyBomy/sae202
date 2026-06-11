@@ -32,3 +32,19 @@ function get_tous_scores() {
             ORDER BY s.points DESC, s.temps_secondes ASC";
     return $pdo->query($sql)->fetchAll();
 }
+
+// Classement public des équipes : total de points, meilleur temps de sortie,
+// nombre de parties et de réussites. Trié par points puis meilleur temps.
+function get_classement() {
+    $pdo = getBdd();
+    $sql = "SELECT e.nom,
+                   SUM(s.points)                                        AS total_points,
+                   MIN(CASE WHEN s.reussi = 1 THEN s.temps_secondes END) AS meilleur_temps,
+                   COUNT(s.id)                                          AS nb_parties,
+                   SUM(s.reussi)                                        AS nb_reussites
+            FROM scores s
+            JOIN equipes e ON e.id = s.equipe_id
+            GROUP BY e.id, e.nom
+            ORDER BY total_points DESC, meilleur_temps ASC";
+    return $pdo->query($sql)->fetchAll();
+}
