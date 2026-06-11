@@ -87,6 +87,13 @@ $resa_en_attente  = count(array_filter($reservations, fn($r) => $r['statut'] ===
 $avis_en_attente  = count(array_filter($commentaires, fn($c) => $c['statut'] === 'en_attente'));
 $avis_approuves   = array_filter($commentaires, fn($c) => $c['statut'] === 'approuve');
 $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuves, 'note')) / count($avis_approuves), 1) : 0;
+
+// Réservations actives par salle (mini-graphique en barres)
+$parSalle = ['facile' => 0, 'standard' => 0, 'hardcore' => 0];
+foreach ($reservations as $r) {
+    if ($r['statut'] !== 'annulee' && isset($parSalle[$r['salle']])) $parSalle[$r['salle']]++;
+}
+$maxSalle = max(1, max($parSalle));
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -143,6 +150,17 @@ $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuv
             <div class="stat"><span class="num"><?= $avis_en_attente ?></span><span class="lbl">Avis à modérer</span></div>
             <div class="stat"><span class="num"><?= $note_moyenne ?>/5</span><span class="lbl">Note moyenne</span></div>
         </div>
+
+        <h3 style="margin:20px 0 8px;">Réservations actives par salle</h3>
+        <?php foreach ($parSalle as $s => $n): ?>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                <span style="width:90px;font-size:13px;text-transform:capitalize;"><?= $s ?></span>
+                <div style="flex:1;background:#eee;border-radius:4px;height:18px;overflow:hidden;">
+                    <div style="width:<?= round($n / $maxSalle * 100) ?>%;height:100%;background:#d1b023;"></div>
+                </div>
+                <strong style="width:24px;text-align:right;"><?= $n ?></strong>
+            </div>
+        <?php endforeach; ?>
     </div>
 
     <!-- MODÉRATION DES AVIS -->

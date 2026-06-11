@@ -54,23 +54,30 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
           <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" aria-label="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
           <select class="resa-field" name="salle" required aria-label="Salle">
             <option value="">CHOISIR UNE SALLE…</option>
-            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile)</option>
-            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>>Salle 2 — Les Couloirs jaunes (standard)</option>
-            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>>Salle 3 — Le Niveau ! (hardcore)</option>
+            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile, dès 10 ans)</option>
+            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>>Salle 2 — Les Couloirs jaunes (standard, dès 14 ans)</option>
+            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>>Salle 3 — Le Niveau ! (hardcore, dès 16 ans)</option>
           </select>
           <label class="resa-dob-label">Date de naissance</label>
+          <?php
+            // Pré-remplissage : saisie en cours ($_POST) sinon la date déjà connue du compte.
+            $dn  = !empty($utilisateur['date_naissance']) ? explode('-', $utilisateur['date_naissance']) : null; // [AAAA, MM, JJ]
+            $dnJ = $_POST['naiss_jour']  ?? ($dn ? (int) $dn[2] : '');
+            $dnM = $_POST['naiss_mois']  ?? ($dn ? (int) $dn[1] : '');
+            $dnA = $_POST['naiss_annee'] ?? ($dn ? (int) $dn[0] : '');
+          ?>
           <div class="resa-dob">
             <select class="resa-field" name="naiss_jour" aria-label="Jour">
               <option value="">Jour</option>
-              <?php for ($j = 1; $j <= 31; $j++): ?><option <?= ($_POST['naiss_jour'] ?? '') == $j ? 'selected' : '' ?>><?= $j ?></option><?php endfor; ?>
+              <?php for ($j = 1; $j <= 31; $j++): ?><option <?= $dnJ == $j ? 'selected' : '' ?>><?= $j ?></option><?php endfor; ?>
             </select>
             <select class="resa-field" name="naiss_mois" aria-label="Mois">
               <option value="">Mois</option>
-              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>" <?= ($_POST['naiss_mois'] ?? '') == $n ? 'selected' : '' ?>><?= ucfirst($m) ?></option><?php endforeach; ?>
+              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>" <?= $dnM == $n ? 'selected' : '' ?>><?= ucfirst($m) ?></option><?php endforeach; ?>
             </select>
             <select class="resa-field" name="naiss_annee" aria-label="Année">
               <option value="">Année</option>
-              <?php for ($a = 2010; $a >= 1940; $a--): ?><option <?= ($_POST['naiss_annee'] ?? '') == $a ? 'selected' : '' ?>><?= $a ?></option><?php endfor; ?>
+              <?php for ($a = 2010; $a >= 1940; $a--): ?><option <?= $dnA == $a ? 'selected' : '' ?>><?= $a ?></option><?php endfor; ?>
             </select>
           </div>
         </div>
@@ -93,6 +100,8 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
           ?>
             <?php if ($passe): ?>
               <span class="cal-case cal-passe"><?= $jour ?></span>
+            <?php elseif (in_array($dateJour, $joursComplets ?? [], true)): ?>
+              <span class="cal-case cal-complet" title="Complet : les 3 salles sont réservées"><?= $jour ?></span>
             <?php else: ?>
               <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio"
                      <?= ($_POST['date_session'] ?? '') === $dateJour ? 'checked' : '' ?>>

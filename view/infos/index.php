@@ -12,21 +12,21 @@
         <h2>Le Niveau 0</h2>
         <p>L'initiation idéale. Des couloirs jaunes interminables, des énigmes accessibles
            et une ambiance déjà bien pesante. Parfait pour une première fois.</p>
-        <p class="salle-meta">Durée ~1h30 · 2 à 6 joueurs · dès 16 ans</p>
+        <p class="salle-meta">Durée ~1h30 · 2 à 6 joueurs · dès 10 ans</p>
       </div>
       <div class="carte salle-card">
         <span class="salle-tag">STANDARD</span>
         <h2>Les Couloirs jaunes</h2>
         <p>Le cœur de l'expérience Backrooms. Énigmes imbriquées, fausses pistes et
            premières « entités » qui rôdent. Le bon équilibre frisson / réflexion.</p>
-        <p class="salle-meta">Durée ~2h · 3 à 6 joueurs · dès 16 ans</p>
+        <p class="salle-meta">Durée ~2h · 2 à 6 joueurs · dès 14 ans</p>
       </div>
       <div class="carte salle-card">
         <span class="salle-tag salle-tag--hard">HARDCORE</span>
         <h2>Le Niveau !</h2>
         <p>Réservé aux experts. Obscurité quasi totale, comédiens en pleine action et
            énigmes redoutables. Le mot d'arrêt « LUMIÈRE » risque d'être tentant…</p>
-        <p class="salle-meta">Durée ~2h30 · 4 à 6 joueurs · dès 18 ans</p>
+        <p class="salle-meta">Durée ~2h30 · 2 à 6 joueurs · dès 16 ans</p>
       </div>
     </div>
 

@@ -961,3 +961,17 @@ img, svg, iframe { max-width: 100%; }
 .classement-table td:first-child { font-size: 1.2rem; text-align: center; width: 64px; }
 .classement-table .podium td { background: rgba(209, 176, 35, 0.08); }
 .classement-table .podium td:nth-child(2) { color: var(--primary-color); font-weight: 600; }
+
+/* ===================== Vignettes de salles + annulation (Mes parties) ===================== */
+.session-cell { display: flex; align-items: center; gap: 10px; }
+.salle-thumb { width: 72px; height: 42px; object-fit: cover; border-radius: 5px; border: 1px solid #3a3320; }
+.btn-annuler { font-size: .85rem; padding: 5px 12px; }
+
+/* Jour complet dans le calendrier (les 3 salles réservées) */
+.cal-complet {
+  opacity: .45;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  border-color: #5a2020;
+  color: #c98a8a;
+}

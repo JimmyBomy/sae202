@@ -41,6 +41,13 @@ function index() {
         $paiement     = $_POST['paiement'] ?? 'sur_place';
         $equipeRejointe = null;
 
+        // Date de naissance : champ du formulaire, sinon celle déjà connue du compte.
+        $j = (int)($_POST['naiss_jour'] ?? 0); $m = (int)($_POST['naiss_mois'] ?? 0); $a = (int)($_POST['naiss_annee'] ?? 0);
+        $naissance = checkdate($m, $j, $a) ? sprintf('%04d-%02d-%02d', $a, $m, $j) : ($utilisateur['date_naissance'] ?? null);
+
+        // Âge minimum par salle (aligné sur la communication officielle : 10 / 14 / 16 ans).
+        $ageMin = ['facile' => 10, 'standard' => 14, 'hardcore' => 16];
+
         // --- Validations communes ---
         if (!csrf_verifie()) {
             $erreur = "Session expirée, veuillez renvoyer le formulaire.";
@@ -52,10 +59,16 @@ function index() {
             $erreur = "Indiquez un nom d'équipe (pour la créer) OU un code d'invitation (pour la rejoindre).";
         } elseif (!in_array($salle, ['facile', 'standard', 'hardcore'], true)) {
             $erreur = "Choisissez une salle.";
+        } elseif ($naissance === null) {
+            $erreur = "Indiquez votre date de naissance (l'accès aux salles dépend de l'âge).";
         } elseif ($date_session === '' || strtotime($date_session) === false) {
             $erreur = "Choisissez une date dans le calendrier des disponibilités.";
         } elseif (strtotime($date_session . ' 20:00:00') < time()) {
             $erreur = "Cette date est déjà passée, choisissez-en une autre.";
+        } elseif ((new DateTime($naissance))->diff(new DateTime($date_session))->y < $ageMin[$salle]) {
+            $erreur = "Cette salle est accessible à partir de " . $ageMin[$salle] . " ans.";
+        } elseif (!salle_disponible($salle, $date_session . ' 20:00:00')) {
+            $erreur = "Cette salle est déjà réservée ce soir-là — choisissez une autre date ou une autre salle.";
         } elseif ($nb_joueurs < 2 || $nb_joueurs > 6) {
             $erreur = "Le nombre de participants doit être compris entre 2 et 6.";
         } elseif (empty($utilisateur['equipe_id']) && $code_invite !== '') {
@@ -107,10 +120,8 @@ function index() {
                     assigner_equipe($utilisateur['id'], $equipe_id);
                 }
 
-                // Date de naissance (3 listes) + questionnaire santé : on les conserve
-                // sur le compte (l'organisateur doit connaître les contre-indications).
-                $j = (int)($_POST['naiss_jour'] ?? 0); $m = (int)($_POST['naiss_mois'] ?? 0); $a = (int)($_POST['naiss_annee'] ?? 0);
-                $naissance = checkdate($m, $j, $a) ? sprintf('%04d-%02d-%02d', $a, $m, $j) : null;
+                // Naissance (validée plus haut) + questionnaire santé : conservés sur le
+                // compte (l'organisateur doit connaître les contre-indications).
                 $sante = fn($k) => in_array($_POST[$k] ?? '', ['oui', 'non'], true) ? $_POST[$k] : null;
                 update_sante_naissance($utilisateur['id'], $naissance,
                     $sante('sante_cardiaque'), $sante('sante_epilepsie'),
@@ -142,8 +153,9 @@ function index() {
     }
 
     // Données pour la vue.
-    $equipe       = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
-    $reservations = $equipe ? get_reservations_by_equipe($equipe['id']) : [];
+    $equipe        = !empty($utilisateur['equipe_id']) ? get_equipe_by_id($utilisateur['equipe_id']) : null;
+    $reservations  = $equipe ? get_reservations_by_equipe($equipe['id']) : [];
+    $joursComplets = get_jours_complets($mois); // soirées où les 3 salles sont prises
 
     $titrePage = 'Réserver une session';
     $page_class = 'page-concept'; // même fond liminal

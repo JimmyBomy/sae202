@@ -14,8 +14,25 @@ function index() {
     $erreur = '';
     $succes = '';
 
+    // --- Annulation d'une réservation par le joueur (uniquement celles de SON équipe, à venir) ---
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['annuler_resa'])) {
+        if (!csrf_verifie()) {
+            $erreur = 'Session expirée, veuillez réessayer.';
+        } else {
+            $resa = get_reservation_by_id((int) $_POST['annuler_resa']);
+            if ($resa
+                && (int) $resa['equipe_id'] === (int) ($utilisateur['equipe_id'] ?? 0)
+                && strtotime($resa['date_session']) > time()
+                && $resa['statut'] !== 'annulee') {
+                update_statut_reservation($resa['id'], 'annulee');
+                $succes = 'Réservation annulée.';
+            } else {
+                $erreur = 'Cette réservation ne peut pas être annulée.';
+            }
+        }
+
     // --- "MODIFIER MES INFORMATIONS" (pseudo / email / téléphone / mot de passe) ---
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pseudo      = htmlspecialchars(trim($_POST['pseudo'] ?? ''));
         $email       = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
         $telephone   = htmlspecialchars(trim($_POST['telephone'] ?? ''));

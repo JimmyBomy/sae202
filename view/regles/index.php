@@ -10,7 +10,7 @@
       <h2>1. Avant la partie</h2>
       <ul>
         <li>Présentez-vous <strong>30 minutes avant</strong> l'horaire de votre session.</li>
-        <li>Joueurs de <strong>16 ans minimum</strong> (autorisation parentale entre 16 et 18 ans).</li>
+        <li>Âge minimum selon la salle : <strong>10 ans</strong> (Salle 1), <strong>14 ans</strong> (Salle 2), <strong>16 ans</strong> (Salle 3).</li>
         <li>Équipes de <strong>2 à 6 joueurs</strong>.</li>
         <li>Casier fourni pour vos effets personnels : téléphones et montres connectées y restent.</li>
       </ul>

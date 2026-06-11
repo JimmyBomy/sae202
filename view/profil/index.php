@@ -106,7 +106,7 @@
       <p>Aucune partie pour le moment. <a href="<?= BASE_URL ?>/reservation" class="btn-link">Réservez votre première session ›</a></p>
     <?php else: ?>
       <table class="tableau">
-        <thead><tr><th>Session</th><th>Date</th><th>Heure</th><th>Statut</th></tr></thead>
+        <thead><tr><th>Session</th><th>Date</th><th>Heure</th><th>Statut</th><th></th></tr></thead>
         <tbody>
           <?php foreach ($reservations as $r):
             $t = strtotime($r['date_session']);
@@ -115,10 +115,22 @@
             else                                 { $lbl = 'À venir';      $cls = 'en_attente'; }
           ?>
             <tr>
-              <td>Salle <?= htmlspecialchars(ucfirst($r['salle'])) ?></td>
+              <td class="session-cell">
+                <img class="salle-thumb" src="<?= BASE_URL ?>/view/img/salle-<?= htmlspecialchars($r['salle']) ?>.jpg" alt="">
+                Salle <?= htmlspecialchars(ucfirst($r['salle'])) ?>
+              </td>
               <td><?= htmlspecialchars(date('d/m/Y', $t)) ?></td>
               <td><?= htmlspecialchars(date('H\hi', $t)) ?></td>
               <td><span class="badge badge-<?= $cls ?>"><?= $lbl ?></span></td>
+              <td>
+                <?php if ($lbl === 'À venir'): ?>
+                  <!-- Annulation par le joueur (POST + CSRF, vérifiée côté serveur) -->
+                  <form method="post" action="<?= BASE_URL ?>/profil" onsubmit="return confirm('Annuler cette réservation ?');">
+                    <?= csrf_input() ?>
+                    <button type="submit" name="annuler_resa" value="<?= $r['id'] ?>" class="btn btn-outline btn-annuler">Annuler</button>
+                  </form>
+                <?php endif; ?>
+              </td>
             </tr>
           <?php endforeach; ?>
         </tbody>
