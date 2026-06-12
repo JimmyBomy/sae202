@@ -21,7 +21,7 @@ require_once('model/equipe.php');
 require_once('model/reservation.php');
 require_once('model/score.php');
 
-// --- Export CSV des inscrits (bouton dans la carte "Utilisateurs inscrits") ---
+// --- Export CSV des inscrits ---
 if (($_GET['export'] ?? '') === 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="inscrits_backrooms_' . date('Ymd') . '.csv"');
@@ -88,7 +88,7 @@ $avis_en_attente  = count(array_filter($commentaires, fn($c) => $c['statut'] ===
 $avis_approuves   = array_filter($commentaires, fn($c) => $c['statut'] === 'approuve');
 $note_moyenne     = $avis_approuves ? round(array_sum(array_column($avis_approuves, 'note')) / count($avis_approuves), 1) : 0;
 
-// Réservations actives par salle (mini-graphique en barres)
+// Réservations actives par salle (barres)
 $parSalle = ['facile' => 0, 'standard' => 0, 'hardcore' => 0];
 foreach ($reservations as $r) {
     if ($r['statut'] !== 'annulee' && isset($parSalle[$r['salle']])) $parSalle[$r['salle']]++;
@@ -101,154 +101,208 @@ $maxSalle = max(1, max($parSalle));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Back-Office — <?= NOM_SITE ?></title>
+    <link rel="icon" type="image/png" href="/view/img/favicon.png">
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, Helvetica, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; color: #222; }
+        /* Polices auto-hébergées du site (mêmes fichiers que le front) */
+        @font-face { font-family: 'VT323'; src: url('/view/fonts/vt323-400.woff2') format('woff2'); font-display: swap; }
+        @font-face { font-family: 'Montserrat'; font-weight: 600; src: url('/view/fonts/montserrat-600.woff2') format('woff2'); font-display: swap; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #f5f5f5;
+            padding: 30px 20px 60px;
+            background-color: #111;
+            background-image: linear-gradient(rgba(13,12,9,.78), rgba(13,12,9,.86)), url('/view/img/fond.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
         .wrap { max-width: 1100px; margin: auto; }
-        .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); margin-bottom: 25px; }
-        h1 { margin-top: 0; } h2 { color: #333; border-bottom: 2px solid #d1b023; padding-bottom: 6px; }
-        a.lien { color: #1a73e8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        th, td { padding: 9px 10px; text-align: left; border: 1px solid #e0e0e0; font-size: 14px; }
-        th { background: #fafafa; }
-        .stats { display: flex; flex-wrap: wrap; gap: 15px; }
-        .stat { flex: 1; min-width: 150px; background: #1a1a1a; color: #fff; padding: 16px; border-radius: 8px; text-align: center; }
-        .stat .num { font-size: 2rem; font-weight: bold; color: #d1b023; display: block; }
-        .stat .lbl { font-size: .85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .btn { padding: 5px 10px; text-decoration: none; color: #fff; border-radius: 4px; font-size: 13px; display: inline-block; border: none; cursor: pointer; font-family: inherit; }
-        .btn-success { background: #2ecc71; } .btn-danger { background: #e74c3c; } .btn-info { background: #3498db; }
-        .badge { padding: 3px 8px; border-radius: 10px; font-size: 12px; color:#fff; text-transform: capitalize; }
-        .badge.en_attente { background:#e67e22; } .badge.confirmee, .badge.approuve { background:#27ae60; }
-        .badge.annulee, .badge.refuse { background:#c0392b; }
-        form.inline { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; align-items: end; }
-        form.inline label { font-size: 13px; display: block; margin-bottom: 3px; }
-        form.inline input, form.inline select { width: 100%; padding: 7px; border: 1px solid #ccc; border-radius: 4px; }
-        button { padding: 9px 14px; background: #d1b023; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        /* Responsive back-office : tableaux scrollables, grilles resserrées */
+        h1 { font-family: 'VT323', monospace; font-size: 3.6rem; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+        h2 { font-family: 'VT323', monospace; font-size: 2.3rem; letter-spacing: 2px; font-weight: 400; margin: 44px 0 18px; }
+        a.lien { color: #d1b023; }
+
+        /* --- Statistiques : 6 boîtes (maquette) --- */
+        .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+        .stat {
+            border: 2px solid #e6e0c8; border-radius: 4px; background: rgba(10,10,8,.55);
+            text-align: center; padding: 16px 6px 12px;
+        }
+        .stat .num { font-family: 'VT323', monospace; font-size: 2.6rem; line-height: 1; display: block; }
+        .stat .lbl { font-size: .62rem; letter-spacing: 1px; text-transform: uppercase; color: #d1b023; }
+
+        /* --- Barres par salle (maquette) --- */
+        .salles-barres { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+        .barre-ligne { display: flex; align-items: center; gap: 14px; }
+        .barre-ligne .nom { width: 110px; font-family: 'VT323', monospace; font-size: 1.3rem; letter-spacing: 1px; text-transform: uppercase; text-align: right; }
+        .barre { flex: 1; height: 22px; background: #f5f5f0; border-radius: 11px; overflow: hidden; }
+        .barre span { display: block; height: 100%; background: #d1b023; border-radius: 11px; }
+        .barre-ligne .nb { width: 30px; font-family: 'VT323', monospace; font-size: 1.4rem; }
+
+        /* --- Modération : cartes (maquette) --- */
+        .avis-cartes { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+        .avis-carte {
+            border: 1px solid #d1b023; border-radius: 6px; background: rgba(10,10,8,.72);
+            padding: 16px 14px; text-align: center; display: flex; flex-direction: column; gap: 8px;
+        }
+        .avis-carte .pseudo { color: #d1b023; font-weight: 600; }
+        .avis-carte .date { color: #9a9a8a; font-size: .72rem; }
+        .avis-carte .etoiles { color: #d1b023; font-size: 1.15rem; letter-spacing: 3px; }
+        .avis-carte .texte { font-style: italic; font-size: .8rem; color: #e3e3e3; flex: 1; }
+        .avis-actions { display: flex; gap: 10px; justify-content: center; }
+        .btn { font-family: 'Montserrat', Arial, sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+               border: none; border-radius: 3px; padding: 7px 14px; font-size: .72rem; cursor: pointer; }
+        .btn-accepter { background: #d1b023; color: #1a1a1a; }
+        .btn-refuser  { background: transparent; color: #e74c3c; border: 1px solid #e74c3c; }
+        .badge-modere { font-size: .72rem; color: #9a9a8a; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- Réservations : lignes sombres (maquette) --- */
+        .resa-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .resa-table td { background: rgba(10,10,8,.78); padding: 10px 14px; font-size: .85rem; }
+        .resa-table tr td:first-child { border-radius: 5px 0 0 5px; font-weight: 600; }
+        .resa-table tr td:last-child  { border-radius: 0 5px 5px 0; }
+        .pill { display: inline-block; padding: 3px 12px; border-radius: 3px; font-size: .72rem; font-weight: 600; color: #1a1a1a; }
+        .pill-attente  { background: #e67e22; }
+        .pill-confirme { background: #2ecc71; }
+        .pill-annule   { background: #e74c3c; color: #fff; }
+        .btn-carre { width: 30px; height: 30px; border: none; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; color: #fff; }
+        .btn-ok  { background: #2ecc71; }
+        .btn-non { background: #e74c3c; }
+        .actions-resa { display: flex; gap: 8px; justify-content: flex-end; }
+
+        /* --- Tableaux secondaires (équipes, inscrits, scores) --- */
+        .tbl { width: 100%; border-collapse: collapse; }
+        .tbl th { font-size: .68rem; text-transform: uppercase; letter-spacing: 1px; color: #d1b023; text-align: left; padding: 6px 10px; border-bottom: 1px solid #3a3320; }
+        .tbl td { padding: 8px 10px; font-size: .82rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+        .alerte-sante { color: #ff8a75; font-weight: 600; }
+
+        /* --- Formulaire score --- */
+        form.inline { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; align-items: end;
+                      border: 1px solid #3a3320; border-radius: 6px; padding: 16px; background: rgba(10,10,8,.6); }
+        form.inline label { font-size: .68rem; text-transform: uppercase; letter-spacing: 1px; color: #d1b023; display: block; margin-bottom: 4px; }
+        form.inline input, form.inline select { width: 100%; padding: 8px; background: #1d1c15; border: 1px solid #3a3320; border-radius: 4px; color: #f5f5f5; }
+
+        @media (max-width: 900px) { .stats { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 700px) {
-            body { padding: 10px; }
-            .card { padding: 14px; }
-            table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-            form.inline { grid-template-columns: 1fr 1fr; }
-            .stat { min-width: 120px; }
+            body { padding: 16px 10px 40px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size: 2.6rem; } h2 { font-size: 1.8rem; }
+            .resa-table, .tbl { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            .barre-ligne .nom { width: 86px; font-size: 1.05rem; }
         }
     </style>
 </head>
 <body>
 <div class="wrap">
-    <h1>Back-Office — <?= NOM_SITE ?></h1>
+    <h1>BACK-OFFICE</h1>
     <p><a class="lien" href="<?= BASE_URL ?>/">← Retour au site public</a></p>
 
-    <!-- STATISTIQUES -->
-    <div class="card">
-        <h2>Statistiques</h2>
-        <div class="stats">
-            <div class="stat"><span class="num"><?= $total_inscrits ?></span><span class="lbl">Inscrits</span></div>
-            <div class="stat"><span class="num"><?= $total_equipes ?></span><span class="lbl">Équipes</span></div>
-            <div class="stat"><span class="num"><?= $total_resa ?></span><span class="lbl">Réservations</span></div>
-            <div class="stat"><span class="num"><?= $resa_en_attente ?></span><span class="lbl">Résa en attente</span></div>
-            <div class="stat"><span class="num"><?= $avis_en_attente ?></span><span class="lbl">Avis à modérer</span></div>
-            <div class="stat"><span class="num"><?= $note_moyenne ?>/5</span><span class="lbl">Note moyenne</span></div>
-        </div>
+    <!-- ============ STATISTIQUES ============ -->
+    <h2>STATISTIQUES :</h2>
+    <div class="stats">
+        <div class="stat"><span class="num"><?= $total_inscrits ?></span><span class="lbl">Inscrits</span></div>
+        <div class="stat"><span class="num"><?= $total_equipes ?></span><span class="lbl">Équipes</span></div>
+        <div class="stat"><span class="num"><?= $total_resa ?></span><span class="lbl">Réservations</span></div>
+        <div class="stat"><span class="num"><?= $resa_en_attente ?></span><span class="lbl">En attente</span></div>
+        <div class="stat"><span class="num"><?= $avis_en_attente ?></span><span class="lbl">Avis à modérer</span></div>
+        <div class="stat"><span class="num"><?= $note_moyenne ?>/5</span><span class="lbl">Note moyenne</span></div>
+    </div>
 
-        <h3 style="margin:20px 0 8px;">Réservations actives par salle</h3>
+    <div class="salles-barres">
         <?php foreach ($parSalle as $s => $n): ?>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                <span style="width:90px;font-size:13px;text-transform:capitalize;"><?= $s ?></span>
-                <div style="flex:1;background:#eee;border-radius:4px;height:18px;overflow:hidden;">
-                    <div style="width:<?= round($n / $maxSalle * 100) ?>%;height:100%;background:#d1b023;"></div>
-                </div>
-                <strong style="width:24px;text-align:right;"><?= $n ?></strong>
+            <div class="barre-ligne">
+                <span class="nom"><?= htmlspecialchars($s) ?></span>
+                <div class="barre"><span style="width:<?= round($n / $maxSalle * 100) ?>%"></span></div>
+                <span class="nb"><?= $n ?></span>
             </div>
         <?php endforeach; ?>
     </div>
 
-    <!-- MODÉRATION DES AVIS -->
-    <div class="card">
-        <h2>Modération des avis</h2>
-        <table>
-            <thead><tr><th>Joueur</th><th>Note</th><th>Commentaire</th><th>Date</th><th>Statut</th><th>Action</th></tr></thead>
-            <tbody>
+    <!-- ============ MODÉRATION DES AVIS ============ -->
+    <h2>MODÉRATION DES AVIS</h2>
+    <?php if (empty($commentaires)): ?>
+        <p>Aucun avis pour le moment.</p>
+    <?php else: ?>
+        <div class="avis-cartes">
             <?php foreach ($commentaires as $c): ?>
-                <tr>
-                    <td><?= htmlspecialchars($c['pseudo']) ?></td>
-                    <td><?= htmlspecialchars($c['note']) ?>/5</td>
-                    <td><?= htmlspecialchars($c['texte']) ?></td>
-                    <td><?= htmlspecialchars($c['date_creation']) ?></td>
-                    <td><span class="badge <?= htmlspecialchars($c['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$c['statut'])) ?></span></td>
-                    <td>
-                        <form method="post" style="display:inline-flex; gap:6px;">
-                            <?= csrf_input() ?>
-                            <input type="hidden" name="id" value="<?= $c['id'] ?>">
-                            <?php if ($c['statut'] === 'en_attente'): ?>
-                                <button type="submit" name="action" value="approuver" class="btn btn-success">Approuver</button>
-                                <button type="submit" name="action" value="refuser" class="btn btn-danger">Refuser</button>
-                            <?php else: ?>
-                                <button type="submit" name="action" value="approuver" class="btn btn-info">Re-publier</button>
-                            <?php endif; ?>
-                        </form>
-                    </td>
-                </tr>
+                <div class="avis-carte">
+                    <span class="pseudo"><?= htmlspecialchars($c['pseudo']) ?></span>
+                    <span class="date"><?= htmlspecialchars(date('d/m/Y - H\hi', strtotime($c['date_creation']))) ?></span>
+                    <span class="etoiles"><?= str_repeat('★', (int) $c['note']) . str_repeat('☆', 5 - (int) $c['note']) ?></span>
+                    <p class="texte"><?= htmlspecialchars($c['texte']) ?></p>
+                    <form method="post" class="avis-actions">
+                        <?= csrf_input() ?>
+                        <input type="hidden" name="id" value="<?= $c['id'] ?>">
+                        <?php if ($c['statut'] === 'en_attente'): ?>
+                            <button type="submit" name="action" value="approuver" class="btn btn-accepter">Accepter</button>
+                            <button type="submit" name="action" value="refuser" class="btn btn-refuser">Refuser</button>
+                        <?php elseif ($c['statut'] === 'approuve'): ?>
+                            <span class="badge-modere">✔ publié</span>
+                            <button type="submit" name="action" value="refuser" class="btn btn-refuser">Retirer</button>
+                        <?php else: ?>
+                            <span class="badge-modere">✖ refusé</span>
+                            <button type="submit" name="action" value="approuver" class="btn btn-accepter">Publier</button>
+                        <?php endif; ?>
+                    </form>
+                </div>
             <?php endforeach; ?>
-            <?php if (empty($commentaires)): ?><tr><td colspan="6">Aucun avis.</td></tr><?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+        </div>
+    <?php endif; ?>
 
-    <!-- RÉSERVATIONS -->
-    <div class="card">
-        <h2>Réservations</h2>
-        <table>
-            <thead><tr><th>Équipe</th><th>Salle</th><th>Date session</th><th>Joueurs</th><th>Statut</th><th>Action</th></tr></thead>
-            <tbody>
+    <!-- ============ RÉSERVATIONS ============ -->
+    <h2>RÉSERVATIONS :</h2>
+    <?php if (empty($reservations)): ?>
+        <p>Aucune réservation.</p>
+    <?php else: ?>
+        <table class="resa-table">
             <?php foreach ($reservations as $r): ?>
                 <tr>
                     <td><?= htmlspecialchars($r['equipe_nom']) ?></td>
                     <td><?= htmlspecialchars(ucfirst($r['salle'])) ?></td>
-                    <td><?= htmlspecialchars(date('d/m/Y H\hi', strtotime($r['date_session']))) ?></td>
-                    <td><?= htmlspecialchars($r['nb_joueurs']) ?></td>
-                    <td><span class="badge <?= htmlspecialchars($r['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$r['statut'])) ?></span></td>
+                    <td><?= htmlspecialchars(date('d/m/y', strtotime($r['date_session']))) ?></td>
+                    <td><?= htmlspecialchars($r['nb_joueurs']) ?> joueurs</td>
                     <td>
-                        <form method="post" style="display:inline-flex; gap:6px;">
+                        <?php if ($r['statut'] === 'confirmee'): ?><span class="pill pill-confirme">Confirmé</span>
+                        <?php elseif ($r['statut'] === 'annulee'): ?><span class="pill pill-annule">Annulé</span>
+                        <?php else: ?><span class="pill pill-attente">En attente</span><?php endif; ?>
+                    </td>
+                    <td>
+                        <form method="post" class="actions-resa">
                             <?= csrf_input() ?>
                             <input type="hidden" name="resa" value="<?= $r['id'] ?>">
-                            <button type="submit" name="statut" value="confirmee" class="btn btn-success">Confirmer</button>
-                            <button type="submit" name="statut" value="annulee" class="btn btn-danger">Annuler</button>
+                            <button type="submit" name="statut" value="confirmee" class="btn-carre btn-ok" title="Confirmer">✓</button>
+                            <button type="submit" name="statut" value="annulee" class="btn-carre btn-non" title="Annuler">✕</button>
                         </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
-            <?php if (empty($reservations)): ?><tr><td colspan="6">Aucune réservation.</td></tr><?php endif; ?>
-            </tbody>
         </table>
-    </div>
+    <?php endif; ?>
 
-    <!-- SAISIE DES SCORES -->
-    <div class="card">
-        <h2>Saisir un score</h2>
-        <?php if (empty($equipes)): ?>
-            <p>Aucune équipe pour le moment.</p>
-        <?php else: ?>
-            <form method="post" class="inline">
-                <?= csrf_input() ?>
-                <input type="hidden" name="form_type" value="score">
-                <div><label>Équipe</label>
-                    <select name="equipe_id" required>
-                        <?php foreach ($equipes as $e): ?>
-                            <option value="<?= $e['id'] ?>"><?= htmlspecialchars($e['nom']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div><label>Points</label><input type="number" name="points" value="0" min="0" required></div>
-                <div><label>Minutes</label><input type="number" name="minutes" value="0" min="0"></div>
-                <div><label>Secondes</label><input type="number" name="secondes" value="0" min="0" max="59"></div>
-                <div><label>Sortis ?</label><input type="checkbox" name="reussi" value="1"></div>
-                <div><button type="submit">Enregistrer</button></div>
-            </form>
-        <?php endif; ?>
+    <!-- ============ SAISIE DES SCORES ============ -->
+    <h2>SAISIR UN SCORE</h2>
+    <?php if (empty($equipes)): ?>
+        <p>Aucune équipe pour le moment.</p>
+    <?php else: ?>
+        <form method="post" class="inline">
+            <?= csrf_input() ?>
+            <input type="hidden" name="form_type" value="score">
+            <div><label>Équipe</label>
+                <select name="equipe_id" required>
+                    <?php foreach ($equipes as $e): ?>
+                        <option value="<?= $e['id'] ?>"><?= htmlspecialchars($e['nom']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div><label>Points</label><input type="number" name="points" value="0" min="0" required></div>
+            <div><label>Minutes</label><input type="number" name="minutes" value="0" min="0"></div>
+            <div><label>Secondes</label><input type="number" name="secondes" value="0" min="0" max="59"></div>
+            <div><label>Sortis ?</label><input type="checkbox" name="reussi" value="1"></div>
+            <div><button type="submit" class="btn btn-accepter" style="width:100%;">Enregistrer</button></div>
+        </form>
+    <?php endif; ?>
 
-        <h3 style="margin-top:25px;">Derniers scores</h3>
-        <table>
+    <?php if (!empty($scores)): ?>
+        <table class="tbl" style="margin-top:16px;">
             <thead><tr><th>Équipe</th><th>Points</th><th>Temps</th><th>Résultat</th><th>Date</th></tr></thead>
             <tbody>
             <?php foreach ($scores as $s): ?>
@@ -257,64 +311,58 @@ $maxSalle = max(1, max($parSalle));
                     <td><?= htmlspecialchars($s['points']) ?></td>
                     <td><?= $s['temps_secondes'] !== null ? floor($s['temps_secondes']/60).' min '.($s['temps_secondes']%60).' s' : '—' ?></td>
                     <td><?= $s['reussi'] ? 'Sortis ✅' : 'Coincés ❌' ?></td>
-                    <td><?= htmlspecialchars(date('d/m/Y', strtotime($s['date_partie']))) ?></td>
+                    <td><?= htmlspecialchars(date('d/m/y', strtotime($s['date_partie']))) ?></td>
                 </tr>
             <?php endforeach; ?>
-            <?php if (empty($scores)): ?><tr><td colspan="5">Aucun score.</td></tr><?php endif; ?>
             </tbody>
         </table>
-    </div>
+    <?php endif; ?>
 
-    <!-- ÉQUIPES -->
-    <div class="card">
-        <h2>Équipes</h2>
-        <table>
-            <thead><tr><th>ID</th><th>Nom</th><th>Code</th><th>Membres</th><th>Créée le</th></tr></thead>
-            <tbody>
-            <?php foreach ($equipes as $e): ?>
-                <tr>
-                    <td><?= htmlspecialchars($e['id']) ?></td>
-                    <td><?= htmlspecialchars($e['nom']) ?></td>
-                    <td><?= htmlspecialchars($e['code_invite']) ?></td>
-                    <td><?= htmlspecialchars($e['nb_membres']) ?></td>
-                    <td><?= htmlspecialchars(date('d/m/Y', strtotime($e['date_creation']))) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            <?php if (empty($equipes)): ?><tr><td colspan="5">Aucune équipe.</td></tr><?php endif; ?>
-            </tbody>
-        </table>
-    </div>
+    <!-- ============ ÉQUIPES ============ -->
+    <h2>ÉQUIPES</h2>
+    <table class="tbl">
+        <thead><tr><th>ID</th><th>Nom</th><th>Code</th><th>Membres</th><th>Créée le</th></tr></thead>
+        <tbody>
+        <?php foreach ($equipes as $e): ?>
+            <tr>
+                <td><?= htmlspecialchars($e['id']) ?></td>
+                <td><?= htmlspecialchars($e['nom']) ?></td>
+                <td><?= htmlspecialchars($e['code_invite']) ?></td>
+                <td><?= htmlspecialchars($e['nb_membres']) ?></td>
+                <td><?= htmlspecialchars(date('d/m/y', strtotime($e['date_creation']))) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        <?php if (empty($equipes)): ?><tr><td colspan="5">Aucune équipe.</td></tr><?php endif; ?>
+        </tbody>
+    </table>
 
-    <!-- INSCRITS -->
-    <div class="card">
-        <h2>Utilisateurs inscrits</h2>
-        <p><a href="?export=csv" class="btn btn-info">⬇ Exporter en CSV</a></p>
-        <table>
-            <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Naissance</th><th>Santé</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
-            <tbody>
-            <?php foreach ($utilisateurs as $u):
-                // Alerte santé : liste des contre-indications déclarées "oui"
-                $alertes = [];
-                if (($u['sante_cardiaque'] ?? '') === 'oui')    $alertes[] = 'cardiaque';
-                if (($u['sante_epilepsie'] ?? '') === 'oui')    $alertes[] = 'épilepsie';
-                if (($u['sante_respiratoire'] ?? '') === 'oui') $alertes[] = 'respiratoire';
-                if (($u['sante_claustro'] ?? '') === 'oui')     $alertes[] = 'claustrophobie';
-            ?>
-                <tr>
-                    <td><?= htmlspecialchars($u['id']) ?></td>
-                    <td><?= htmlspecialchars($u['pseudo']) ?></td>
-                    <td><?= htmlspecialchars($u['prenom'].' '.$u['nom']) ?></td>
-                    <td><?= htmlspecialchars($u['email']) ?></td>
-                    <td><?= $u['date_naissance'] ? htmlspecialchars(date('d/m/Y', strtotime($u['date_naissance']))) : '—' ?></td>
-                    <td><?= $alertes ? '<span style="color:#c0392b;font-weight:bold;">⚠ ' . htmlspecialchars(implode(', ', $alertes)) . '</span>' : 'RAS' ?></td>
-                    <td><?= htmlspecialchars($u['equipe_nom'] ?? '—') ?></td>
-                    <td><?= htmlspecialchars($u['role']) ?></td>
-                    <td><?= htmlspecialchars(date('d/m/Y', strtotime($u['date_inscription']))) ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+    <!-- ============ INSCRITS ============ -->
+    <h2>UTILISATEURS INSCRITS</h2>
+    <p style="margin-bottom:10px;"><a href="?export=csv" class="btn btn-accepter" style="text-decoration:none;">⬇ Exporter en CSV</a></p>
+    <table class="tbl">
+        <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Naissance</th><th>Santé</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
+        <tbody>
+        <?php foreach ($utilisateurs as $u):
+            $alertes = [];
+            if (($u['sante_cardiaque'] ?? '') === 'oui')    $alertes[] = 'cardiaque';
+            if (($u['sante_epilepsie'] ?? '') === 'oui')    $alertes[] = 'épilepsie';
+            if (($u['sante_respiratoire'] ?? '') === 'oui') $alertes[] = 'respiratoire';
+            if (($u['sante_claustro'] ?? '') === 'oui')     $alertes[] = 'claustrophobie';
+        ?>
+            <tr>
+                <td><?= htmlspecialchars($u['id']) ?></td>
+                <td><?= htmlspecialchars($u['pseudo']) ?></td>
+                <td><?= htmlspecialchars($u['prenom'].' '.$u['nom']) ?></td>
+                <td><?= htmlspecialchars($u['email']) ?></td>
+                <td><?= $u['date_naissance'] ? htmlspecialchars(date('d/m/y', strtotime($u['date_naissance']))) : '—' ?></td>
+                <td><?= $alertes ? '<span class="alerte-sante">⚠ ' . htmlspecialchars(implode(', ', $alertes)) . '</span>' : 'RAS' ?></td>
+                <td><?= htmlspecialchars($u['equipe_nom'] ?? '—') ?></td>
+                <td><?= htmlspecialchars($u['role']) ?></td>
+                <td><?= htmlspecialchars(date('d/m/y', strtotime($u['date_inscription']))) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
