@@ -168,7 +168,6 @@
            superflu — 10&nbsp;m² maximum, pour rester fidèle à l'ambiance liminale.</p>
       </div>
       <div class="carte">
-        <img class="carte-picto" src="<?= BASE_URL ?>/view/img/resto-pain.webp" alt="" loading="lazy">
         <h2>La restauration</h2>
         <p>Rations de survie thématiques et la fameuse boisson «&nbsp;Eau d'Amande&nbsp;»,
            tout droit sorties du lore des Backrooms.</p>
