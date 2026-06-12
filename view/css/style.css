@@ -975,3 +975,14 @@ img, svg, iframe { max-width: 100%; }
   border-color: #5a2020;
   color: #c98a8a;
 }
+
+/* ===================== Photo de profil (avatar) ===================== */
+.avatar-cercle { overflow: hidden; }
+.avatar-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.avatar-input { display: none; }              /* le label "Changer la photo" sert de bouton */
+.avatar-changer:hover { color: var(--primary-color); }
+
+/* Avatar dans les avis */
+.avis-auteur { display: flex; align-items: center; gap: 10px; }
+.avis-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary-color); }
+.avis-avatar--vide { display: inline-flex; align-items: center; justify-content: center; background: #2a2a20; font-size: 1rem; }

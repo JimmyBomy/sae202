@@ -81,3 +81,10 @@ function clear_reset_token($id) {
     $stmt = $pdo->prepare("UPDATE utilisateurs SET reset_token = NULL, reset_expire = NULL WHERE id = ?");
     return $stmt->execute([$id]);
 }
+
+// Met à jour le chemin de la photo de profil.
+function update_photo($id, $chemin) {
+    $pdo = getBdd();
+    $stmt = $pdo->prepare("UPDATE utilisateurs SET photo = ? WHERE id = ?");
+    return $stmt->execute([$chemin, $id]);
+}

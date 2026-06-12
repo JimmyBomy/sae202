@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
     email         VARCHAR(160) NOT NULL UNIQUE,
     telephone     VARCHAR(20)  NULL,
     date_naissance DATE        NULL,                 -- saisie lors de la réservation
+    photo         VARCHAR(255) NULL,                 -- avatar (fichier dans view/uploads/avatars/)
     mot_de_passe  VARCHAR(255) NOT NULL,            -- haché avec password_hash()
     role          ENUM('membre','admin') NOT NULL DEFAULT 'membre',
     equipe_id     INT UNSIGNED NULL,

@@ -137,7 +137,14 @@
         <figure class="avis-card">
           <div class="avis-note"><?= str_repeat('★', (int)$a['note']) . str_repeat('☆', 5 - (int)$a['note']) ?></div>
           <blockquote><?= htmlspecialchars($a['texte']) ?></blockquote>
-          <figcaption>— <?= htmlspecialchars($a['pseudo']) ?></figcaption>
+          <figcaption class="avis-auteur">
+            <?php if (!empty($a['photo'])): ?>
+              <img class="avis-avatar" src="<?= BASE_URL ?>/view/uploads/avatars/<?= htmlspecialchars($a['photo']) ?>" alt="">
+            <?php else: ?>
+              <span class="avis-avatar avis-avatar--vide">👤</span>
+            <?php endif; ?>
+            <?= htmlspecialchars($a['pseudo']) ?>
+          </figcaption>
         </figure>
       <?php endforeach; ?>
     </div>

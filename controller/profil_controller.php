@@ -57,7 +57,16 @@ function index() {
                     update_utilisateur_password($utilisateur['id'], $nouveau_mdp);
                     unset($_SESSION['mdp_auto']); // il connaît désormais son mot de passe
                 }
-                $succes = 'Vos informations ont été mises à jour.';
+
+                // --- Photo de profil (optionnelle) ---
+                if (!empty($_FILES['photo']['tmp_name']) && is_uploaded_file($_FILES['photo']['tmp_name'])) {
+                    $resultat = enregistrer_avatar($_FILES['photo'], $utilisateur);
+                    if ($resultat !== true) {
+                        $erreur = $resultat; // message d'erreur de validation
+                    }
+                }
+
+                if ($erreur === '') { $succes = 'Vos informations ont été mises à jour.'; }
                 $utilisateur = get_utilisateur_by_id($_SESSION['user_id']);
             }
         }
@@ -167,4 +176,49 @@ function commentaire() {
     require('view/inc/header.php');
     require('view/profil/commentaire.php');
     require('view/inc/footer.php');
+}
+
+/**
+ * Valide et enregistre l'avatar envoyé (max 2 Mo, JPEG/PNG/WebP).
+ * L'image est recadrée en carré et recompressée en JPEG 240x240 via GD :
+ * on ne stocke JAMAIS le fichier d'origine tel quel (sécurité + poids).
+ * Renvoie true si OK, sinon le message d'erreur à afficher.
+ */
+function enregistrer_avatar($fichier, $utilisateur) {
+    if ($fichier['error'] !== UPLOAD_ERR_OK || $fichier['size'] > 2 * 1024 * 1024) {
+        return "Photo refusée : fichier invalide ou supérieur à 2 Mo.";
+    }
+    // Le vrai type est lu dans le contenu (pas l'extension, falsifiable).
+    $infos = getimagesize($fichier['tmp_name']);
+    $types = [IMAGETYPE_JPEG => 'jpeg', IMAGETYPE_PNG => 'png', IMAGETYPE_WEBP => 'webp'];
+    if ($infos === false || !isset($types[$infos[2]])) {
+        return "Photo refusée : formats acceptés JPEG, PNG ou WebP.";
+    }
+
+    $creer  = 'imagecreatefrom' . $types[$infos[2]];
+    $source = @$creer($fichier['tmp_name']);
+    if (!$source) {
+        return "Photo illisible, réessayez avec une autre image.";
+    }
+
+    // Recadrage carré centré puis redimensionnement en 240x240.
+    $larg = imagesx($source); $haut = imagesy($source);
+    $cote = min($larg, $haut);
+    $avatar = imagecreatetruecolor(240, 240);
+    imagecopyresampled($avatar, $source, 0, 0,
+        (int) (($larg - $cote) / 2), (int) (($haut - $cote) / 2),
+        240, 240, $cote, $cote);
+
+    // Nom imprévisible + suppression de l'ancienne photo.
+    $nomFichier = 'u' . $utilisateur['id'] . '_' . bin2hex(random_bytes(6)) . '.jpg';
+    $dossier = 'view/uploads/avatars/';
+    if (!empty($utilisateur['photo']) && file_exists($dossier . $utilisateur['photo'])) {
+        unlink($dossier . $utilisateur['photo']);
+    }
+    imagejpeg($avatar, $dossier . $nomFichier, 85);
+    imagedestroy($source);
+    imagedestroy($avatar);
+
+    update_photo($utilisateur['id'], $nomFichier);
+    return true;
 }

@@ -12,13 +12,19 @@
     <h1 class="sec-title">MON PROFIL</h1>
     <p class="sec-sub">Gérez vos informations et vos réservations !</p>
 
-    <form method="post" action="<?= BASE_URL ?>/profil" class="profil-bloc">
+    <form method="post" action="<?= BASE_URL ?>/profil" class="profil-bloc" enctype="multipart/form-data">
       <?= csrf_input() ?>
       <div class="profil-avatar">
         <div class="avatar-cercle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg>
+          <?php if (!empty($utilisateur['photo'])): ?>
+            <img class="avatar-img" src="<?= BASE_URL ?>/view/uploads/avatars/<?= htmlspecialchars($utilisateur['photo']) ?>" alt="Photo de profil">
+          <?php else: ?>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg>
+          <?php endif; ?>
         </div>
-        <span class="avatar-changer">Changer la photo</span>
+        <!-- Le label déclenche le champ fichier caché ; l'envoi se fait avec "Modifier mes informations" -->
+        <label for="photo" class="avatar-changer" style="cursor:pointer;">Changer la photo</label>
+        <input type="file" name="photo" id="photo" accept="image/jpeg,image/png,image/webp" class="avatar-input">
       </div>
       <div class="profil-champs">
         <label class="champ">

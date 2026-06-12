@@ -1,3 +1,5 @@
 conf/secrets.local.php
 *.log
 .DS_Store
+view/uploads/avatars/*
+!view/uploads/avatars/.gitkeep
