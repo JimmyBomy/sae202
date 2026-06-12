@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
     sante_epilepsie    ENUM('oui','non') NULL,
     sante_respiratoire ENUM('oui','non') NULL,
     sante_claustro     ENUM('oui','non') NULL,
+    regime             VARCHAR(30) NULL,                 -- régime alimentaire (repas inclus)
     -- Réinitialisation du mot de passe (lien envoyé par email, durée limitée)
     reset_token   VARCHAR(64)  NULL,
     reset_expire  DATETIME     NULL,

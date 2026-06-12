@@ -10,7 +10,7 @@
         <h4>Navigation</h4>
         <ul>
           <li><a href="<?= BASE_URL ?>/">Accueil</a></li>
-          <li><a href="<?= BASE_URL ?>/concept">À propos</a></li>
+          <li><a href="<?= BASE_URL ?>/concept">Concept</a></li>
           <li><a href="<?= BASE_URL ?>/infos">Les salles</a></li>
           <li><a href="<?= BASE_URL ?>/regles">Règles</a></li>
           <li><a href="<?= BASE_URL ?>/classement">Classement</a></li>
@@ -27,7 +27,7 @@
         <h4>Infos pratiques</h4>
         <ul>
           <li>Cours Émile Zola, 69100 Villeurbanne</li>
-          <li>Jeudi → dimanche, sessions nocturnes</li>
+          <li>Vendredi soir, samedi soir, jours fériés et vacances scolaires (sauf le lundi)</li>
           <li><a href="<?= BASE_URL ?>/contact">Nous contacter</a></li>
         </ul>
       </div>

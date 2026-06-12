@@ -123,9 +123,11 @@ function index() {
                 // Naissance (validée plus haut) + questionnaire santé : conservés sur le
                 // compte (l'organisateur doit connaître les contre-indications).
                 $sante = fn($k) => in_array($_POST[$k] ?? '', ['oui', 'non'], true) ? $_POST[$k] : null;
+                $regimesOk = ['aucun', 'vegetarien', 'vegan', 'sans_gluten', 'halal', 'autre'];
+                $regime = in_array($_POST['regime'] ?? '', $regimesOk, true) ? $_POST['regime'] : null;
                 update_sante_naissance($utilisateur['id'], $naissance,
                     $sante('sante_cardiaque'), $sante('sante_epilepsie'),
-                    $sante('sante_respiratoire'), $sante('sante_claustro'));
+                    $sante('sante_respiratoire'), $sante('sante_claustro'), $regime);
 
                 $date_sql = date('Y-m-d', strtotime($date_session)) . ' 20:00:00';
                 creer_reservation($equipe_id, $salle, $date_sql, $nb_joueurs);

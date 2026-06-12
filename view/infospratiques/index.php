@@ -163,17 +163,18 @@
     <p class="sec-sub">L'immersion continue toute la nuit</p>
     <div class="cartes cartes-3">
       <div class="carte">
-        <h2>🛏️ La chambre</h2>
+        <h2>La chambre</h2>
         <p>Chambre double (lit séparable), volontairement nue&nbsp;: ni télé, ni table, ni mobilier
            superflu — 10&nbsp;m² maximum, pour rester fidèle à l'ambiance liminale.</p>
       </div>
       <div class="carte">
-        <h2>🥫 La restauration</h2>
+        <img class="carte-picto" src="<?= BASE_URL ?>/view/img/resto-pain.webp" alt="" loading="lazy">
+        <h2>La restauration</h2>
         <p>Rations de survie thématiques et la fameuse boisson «&nbsp;Eau d'Amande&nbsp;»,
-           droit sorties du lore des Backrooms.</p>
+           tout droit sorties du lore des Backrooms.</p>
       </div>
       <div class="carte">
-        <h2>🥐 Le petit-déjeuner</h2>
+        <h2>Le petit-déjeuner</h2>
         <p><strong>Offert</strong> si votre équipe s'échappe&nbsp;! En cas d'échec, il vous sera
            facturé <strong>6&nbsp;€</strong>… une motivation de plus pour sortir.</p>
       </div>
@@ -185,14 +186,14 @@
     <h2 class="sec-title">INTERDICTIONS</h2>
     <p class="sec-sub">Pour la sécurité et le bon déroulement de la partie, ces objets sont interdits :</p>
     <div class="interdits-grid">
-      <div class="interdit"><div class="interdit-ic">📱</div><span>Téléphone portable</span></div>
-      <div class="interdit"><div class="interdit-ic">🍔</div><span>Nourriture</span></div>
-      <div class="interdit"><div class="interdit-ic">🔫</div><span>Arme à feu</span></div>
-      <div class="interdit"><div class="interdit-ic">🚬</div><span>Cigarette</span></div>
-      <div class="interdit"><div class="interdit-ic">🧨</div><span>Bombe</span></div>
-      <div class="interdit"><div class="interdit-ic">🔪</div><span>Arme blanche</span></div>
-      <div class="interdit"><div class="interdit-ic">🐾</div><span>Animaux</span></div>
-      <div class="interdit"><div class="interdit-ic">☂️</div><span>Parapluie</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-telephone.webp" alt="" loading="lazy"><span>Téléphone portable</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-nourriture.webp" alt="" loading="lazy"><span>Nourriture</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-arme-feu.webp" alt="" loading="lazy"><span>Arme à feu</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-cigarette.webp" alt="" loading="lazy"><span>Cigarette</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-bombe.webp" alt="" loading="lazy"><span>Bombe</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-arme-blanche.webp" alt="" loading="lazy"><span>Arme blanche</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-animaux.webp" alt="" loading="lazy"><span>Animaux</span></div>
+      <div class="interdit"><img class="interdit-ic" src="<?= BASE_URL ?>/view/img/interdit-parapluie.webp" alt="" loading="lazy"><span>Parapluie</span></div>
     </div>
   </section>
 

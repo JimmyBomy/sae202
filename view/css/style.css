@@ -674,10 +674,8 @@ main { flex: 1 0 auto; }
 .interdits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .interdit { text-align: center; }
 .interdit span { display: block; margin-top: 12px; font-family: var(--font-nav); text-transform: uppercase; letter-spacing: .5px; color: #d8d8d8; font-size: .85rem; }
-/* Cases CARRÉES avec barre diagonale, comme la maquette */
-.interdit-ic { position: relative; width: 84px; height: 84px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 2rem; background: rgba(20, 19, 14, 0.85); overflow: hidden; }
-.interdit-ic::after { content: ""; position: absolute; inset: 0; border: 3px solid var(--primary-color); border-radius: 10px; }
-.interdit-ic::before { content: ""; position: absolute; top: 50%; left: 50%; width: 4px; height: 120px; background: var(--primary-color); transform: translate(-50%, -50%) rotate(45deg); }
+/* Pictogrammes d'interdiction (le cercle barré est déjà dans l'image) */
+.interdit-ic { width: 96px; height: 96px; margin: 0 auto; display: block; object-fit: contain; }
 
 @media (max-width: 900px) {
   .quick-links { grid-template-columns: repeat(2, 1fr); }
@@ -995,3 +993,4 @@ img, svg, iframe { max-width: 100%; }
 .calc-pp { display: block; color: #cfcfcf; font-family: var(--font-nav); letter-spacing: .5px; }
 .calc-total { display: block; font-family: var(--font-hero); font-size: 2.3rem; color: var(--primary-color); margin-top: 4px; }
 .resa-prix { color: var(--primary-color); font-family: var(--font-nav); font-weight: 600; margin-top: -4px; min-height: 1.2em; }
+.carte-picto { width: 58px; height: 58px; object-fit: contain; display: block; margin-bottom: 10px; }

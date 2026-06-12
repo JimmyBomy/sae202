@@ -28,11 +28,11 @@ if (($_GET['export'] ?? '') === 'csv') {
     $sortie = fopen('php://output', 'w');
     fputs($sortie, "\xEF\xBB\xBF"); // BOM : accents corrects dans Excel
     fputcsv($sortie, ['ID', 'Pseudo', 'Nom', 'Prénom', 'Email', 'Téléphone', 'Naissance', 'Équipe', 'Rôle', 'Inscrit le',
-                      'Cardiaque', 'Épilepsie', 'Respiratoire', 'Claustrophobie'], ';');
+                      'Cardiaque', 'Épilepsie', 'Respiratoire', 'Claustrophobie', 'Régime'], ';');
     foreach (get_tous_utilisateurs() as $u) {
         fputcsv($sortie, [$u['id'], $u['pseudo'], $u['nom'], $u['prenom'], $u['email'], $u['telephone'],
                           $u['date_naissance'], $u['equipe_nom'] ?? '', $u['role'], $u['date_inscription'],
-                          $u['sante_cardiaque'], $u['sante_epilepsie'], $u['sante_respiratoire'], $u['sante_claustro']], ';');
+                          $u['sante_cardiaque'], $u['sante_epilepsie'], $u['sante_respiratoire'], $u['sante_claustro'], $u['regime'] ?? ''], ';');
     }
     fclose($sortie);
     exit;
@@ -340,7 +340,7 @@ $maxSalle = max(1, max($parSalle));
     <h2>UTILISATEURS INSCRITS</h2>
     <p style="margin-bottom:10px;"><a href="?export=csv" class="btn btn-accepter" style="text-decoration:none;">⬇ Exporter en CSV</a></p>
     <table class="tbl">
-        <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Naissance</th><th>Santé</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
+        <thead><tr><th>ID</th><th>Pseudo</th><th>Nom</th><th>Email</th><th>Naissance</th><th>Santé</th><th>Régime</th><th>Équipe</th><th>Rôle</th><th>Inscrit le</th></tr></thead>
         <tbody>
         <?php foreach ($utilisateurs as $u):
             $alertes = [];
@@ -356,6 +356,7 @@ $maxSalle = max(1, max($parSalle));
                 <td><?= htmlspecialchars($u['email']) ?></td>
                 <td><?= $u['date_naissance'] ? htmlspecialchars(date('d/m/y', strtotime($u['date_naissance']))) : '—' ?></td>
                 <td><?= $alertes ? '<span class="alerte-sante">⚠ ' . htmlspecialchars(implode(', ', $alertes)) . '</span>' : 'RAS' ?></td>
+                <td><?= $u['regime'] && $u['regime'] !== 'aucun' ? htmlspecialchars(ucfirst(str_replace('_', ' ', $u['regime']))) : '—' ?></td>
                 <td><?= htmlspecialchars($u['equipe_nom'] ?? '—') ?></td>
                 <td><?= htmlspecialchars($u['role']) ?></td>
                 <td><?= htmlspecialchars(date('d/m/y', strtotime($u['date_inscription']))) ?></td>

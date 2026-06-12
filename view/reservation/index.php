@@ -146,6 +146,20 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
           </div>
         </div>
       <?php endforeach; ?>
+
+      <!-- Régime alimentaire (un repas est servi sur place) -->
+      <div class="sante-q">
+        <span class="sante-libelle">Avez-vous un régime alimentaire particulier ? (un repas est servi)</span>
+        <select class="resa-field" name="regime" style="max-width:240px;" aria-label="Régime alimentaire">
+          <?php
+            $regimes = ['aucun' => 'Aucun', 'vegetarien' => 'Végétarien', 'vegan' => 'Végan',
+                        'sans_gluten' => 'Sans gluten', 'halal' => 'Halal', 'autre' => 'Autre'];
+            foreach ($regimes as $val => $lib):
+          ?>
+            <option value="<?= $val ?>" <?= ($_POST['regime'] ?? '') === $val ? 'selected' : '' ?>><?= $lib ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
     </section>
 
     <!-- ============ PAIEMENT ============ -->

@@ -51,13 +51,13 @@ function get_tous_utilisateurs() {
     return $stmt->fetchAll();
 }
 
-// Enregistre la date de naissance et le questionnaire santé (saisis à la réservation).
-function update_sante_naissance($id, $date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro) {
+// Enregistre la date de naissance, le questionnaire santé et le régime alimentaire (réservation).
+function update_sante_naissance($id, $date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro, $regime = null) {
     $pdo = getBdd();
     $sql = "UPDATE utilisateurs SET date_naissance = ?, sante_cardiaque = ?, sante_epilepsie = ?,
-            sante_respiratoire = ?, sante_claustro = ? WHERE id = ?";
+            sante_respiratoire = ?, sante_claustro = ?, regime = ? WHERE id = ?";
     $stmt = $pdo->prepare($sql);
-    return $stmt->execute([$date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro, $id]);
+    return $stmt->execute([$date_naissance, $cardiaque, $epilepsie, $respiratoire, $claustro, $regime, $id]);
 }
 
 // --- Réinitialisation du mot de passe (lien par email, valable 1 h) ---
