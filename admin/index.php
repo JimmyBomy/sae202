@@ -39,7 +39,7 @@ if (($_GET['export'] ?? '') === 'csv') {
 }
 
 // --- Traitements (modération avis) — en POST + jeton CSRF (pas de lien GET forgeable) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id']) && csrf_verifie()) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action'], $_POST['id']) && csrf_verifie()) {
     $id = (int) $_POST['id'];
     if ($_POST['action'] === 'approuver') update_statut_commentaire($id, 'approuve');
     if ($_POST['action'] === 'refuser')   update_statut_commentaire($id, 'refuse');
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['id'
 }
 
 // --- Traitements (statut d'une réservation) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['resa'], $_POST['statut']) && csrf_verifie()) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['resa'], $_POST['statut']) && csrf_verifie()) {
     $id = (int) $_POST['resa'];
     if (in_array($_POST['statut'], ['confirmee', 'annulee', 'en_attente'], true)) {
         update_statut_reservation($id, $_POST['statut']);
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['resa'], $_POST['statu
 }
 
 // --- Traitements (saisie d'un score) ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_type'] ?? '') === 'score' && csrf_verifie()) {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['form_type'] ?? '') === 'score' && csrf_verifie()) {
     $equipe_id = (int) ($_POST['equipe_id'] ?? 0);
     $points    = (int) ($_POST['points'] ?? 0);
     $minutes   = (int) ($_POST['minutes'] ?? 0);
