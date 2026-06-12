@@ -18,7 +18,7 @@ function get_tous_commentaires() {
 function get_commentaires_approuves() {
     $pdo = getBdd();
     // u.photo : avatar du joueur, affiché à côté de son avis
-    $sql = "SELECT c.*, u.pseudo, u.photo FROM commentaires c JOIN utilisateurs u ON c.utilisateur_id = u.id WHERE c.statut = 'approuve' ORDER BY c.date_creation DESC";
+    $sql = "SELECT c.*, u.pseudo, u.photo FROM commentaires c JOIN utilisateurs u ON c.utilisateur_id = u.id WHERE c.statut = 'approuve' ORDER BY c.date_creation DESC LIMIT 3";
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
 }
