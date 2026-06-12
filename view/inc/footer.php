@@ -26,7 +26,7 @@
       <div class="footer-col">
         <h4>Infos pratiques</h4>
         <ul>
-          <li>12 rue des Liminaux, 10000 Troyes</li>
+          <li>Cours Émile Zola, 69100 Villeurbanne</li>
           <li>Jeudi → dimanche, sessions nocturnes</li>
           <li><a href="<?= BASE_URL ?>/contact">Nous contacter</a></li>
         </ul>

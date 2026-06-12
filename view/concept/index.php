@@ -64,7 +64,7 @@
       <div class="mini-carte">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <h3>Course contre le temps</h3>
-        <p>4 heures pour vous échapper… le chrono joue contre vous, à chaque seconde.</p>
+        <p>4 à 5 heures pour vous échapper… le chrono joue contre vous, à chaque seconde.</p>
       </div>
     </div>
   </section>
@@ -77,12 +77,12 @@
     <div class="stats-grid">
       <div class="stat-item">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span class="stat-num">4H</span>
+        <span class="stat-num">4-5H</span>
         <span class="stat-lbl">Temps maximum pour s'échapper</span>
       </div>
       <div class="stat-item">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="stat-num">2 à 6</span>
+        <span class="stat-num">2 à 10</span>
         <span class="stat-lbl">Joueurs par équipe</span>
       </div>
       <div class="stat-item">
@@ -92,7 +92,7 @@
       </div>
       <div class="stat-item">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="10"/></svg>
-        <span class="stat-num">38%</span>
+        <span class="stat-num">50%</span>
         <span class="stat-lbl">Taux de réussite</span>
       </div>
       <div class="stat-item">

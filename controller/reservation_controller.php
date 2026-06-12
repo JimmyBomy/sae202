@@ -69,8 +69,8 @@ function index() {
             $erreur = "Cette salle est accessible à partir de " . $ageMin[$salle] . " ans.";
         } elseif (!salle_disponible($salle, $date_session . ' 20:00:00')) {
             $erreur = "Cette salle est déjà réservée ce soir-là — choisissez une autre date ou une autre salle.";
-        } elseif ($nb_joueurs < 2 || $nb_joueurs > 6) {
-            $erreur = "Le nombre de participants doit être compris entre 2 et 6.";
+        } elseif ($nb_joueurs < 2 || $nb_joueurs > 10) {
+            $erreur = "Le nombre de participants doit être compris entre 2 et 10.";
         } elseif (empty($utilisateur['equipe_id']) && $code_invite !== '') {
             // Rejoindre une équipe existante grâce à son code d'invitation.
             $equipeRejointe = get_equipe_by_code($code_invite);
@@ -175,7 +175,9 @@ function envoyer_confirmation_reservation($utilisateur, $equipe_id, $salle, $dat
            . "  Équipe   : " . $equipe['nom'] . " (code d'invitation : " . $equipe['code_invite'] . ")\n"
            . "  Salle    : " . ($noms[$salle] ?? $salle) . "\n"
            . "  Date     : " . date('d/m/Y', strtotime($date_sql)) . " à 20h00\n"
-           . "  Joueurs  : " . $nb_joueurs . "\n\n"
+           . "  Joueurs  : " . $nb_joueurs . "\n"
+           . "  Tarif    : " . prix_total($salle, $nb_joueurs) . " € ("
+                            . prix_par_personne($salle, $nb_joueurs) . " €/pers, hébergement et repas inclus)\n\n"
            . "Présentez-vous 30 minutes avant le début de la session.\n"
            . "12 rue des Liminaux, 10000 Troyes\n\n"
            . "Vous n'auriez jamais dû trouver cet endroit…\n"

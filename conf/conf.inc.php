@@ -64,3 +64,21 @@ function csrf_verifie() {
     return isset($_POST['csrf'], $_SESSION['csrf'])
         && hash_equals($_SESSION['csrf'], $_POST['csrf']);
 }
+
+// --- Tarification ---
+// Tarif dégressif par personne (hébergement + repas inclus), selon l'effectif (2 à 10).
+function tarif_par_personne($nb) {
+    if ($nb >= 7) return 145;
+    $grille = [2 => 170, 3 => 165, 4 => 160, 5 => 155, 6 => 150];
+    return $grille[$nb] ?? 170;
+}
+
+// Prix par personne pour une salle donnée (Hardcore : majoration de 10 €).
+function prix_par_personne($salle, $nb) {
+    return tarif_par_personne($nb) + ($salle === 'hardcore' ? 10 : 0);
+}
+
+// Prix total de la réservation.
+function prix_total($salle, $nb) {
+    return prix_par_personne($salle, $nb) * $nb;
+}

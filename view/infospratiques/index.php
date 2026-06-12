@@ -18,6 +18,10 @@
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H12m5 7H9.5a3.5 3.5 0 0 1 0-7H12M7 8h10M7 16h10"/></svg>
         <span>Tarifs &rsaquo;</span>
       </a>
+      <a href="#hebergement" class="quick-link">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v-6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6M2 14h20M6 10V8a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M2 18v2M22 18v2"/></svg>
+        <span>Hébergement &rsaquo;</span>
+      </a>
       <a href="#interdictions" class="quick-link">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
         <span>Interdictions &rsaquo;</span>
@@ -31,9 +35,9 @@
     <p class="sec-sub">Où se situe notre escape game ?</p>
     <div class="loc-grid">
       <div class="loc-info">
-        <div class="info-field"><span class="info-label">Adresse</span><p>12 rue des Liminaux</p></div>
-        <div class="info-field"><span class="info-label">Ville</span><p>Troyes</p></div>
-        <div class="info-field"><span class="info-label">Code postal</span><p>10000</p></div>
+        <div class="info-field"><span class="info-label">Adresse</span><p>Cours Émile Zola</p></div>
+        <div class="info-field"><span class="info-label">Ville</span><p>Villeurbanne</p></div>
+        <div class="info-field"><span class="info-label">Code postal</span><p>69100</p></div>
       </div>
       <div class="loc-map">
         <?php if (GOOGLE_MAPS_KEY !== ''): ?>
@@ -43,23 +47,23 @@
             function initMap() {
               // Style "Pamplona" récupéré sur snazzymaps.com
               const stylePamplona = [{"featureType":"all","elementType":"geometry","stylers":[{"color":"#f2e4b2"}]},{"featureType":"all","elementType":"labels.text.fill","stylers":[{"gamma":0.01},{"lightness":20}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"saturation":-31},{"lightness":-33},{"weight":2},{"gamma":0.8}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"lightness":30},{"saturation":30}]},{"featureType":"landscape.natural.landcover","elementType":"geometry","stylers":[{"visibility":"on"},{"saturation":"-17"}]},{"featureType":"poi","elementType":"geometry","stylers":[{"saturation":20}]},{"featureType":"poi","elementType":"labels.text","stylers":[{"saturation":"-26"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"lightness":20},{"saturation":-20},{"visibility":"off"},{"color":"#e4a5a5"}]},{"featureType":"road","elementType":"geometry","stylers":[{"lightness":10},{"saturation":-30}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"saturation":25},{"lightness":25}]},{"featureType":"water","elementType":"all","stylers":[{"lightness":-20}]}];
-              const troyes = { lat: 48.2973, lng: 4.0744 };
+              const villeurbanne = { lat: 45.7672, lng: 4.8794 };
               const map = new google.maps.Map(document.getElementById('map-backrooms'), {
-                center: troyes,
+                center: villeurbanne,
                 zoom: 14,
                 styles: stylePamplona,
                 streetViewControl: false,
                 mapTypeControl: false
               });
-              new google.maps.Marker({ position: troyes, map: map, title: 'BACKROOMS' });
+              new google.maps.Marker({ position: villeurbanne, map: map, title: 'BACKROOMS' });
             }
           </script>
           <script async src="https://maps.googleapis.com/maps/api/js?key=<?= htmlspecialchars(GOOGLE_MAPS_KEY) ?>&callback=initMap"></script>
         <?php else: ?>
           <!-- Repli OpenStreetMap tant que la clé Google Maps n'est pas renseignée -->
           <iframe
-            src="https://www.openstreetmap.org/export/embed.html?bbox=4.0550%2C48.2880%2C4.1000%2C48.3080&layer=mapnik&marker=48.2973%2C4.0744"
-            title="Carte de localisation à Troyes" loading="lazy"></iframe>
+            src="https://www.openstreetmap.org/export/embed.html?bbox=4.8550%2C45.7550%2C4.9100%2C45.7850&layer=mapnik&marker=45.7672%2C4.8794"
+            title="Carte de localisation à Villeurbanne" loading="lazy"></iframe>
         <?php endif; ?>
       </div>
     </div>
@@ -91,49 +95,87 @@
   <!-- ============ TARIFS ============ -->
   <section id="tarifs" class="concept-section">
     <h2 class="sec-title">TARIFS</h2>
-    <p class="sec-sub">Combien coûte une partie ?</p>
+    <p class="sec-sub">Combien coûte une partie ? (4h+ de jeu, repas et nuit sur place inclus)</p>
+    <div class="loc-grid">
+      <div>
+        <table class="tableau tarif-grille">
+          <thead><tr><th>Participants</th><th>Prix / personne</th></tr></thead>
+          <tbody>
+            <tr><td>2 personnes</td><td>170 €</td></tr>
+            <tr><td>3 personnes</td><td>165 €</td></tr>
+            <tr><td>4 personnes</td><td>160 €</td></tr>
+            <tr><td>5 personnes</td><td>155 €</td></tr>
+            <tr><td>6 personnes</td><td>150 €</td></tr>
+            <tr><td>7 à 10 personnes</td><td>145 €</td></tr>
+          </tbody>
+        </table>
+        <p class="tarif-note">Salle <strong>Hardcore</strong> (5h)&nbsp;: majoration de <strong>+10 €/personne</strong>.<br>Aucun tarif étudiant.</p>
+      </div>
+
+      <!-- Calculateur de prix : salle + nombre de participants -> total -->
+      <div class="calc-tarif">
+        <h3 class="pay-titre">Estimez votre tarif</h3>
+        <div class="form-group">
+          <label for="calc-salle">Salle</label>
+          <select id="calc-salle" class="resa-field">
+            <option value="facile">Salle 1 — Facile</option>
+            <option value="standard">Salle 2 — Standard</option>
+            <option value="hardcore">Salle 3 — Hardcore (+10 €/pers)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="calc-nb">Nombre de participants (2 à 10)</label>
+          <input id="calc-nb" class="resa-field" type="number" min="2" max="10" value="4">
+        </div>
+        <div class="calc-resultat">
+          <span class="calc-pp" id="calc-pp"></span>
+          <span class="calc-total" id="calc-total"></span>
+        </div>
+        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary" style="margin-top:14px;">RÉSERVER</a>
+      </div>
+    </div>
+    <script>
+      (function () {
+        // Tarif dégressif (identique à la fonction PHP prix_total) :
+        const grille = { 2:170, 3:165, 4:160, 5:155, 6:150 };
+        const tarif  = n => (n >= 7 ? 145 : (grille[n] || 170));
+        const salle = document.getElementById('calc-salle');
+        const nb    = document.getElementById('calc-nb');
+        const pp    = document.getElementById('calc-pp');
+        const total = document.getElementById('calc-total');
+        function maj() {
+          const n = parseInt(nb.value, 10);
+          if (isNaN(n) || n < 2 || n > 10) { pp.textContent = ''; total.textContent = 'Indiquez de 2 à 10 participants.'; return; }
+          const parPers = tarif(n) + (salle.value === 'hardcore' ? 10 : 0);
+          pp.textContent = parPers + ' € / personne';
+          total.textContent = 'Total : ' + (parPers * n) + ' €';
+        }
+        salle.addEventListener('change', maj);
+        nb.addEventListener('input', maj);
+        maj();
+      })();
+    </script>
+  </section>
+
+  <!-- ============ HÉBERGEMENT & RESTAURATION ============ -->
+  <section id="hebergement" class="concept-section">
+    <h2 class="sec-title">HÉBERGEMENT &amp; RESTAURATION</h2>
+    <p class="sec-sub">L'immersion continue toute la nuit</p>
     <div class="cartes cartes-3">
-      <div class="carte tarif-card">
-        <span class="salle-tag">SALLE 1</span>
-        <h2>Le Niveau 0</h2>
-        <p>Exploration et cartographie. Aucune menace : l'initiation idéale.</p>
-        <p class="tarif-prix">28,00 €<span>/ joueur</span></p>
-        <div class="diff">
-          <span class="diff-label">Niveau de difficulté</span>
-          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#d1b023" stroke-width="8" stroke-linecap="round" stroke-dasharray="44 200"/>
-          </svg>
-          <span class="diff-niv">Facile</span>
-        </div>
+      <div class="carte">
+        <h2>🛏️ La chambre</h2>
+        <p>Chambre double (lit séparable), volontairement nue&nbsp;: ni télé, ni table, ni mobilier
+           superflu — 10&nbsp;m² maximum, pour rester fidèle à l'ambiance liminale.</p>
       </div>
-      <div class="carte tarif-card">
-        <span class="salle-tag">SALLE 2</span>
-        <h2>Les Couloirs jaunes</h2>
-        <p>Recherche de ressources et gestion du stress. Présence d'entités.</p>
-        <p class="tarif-prix">34,00 €<span>/ joueur</span></p>
-        <div class="diff">
-          <span class="diff-label">Niveau de difficulté</span>
-          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#d1b023" stroke-width="8" stroke-linecap="round" stroke-dasharray="87 200"/>
-          </svg>
-          <span class="diff-niv">Moyen</span>
-        </div>
+      <div class="carte">
+        <h2>🥫 La restauration</h2>
+        <p>Rations de survie thématiques et la fameuse boisson «&nbsp;Eau d'Amande&nbsp;»,
+           droit sorties du lore des Backrooms.</p>
       </div>
-      <div class="carte tarif-card">
-        <span class="salle-tag salle-tag--hard">SALLE 3</span>
-        <h2>Le Niveau !</h2>
-        <p>Horreur extrême : traque continue par les comédiens, dans le noir.</p>
-        <p class="tarif-prix">39,00 €<span>/ joueur</span></p>
-        <div class="diff">
-          <span class="diff-label">Niveau de difficulté</span>
-          <svg class="gauge" viewBox="0 0 100 58" aria-hidden="true">
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#2a2a20" stroke-width="8" stroke-linecap="round"/>
-            <path d="M8 50 A42 42 0 0 1 92 50" fill="none" stroke="#c0392b" stroke-width="8" stroke-linecap="round" stroke-dasharray="132 200"/>
-          </svg>
-          <span class="diff-niv" style="color:#e0654f">Difficile</span>
-        </div>
+      <div class="carte">
+        <h2>🥐 Le petit-déjeuner</h2>
+        <p><strong>Offert</strong> si votre équipe s'échappe&nbsp;! En cas d'échec, il vous sera
+           facturé <strong>6&nbsp;€</strong>… une motivation de plus pour sortir.</p>
       </div>
     </div>
   </section>

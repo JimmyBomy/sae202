@@ -10,7 +10,7 @@
         <p>
           <strong>Raison sociale :</strong> Lumina Studio<br>
           <strong>Forme juridique :</strong> Projet pédagogique étudiant (BUT MMI — IUT de Troyes)<br>
-          <strong>Adresse :</strong> 9 rue de Québec, 10000 Troyes<br>
+          <strong>Adresse :</strong> Cours Émile Zola, 69100 Villeurbanne<br>
           <strong>Email :</strong> backroomsescapegame@gmail.com<br>
           <strong>Téléphone :</strong> 07 07 07 07 07
         </p>

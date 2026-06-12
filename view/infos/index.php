@@ -10,23 +10,23 @@
       <div class="carte salle-card">
         <span class="salle-tag">FACILE</span>
         <h2>Le Niveau 0</h2>
-        <p>L'initiation idéale. Des couloirs jaunes interminables, des énigmes accessibles
-           et une ambiance déjà bien pesante. Parfait pour une première fois.</p>
-        <p class="salle-meta">Durée ~1h30 · 2 à 6 joueurs · dès 10 ans</p>
+        <p>Exploration et cartographie, sans aucune menace. Décors jaunes, moquette humide,
+           néons qui bourdonnent et une salle « supermarché ». Cible familiale.</p>
+        <p class="salle-meta">4h de jeu + repas et nuit · 2 à 10 joueurs · dès 10 ans</p>
       </div>
       <div class="carte salle-card">
         <span class="salle-tag">STANDARD</span>
         <h2>Les Couloirs jaunes</h2>
-        <p>Le cœur de l'expérience Backrooms. Énigmes imbriquées, fausses pistes et
-           premières « entités » qui rôdent. Le bon équilibre frisson / réflexion.</p>
-        <p class="salle-meta">Durée ~2h · 2 à 6 joueurs · dès 14 ans</p>
+        <p>Décors jaunes, moquette, entrepôt sombre et coupures de courant&nbsp;: gestion du
+           stress avec l'intervention de comédiens. Cible intermédiaire.</p>
+        <p class="salle-meta">4h de jeu + repas et nuit · 2 à 10 joueurs · dès 14 ans</p>
       </div>
       <div class="carte salle-card">
         <span class="salle-tag salle-tag--hard">HARDCORE</span>
         <h2>Le Niveau !</h2>
-        <p>Réservé aux experts. Obscurité quasi totale, comédiens en pleine action et
-           énigmes redoutables. Le mot d'arrêt « LUMIÈRE » risque d'être tentant…</p>
-        <p class="salle-meta">Durée ~2h30 · 2 à 6 joueurs · dès 16 ans</p>
+        <p>Noir complet, stimuli sonores agressifs, traque ininterrompue par les entités.
+           Cible experte. Le mot d'arrêt « LUMIÈRE » risque d'être tentant…</p>
+        <p class="salle-meta">5h de jeu + repas et nuit · 2 à 10 joueurs · dès 16 ans</p>
       </div>
     </div>
 

@@ -51,13 +51,14 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
                    placeholder="OU CODE D'INVITATION (rejoindre une équipe)" aria-label="OU CODE D'INVITATION (rejoindre une équipe)"
                    value="<?= $champ('code_invite') ?>" style="text-transform:uppercase;">
           <?php endif; ?>
-          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 6)" aria-label="NOMBRE DE PARTICIPANTS (2 à 6)" min="2" max="6" value="<?= $champ('nb_joueurs') ?>" required>
+          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 10)" aria-label="NOMBRE DE PARTICIPANTS (2 à 10)" min="2" max="10" value="<?= $champ('nb_joueurs') ?>" required>
           <select class="resa-field" name="salle" required aria-label="Salle">
             <option value="">CHOISIR UNE SALLE…</option>
             <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile, dès 10 ans)</option>
             <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>>Salle 2 — Les Couloirs jaunes (standard, dès 14 ans)</option>
             <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>>Salle 3 — Le Niveau ! (hardcore, dès 16 ans)</option>
           </select>
+          <p class="resa-prix" id="resa-prix" aria-live="polite"></p>
           <label class="resa-dob-label">Date de naissance</label>
           <?php
             // Pré-remplissage : saisie en cours ($_POST) sinon la date déjà connue du compte.
@@ -197,3 +198,22 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
     </section>
   <?php endif; ?>
 </main>
+
+<script>
+  /* Prix estimé en direct (même grille dégressive que le PHP prix_total) */
+  (function () {
+    const grille = { 2:170, 3:165, 4:160, 5:155, 6:150 };
+    const tarif = n => (n >= 7 ? 145 : (grille[n] || 170));
+    const salle = document.querySelector('[name=salle]');
+    const nb    = document.querySelector('[name=nb_joueurs]');
+    const out   = document.getElementById('resa-prix');
+    if (!salle || !nb || !out) return;
+    function maj() {
+      const n = parseInt(nb.value, 10);
+      if (!salle.value || isNaN(n) || n < 2 || n > 10) { out.textContent = ''; return; }
+      const pp = tarif(n) + (salle.value === 'hardcore' ? 10 : 0);
+      out.textContent = 'Tarif estimé : ' + (pp * n) + ' € (' + pp + ' €/pers, repas et nuit inclus)';
+    }
+    salle.addEventListener('change', maj); nb.addEventListener('input', maj); maj();
+  })();
+</script>
