@@ -757,22 +757,30 @@ select.resa-field { cursor: pointer; }
 .cal-case:hover { border-color: var(--primary-color); color: var(--primary-color); }
 .cal-passe { opacity: .28; cursor: not-allowed; }
 .cal-radio { position: absolute; opacity: 0; width: 0; height: 0; }
-.cal-radio:checked + .cal-case { background: var(--primary-color); color: #1a1a1a; border-color: var(--primary-color); }
+.cal-radio:checked + .cal-case { border-color: var(--primary-color); box-shadow: inset 0 0 0 3px var(--primary-color); }
 .cal-aide { text-align: center; color: #9a9a8a; font-size: .85rem; margin-top: 10px; }
 
-/* --- Pictos du calendrier (designers) : numéro EN HAUT, picto EN BAS (pas par-dessus l'image) --- */
+/* --- Pictos du calendrier (designers) : la photo de porte REMPLIT la case ; numéro en pastille coin --- */
 .cal-grille .cal-case {
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 5px;
-  font-size: .95rem;
+  position: relative;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: auto 56%;
 }
-label.cal-case        { background-image: url('../img/cal-ouvert.webp'); }   /* jour disponible : porte ouverte */
-.cal-case.cal-passe   { background-image: url('../img/cal-ferme.webp'); opacity: .5; }  /* jour passé : porte fermée */
-.cal-case.cal-complet { background-image: url('../img/cal-pain.webp'); }     /* complet : pain complet */
+label.cal-case        { background-image: url('../img/cal-ouvert.webp'); }   /* disponible : porte OUVERT */
+.cal-case.cal-passe   { background-image: url('../img/cal-ferme.webp'); opacity: .55; }  /* passé : porte FERMÉ */
+.cal-case.cal-complet { background-image: url('../img/cal-pain.webp'); }     /* complet : porte COMPLET */
+.cal-case.cal-ferme   { background-image: url('../img/cal-ferme.webp'); cursor: not-allowed; opacity: .82; }  /* jour fermé : porte FERMÉ */
+.cal-num {
+  position: absolute; top: 4px; left: 4px;
+  font-family: var(--font-hero); font-size: .95rem; line-height: 1;
+  color: #fff; background: rgba(0, 0, 0, .62);
+  padding: 2px 6px; border-radius: 6px; text-decoration: none;
+}
+.cal-radio:checked + .cal-case .cal-num { background: var(--primary-color); color: #14130d; }
 
 /* Questionnaire santé */
 .sante-q { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); flex-wrap: wrap; }
@@ -981,11 +989,9 @@ img, svg, iframe { max-width: 100%; }
 
 /* Jour complet dans le calendrier (les 3 salles réservées) */
 .cal-complet {
-  opacity: .45;
+  opacity: .82;
   cursor: not-allowed;
-  text-decoration: line-through;
   border-color: #5a2020;
-  color: #c98a8a;
 }
 
 /* ===================== Photo de profil (avatar) ===================== */
@@ -1020,3 +1026,42 @@ img, svg, iframe { max-width: 100%; }
   transition: background .15s, color .15s;
 }
 .partage-btn:hover { background: var(--primary-color); color: #14130d; }
+
+/* ===== Pages LES SALLES / RÈGLES / CONTACT (refonte au design du site) ===== */
+/* --- Les salles --- */
+.salles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 8px; }
+.salle-card2 { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform .15s, border-color .15s; }
+.salle-card2:hover { transform: translateY(-4px); border-color: var(--primary-color); }
+.salle-thumb2 { position: relative; height: 170px; background-size: cover; background-position: center; }
+.salle-thumb2::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(20,19,14,.05), rgba(20,19,14,.78)); }
+.salle-thumb2 .salle-tag { position: absolute; top: 12px; left: 12px; z-index: 2; margin: 0; }
+.salle-body { padding: 18px 20px 22px; display: flex; flex-direction: column; flex: 1; }
+.salle-body h2 { font-family: var(--font-hero); color: var(--primary-color); font-size: 1.5rem; margin-bottom: 8px; }
+.salle-body > p { color: #cfcfcf; line-height: 1.55; }
+.salle-points { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.salle-points li { color: #e6e6e6; font-size: .9rem; padding-left: 18px; position: relative; }
+.salle-points li::before { content: "\203A"; position: absolute; left: 0; color: var(--primary-color); font-weight: 700; }
+.salle-prix { margin-top: auto; padding-top: 14px; font-family: var(--font-nav); color: var(--primary-color); font-weight: 600; }
+.salle-note { text-align: center; color: #9a9a8a; font-size: .9rem; margin-top: 22px; }
+
+/* --- Règles --- */
+.regle-alerte { display: flex; align-items: center; gap: 14px; background: rgba(192,57,43,.12); border: 1px solid #c0392b; border-radius: 10px; padding: 14px 18px; margin: 6px 0 26px; }
+.regle-alerte-ic { font-size: 1.8rem; color: #ff6b5a; line-height: 1; }
+.regle-alerte p { color: #ffd9d4; }
+.regles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.regle-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 22px 24px; }
+.regle-card h2 { display: flex; align-items: center; gap: 12px; font-family: var(--font-hero); color: var(--primary-color); font-size: 1.35rem; margin-bottom: 14px; }
+.regle-num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; flex: none; border-radius: 50%; background: var(--primary-color); color: #14130d; font-family: var(--font-hero); font-size: 1.1rem; }
+.regle-card ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
+.regle-card li { color: #d8d8d0; line-height: 1.5; }
+
+/* --- Contact --- */
+.contact-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 26px; align-items: start; }
+.contact-infos { display: flex; flex-direction: column; gap: 12px; }
+.contact-form .btn { margin-top: 6px; }
+
+@media (max-width: 860px) {
+  .salles-grid { grid-template-columns: 1fr; }
+  .regles-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+}

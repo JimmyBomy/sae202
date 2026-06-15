@@ -100,13 +100,15 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
               $passe = ($dateJour < $aujour->format('Y-m-d'));
           ?>
             <?php if ($passe): ?>
-              <span class="cal-case cal-passe"><?= $jour ?></span>
+              <span class="cal-case cal-passe" title="Fermé"><span class="cal-num"><?= $jour ?></span></span>
             <?php elseif (in_array($dateJour, $joursComplets ?? [], true)): ?>
-              <span class="cal-case cal-complet" title="Complet : les 3 salles sont réservées"><?= $jour ?></span>
+              <span class="cal-case cal-complet" title="Complet : les 3 salles sont réservées"><span class="cal-num"><?= $jour ?></span></span>
+            <?php elseif (!creneau_ouvert($dateJour)): ?>
+              <span class="cal-case cal-ferme" title="Fermé — ouvert vendredi, samedi, jours fériés et vacances scolaires (sauf le lundi)"><span class="cal-num"><?= $jour ?></span></span>
             <?php else: ?>
               <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio"
                      <?= ($_POST['date_session'] ?? '') === $dateJour ? 'checked' : '' ?>>
-              <label for="cal<?= $dateJour ?>" class="cal-case"><?= $jour ?></label>
+              <label for="cal<?= $dateJour ?>" class="cal-case" title="Disponible"><span class="cal-num"><?= $jour ?></span></label>
             <?php endif; ?>
           <?php endfor; ?>
         </div>

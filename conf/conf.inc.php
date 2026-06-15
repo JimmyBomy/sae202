@@ -82,3 +82,37 @@ function prix_par_personne($salle, $nb) {
 function prix_total($salle, $nb) {
     return prix_par_personne($salle, $nb) * $nb;
 }
+
+// --- Jours d'ouverture ---
+// L'escape n'ouvre que : vendredi soir, samedi soir, jours fériés et vacances
+// scolaires — JAMAIS le lundi. Les autres jours sont "fermés" (non réservables).
+
+// Jours fériés français 2026 (l'événement se déroule en 2026).
+function jours_feries_2026() {
+    return ['2026-01-01','2026-04-06','2026-05-01','2026-05-08','2026-05-14',
+            '2026-05-25','2026-07-14','2026-08-15','2026-11-01','2026-11-11','2026-12-25'];
+}
+
+// Vacances scolaires (zone A — Lyon/Villeurbanne), plages utiles à partir de juin 2026.
+// (Été, Toussaint et Noël sont communs à toutes les zones.)
+function en_vacances_scolaires($ymd) {
+    $plages = [
+        ['2026-07-04', '2026-08-31'], // été
+        ['2026-10-17', '2026-11-02'], // Toussaint
+        ['2026-12-19', '2027-01-04'], // Noël
+    ];
+    foreach ($plages as [$debut, $fin]) {
+        if ($ymd >= $debut && $ymd <= $fin) return true;
+    }
+    return false;
+}
+
+// Le créneau (date AAAA-MM-JJ) est-il ouvert à la réservation ?
+function creneau_ouvert($ymd) {
+    $jour = (int) date('N', strtotime($ymd)); // 1 = lundi … 7 = dimanche
+    if ($jour === 1) return false;                              // jamais le lundi
+    if ($jour === 5 || $jour === 6) return true;                // vendredi / samedi
+    if (in_array($ymd, jours_feries_2026(), true)) return true; // jours fériés
+    if (en_vacances_scolaires($ymd)) return true;              // vacances scolaires
+    return false;
+}

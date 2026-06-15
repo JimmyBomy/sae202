@@ -65,6 +65,8 @@ function index() {
             $erreur = "Choisissez une date dans le calendrier des disponibilités.";
         } elseif (strtotime($date_session . ' 20:00:00') < time()) {
             $erreur = "Cette date est déjà passée, choisissez-en une autre.";
+        } elseif (!creneau_ouvert(date('Y-m-d', strtotime($date_session)))) {
+            $erreur = "Nous ouvrons uniquement le vendredi soir, le samedi soir, les jours fériés et pendant les vacances scolaires (sauf le lundi).";
         } elseif ((new DateTime($naissance))->diff(new DateTime($date_session))->y < $ageMin[$salle]) {
             $erreur = "Cette salle est accessible à partir de " . $ageMin[$salle] . " ans.";
         } elseif (!salle_disponible($salle, $date_session . ' 20:00:00')) {
