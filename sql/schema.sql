@@ -75,3 +75,14 @@ CREATE TABLE IF NOT EXISTS commentaires (
     date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_com_user FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Messages du formulaire de contact : lus dans le back-office (boîte de réception).
+CREATE TABLE IF NOT EXISTS messages (
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nom           VARCHAR(100) NOT NULL,
+    email         VARCHAR(150) NOT NULL,
+    sujet         VARCHAR(150) NOT NULL,
+    message       TEXT NOT NULL,
+    lu            TINYINT(1) NOT NULL DEFAULT 0,    -- 0 = non lu, 1 = lu
+    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

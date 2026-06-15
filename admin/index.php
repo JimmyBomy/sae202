@@ -20,6 +20,7 @@ require_once('model/commentaire.php');
 require_once('model/equipe.php');
 require_once('model/reservation.php');
 require_once('model/score.php');
+require_once('model/message.php');
 
 // --- 2e barrière : connexion par un VRAI compte administrateur (en plus du htpasswd Apache) ---
 require_once(__DIR__ . '/auth.php');
@@ -75,7 +76,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['form_type'] ?? '')
     exit;
 }
 
+// --- Traitements (messagerie : marquer lu / supprimer) — POST + CSRF ---
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['msg_action'], $_POST['msg_id']) && csrf_verifie()) {
+    $mid = (int) $_POST['msg_id'];
+    if ($_POST['msg_action'] === 'lu')    marquer_message_lu($mid);
+    if ($_POST['msg_action'] === 'suppr') supprimer_message($mid);
+    header('Location: ' . BASE_URL . '/gestion');
+    exit;
+}
+
 // --- Données ---
+$messages         = get_tous_messages();
+$messages_non_lus = compter_messages_non_lus();
 $utilisateurs = get_tous_utilisateurs();
 $commentaires = get_tous_commentaires();
 $equipes      = get_toutes_equipes();
@@ -150,6 +162,18 @@ $maxSalle = max(1, max($parSalle));
         .avis-carte .pseudo { color: #d1b023; font-weight: 600; }
         .avis-carte .date { color: #9a9a8a; font-size: .72rem; }
         .avis-carte .etoiles { color: #d1b023; font-size: 1.15rem; letter-spacing: 3px; }
+
+        /* --- Messagerie (boîte de réception du formulaire de contact) --- */
+        .badge-nonlu { font-family: 'Montserrat', Arial, sans-serif; font-size: .7rem; background: #d1b023; color: #14130d; padding: 3px 9px; border-radius: 10px; vertical-align: middle; }
+        .msg-liste { display: flex; flex-direction: column; gap: 12px; }
+        .msg-carte { border: 1px solid #3a382c; border-left: 4px solid #3a382c; border-radius: 6px; background: rgba(10,10,8,.6); padding: 14px 16px; }
+        .msg-carte.msg-nonlu { border-left-color: #d1b023; background: rgba(40,36,18,.55); }
+        .msg-head { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: .85rem; color: #cfcfcf; }
+        .msg-date { color: #9a9a8a; font-size: .75rem; }
+        .msg-sujet { margin: 8px 0 6px; font-weight: 600; color: #f5f5f5; display: flex; align-items: center; gap: 8px; }
+        .msg-sujet .pastille { width: 9px; height: 9px; border-radius: 50%; background: #d1b023; display: inline-block; }
+        .msg-corps { color: #d8d8d0; font-size: .9rem; line-height: 1.5; white-space: pre-wrap; margin-bottom: 12px; }
+        .msg-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .avis-carte .texte { font-style: italic; font-size: .8rem; color: #e3e3e3; flex: 1; }
         .avis-actions { display: flex; gap: 10px; justify-content: center; }
         .btn { font-family: 'Montserrat', Arial, sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
@@ -223,6 +247,35 @@ $maxSalle = max(1, max($parSalle));
             </div>
         <?php endforeach; ?>
     </div>
+
+    <!-- ============ MESSAGERIE (boîte de réception du formulaire de contact) ============ -->
+    <h2>MESSAGERIE<?php if ($messages_non_lus): ?> <span class="badge-nonlu"><?= $messages_non_lus ?> non lu<?= $messages_non_lus > 1 ? 's' : '' ?></span><?php endif; ?></h2>
+    <?php if (empty($messages)): ?>
+        <p>Aucun message reçu pour le moment.</p>
+    <?php else: ?>
+        <div class="msg-liste">
+            <?php foreach ($messages as $m): ?>
+                <div class="msg-carte<?= $m['lu'] ? '' : ' msg-nonlu' ?>">
+                    <div class="msg-head">
+                        <span><strong><?= htmlspecialchars($m['nom']) ?></strong>
+                            &lt;<a class="lien" href="mailto:<?= htmlspecialchars($m['email']) ?>"><?= htmlspecialchars($m['email']) ?></a>&gt;</span>
+                        <span class="msg-date"><?= htmlspecialchars(date('d/m/Y - H\hi', strtotime($m['date_creation']))) ?></span>
+                    </div>
+                    <div class="msg-sujet"><?php if (!$m['lu']): ?><span class="pastille" title="Non lu"></span><?php endif; ?><?= htmlspecialchars($m['sujet']) ?></div>
+                    <p class="msg-corps"><?= htmlspecialchars($m['message']) ?></p>
+                    <form method="post" class="msg-actions">
+                        <?= csrf_input() ?>
+                        <input type="hidden" name="msg_id" value="<?= $m['id'] ?>">
+                        <?php if (!$m['lu']): ?>
+                            <button type="submit" name="msg_action" value="lu" class="btn btn-accepter">Marquer comme lu</button>
+                        <?php endif; ?>
+                        <a class="lien" href="mailto:<?= htmlspecialchars($m['email']) ?>?subject=RE:%20<?= rawurlencode($m['sujet']) ?>">Répondre par mail</a>
+                        <button type="submit" name="msg_action" value="suppr" class="btn btn-refuser" onclick="return confirm('Supprimer définitivement ce message ?');">Supprimer</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <!-- ============ MODÉRATION DES AVIS ============ -->
     <h2>MODÉRATION DES AVIS</h2>
