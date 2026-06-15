@@ -994,3 +994,15 @@ img, svg, iframe { max-width: 100%; }
 .calc-total { display: block; font-family: var(--font-hero); font-size: 2.3rem; color: var(--primary-color); margin-top: 4px; }
 .resa-prix { color: var(--primary-color); font-family: var(--font-nav); font-weight: 600; margin-top: -4px; min-height: 1.2em; }
 .carte-picto { width: 58px; height: 58px; object-fit: contain; display: block; margin-bottom: 10px; }
+
+/* --- Partage du score sur les réseaux sociaux (page profil) --- */
+.profil-partage { margin-top: 26px; text-align: center; }
+.partage-titre { font-family: var(--font-nav); letter-spacing: .5px; color: #cfcfcf; margin-bottom: 12px; }
+.partage-liens { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.partage-btn {
+  display: inline-block; padding: 9px 16px; border: 1px solid var(--primary-color);
+  border-radius: 4px; color: var(--primary-color); text-decoration: none;
+  font-family: var(--font-nav); font-size: .85rem; letter-spacing: 1px; text-transform: uppercase;
+  transition: background .15s, color .15s;
+}
+.partage-btn:hover { background: var(--primary-color); color: #14130d; }

@@ -101,6 +101,23 @@
         <span class="stat-lbl">Mes points</span>
       </div>
     </div>
+
+    <?php if ($nbParties > 0):
+      // Partage du profil/score sur les réseaux sociaux (cahier des charges : possible une fois l'escape terminé et le score obtenu)
+      $partUrl = 'https://' . htmlspecialchars($_SERVER['HTTP_HOST'] ?? 'sae202.mmi-troyes.fr') . BASE_URL . '/classement';
+      $partTxt = "J'ai bravé les BACKROOMS avec l'équipe " . ($equipe['nom'] ?? 'mystère') . " : " . (int) $points . " points ! Oserez-vous nous suivre dans les couloirs ?";
+      $u = rawurlencode($partUrl); $t = rawurlencode($partTxt);
+    ?>
+    <div class="profil-partage">
+      <p class="partage-titre">Fier·e de votre score ? Partagez votre exploit&nbsp;:</p>
+      <div class="partage-liens">
+        <a class="partage-btn" href="https://www.facebook.com/sharer/sharer.php?u=<?= $u ?>" target="_blank" rel="noopener noreferrer" aria-label="Partager mon score sur Facebook">Facebook</a>
+        <a class="partage-btn" href="https://twitter.com/intent/tweet?text=<?= $t ?>&url=<?= $u ?>" target="_blank" rel="noopener noreferrer" aria-label="Partager mon score sur X">X&nbsp;/&nbsp;Twitter</a>
+        <a class="partage-btn" href="https://wa.me/?text=<?= rawurlencode($partTxt . ' ' . $partUrl) ?>" target="_blank" rel="noopener noreferrer" aria-label="Partager mon score sur WhatsApp">WhatsApp</a>
+        <a class="partage-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=<?= $u ?>" target="_blank" rel="noopener noreferrer" aria-label="Partager mon score sur LinkedIn">LinkedIn</a>
+      </div>
+    </div>
+    <?php endif; ?>
   </section>
 
   <!-- ============ MES PARTIES ============ -->
