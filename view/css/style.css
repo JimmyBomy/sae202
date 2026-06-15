@@ -474,7 +474,7 @@ main { flex: 1 0 auto; }
 
 /* Avis */
 .avis-liste { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
-.avis-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; }
+.avis-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
 .avis-note { color: var(--primary-color); letter-spacing: 2px; margin-bottom: 10px; }
 .avis-card blockquote { font-style: italic; color: #ddd; margin: 0 0 12px; }
 .avis-card figcaption { color: var(--primary-color); font-family: var(--font-nav); }
@@ -981,7 +981,7 @@ img, svg, iframe { max-width: 100%; }
 .avatar-changer:hover { color: var(--primary-color); }
 
 /* Avatar dans les avis */
-.avis-auteur { display: flex; align-items: center; gap: 10px; }
+.avis-auteur { display: flex; align-items: center; gap: 10px; margin-top: auto; padding-top: 14px; }
 .avis-avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid var(--primary-color); }
 .avis-avatar--vide { display: inline-flex; align-items: center; justify-content: center; background: #2a2a20; font-size: 1rem; }
 
