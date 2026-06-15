@@ -21,6 +21,9 @@ require_once('model/equipe.php');
 require_once('model/reservation.php');
 require_once('model/score.php');
 
+// --- 2e barrière : connexion par un VRAI compte administrateur (en plus du htpasswd Apache) ---
+require_once(__DIR__ . '/auth.php');
+
 // --- Export CSV des inscrits ---
 if (($_GET['export'] ?? '') === 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
@@ -194,7 +197,11 @@ $maxSalle = max(1, max($parSalle));
 <body>
 <div class="wrap">
     <h1>BACK-OFFICE</h1>
-    <p><a class="lien" href="<?= BASE_URL ?>/">← Retour au site public</a></p>
+    <p>
+        <a class="lien" href="<?= BASE_URL ?>/">← Retour au site public</a>
+        &nbsp;·&nbsp; Connecté : <strong><?= htmlspecialchars($_SESSION['admin_pseudo'] ?? 'admin') ?></strong>
+        &nbsp;·&nbsp; <a class="lien" href="<?= BASE_URL ?>/gestion?logout=1">Déconnexion</a>
+    </p>
 
     <!-- ============ STATISTIQUES ============ -->
     <h2>STATISTIQUES :</h2>
