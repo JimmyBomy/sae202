@@ -760,6 +760,20 @@ select.resa-field { cursor: pointer; }
 .cal-radio:checked + .cal-case { background: var(--primary-color); color: #1a1a1a; border-color: var(--primary-color); }
 .cal-aide { text-align: center; color: #9a9a8a; font-size: .85rem; margin-top: 10px; }
 
+/* --- Pictos du calendrier (designers) : numéro EN HAUT, picto EN BAS (pas par-dessus l'image) --- */
+.cal-grille .cal-case {
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 5px;
+  font-size: .95rem;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: auto 56%;
+}
+label.cal-case        { background-image: url('../img/cal-ouvert.webp'); }   /* jour disponible : porte ouverte */
+.cal-case.cal-passe   { background-image: url('../img/cal-ferme.webp'); opacity: .5; }  /* jour passé : porte fermée */
+.cal-case.cal-complet { background-image: url('../img/cal-pain.webp'); }     /* complet : pain complet */
+
 /* Questionnaire santé */
 .sante-q { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 0; border-bottom: 1px solid rgba(255, 255, 255, .07); flex-wrap: wrap; }
 .sante-libelle { color: #e3e3e3; }
