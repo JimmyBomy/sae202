@@ -9,11 +9,7 @@ $aujour    = new DateTime('today');
 $suivant   = (clone $premier)->modify('+1 month')->format('Y-m');
 $precedent = (clone $premier)->modify('-1 month')->format('Y-m');
 $nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
-// Mois minimum affichable : le mois en cours (on ne réserve pas dans le passé).
 $moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
-
-// Pré-remplissage : ce que l'utilisateur vient de saisir ($_POST) prime,
-// sinon les infos de son compte. Ainsi, changer de mois ne perd RIEN.
 $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $defaut);
 ?>
 <main class="concept-page resa-page">
@@ -30,54 +26,53 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
 
     <!-- ============ INSCRIPTION ============ -->
     <section class="concept-section pt30">
-      <h1 class="sec-title">INSCRIPTION</h1>
-      <p class="sec-sub">Nous avons besoin de vos informations !</p>
+      <h1 class="sec-title"><?= t('rv_ins_t') ?></h1>
+      <p class="sec-sub"><?= t('rv_ins_sub') ?></p>
       <?php if (!$estConnecte): ?>
-        <p class="form-switch" style="margin:0 0 18px;">Déjà un compte&nbsp;? <a href="<?= BASE_URL ?>/compte/connexion">Connectez-vous</a></p>
+        <p class="form-switch" style="margin:0 0 18px;"><?= t('rv_already') ?> <a href="<?= BASE_URL ?>/compte/connexion"><?= t('rv_login') ?></a></p>
       <?php endif; ?>
 
       <div class="resa-grid">
         <div class="resa-col">
-          <input class="resa-field" type="text"  name="nom"       placeholder="NOM" aria-label="NOM"       value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="prenom"    placeholder="PRÉNOM" aria-label="PRÉNOM"    value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
-          <input class="resa-field" type="email" name="email"     placeholder="EMAIL" aria-label="EMAIL"     value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="telephone" placeholder="TÉLÉPHONE" aria-label="TÉLÉPHONE" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
+          <input class="resa-field" type="text"  name="nom"       placeholder="<?= t('ph_NOM') ?>" aria-label="<?= t('ph_NOM') ?>" value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="prenom"    placeholder="<?= t('ph_PRENOM') ?>" aria-label="<?= t('ph_PRENOM') ?>" value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
+          <input class="resa-field" type="email" name="email"     placeholder="<?= t('ph_EMAIL') ?>" aria-label="<?= t('ph_EMAIL') ?>" value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
+          <input class="resa-field" type="text"  name="telephone" placeholder="<?= t('ph_TEL') ?>" aria-label="<?= t('ph_TEL') ?>" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
         </div>
         <div class="resa-col">
-          <input class="resa-field" type="text" name="nom_equipe" placeholder="NOM DE L'ÉQUIPE" aria-label="NOM DE L'ÉQUIPE"
+          <input class="resa-field" type="text" name="nom_equipe" placeholder="<?= t('ph_EQUIPE') ?>" aria-label="<?= t('ph_EQUIPE') ?>"
                  value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : '' ?>>
           <?php if (!$equipe): ?>
             <input class="resa-field" type="text" name="code_invite" maxlength="6"
-                   placeholder="OU CODE D'INVITATION (rejoindre une équipe)" aria-label="OU CODE D'INVITATION (rejoindre une équipe)"
+                   placeholder="<?= t('ph_CODE') ?>" aria-label="<?= t('ph_CODE') ?>"
                    value="<?= $champ('code_invite') ?>" style="text-transform:uppercase;">
           <?php endif; ?>
-          <input class="resa-field" type="number" name="nb_joueurs" placeholder="NOMBRE DE PARTICIPANTS (2 à 10)" aria-label="NOMBRE DE PARTICIPANTS (2 à 10)" min="2" max="10" value="<?= $champ('nb_joueurs') ?>" required>
-          <select class="resa-field" name="salle" required aria-label="Salle">
-            <option value="">CHOISIR UNE SALLE…</option>
-            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>>Salle 1 — Le Niveau 0 (facile, dès 10 ans)</option>
-            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>>Salle 2 — Les Couloirs jaunes (standard, dès 14 ans)</option>
-            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>>Salle 3 — Le Niveau ! (hardcore, dès 16 ans)</option>
+          <input class="resa-field" type="number" name="nb_joueurs" placeholder="<?= t('ph_NB') ?>" aria-label="<?= t('ph_NB') ?>" min="2" max="10" value="<?= $champ('nb_joueurs') ?>" required>
+          <select class="resa-field" name="salle" required aria-label="<?= t('calc_salle') ?>">
+            <option value=""><?= t('rv_salle_ph') ?></option>
+            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>><?= t('rv_s1') ?></option>
+            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>><?= t('rv_s2') ?></option>
+            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>><?= t('rv_s3') ?></option>
           </select>
           <p class="resa-prix" id="resa-prix" aria-live="polite"></p>
-          <label class="resa-dob-label">Date de naissance</label>
+          <label class="resa-dob-label"><?= t('rv_dob') ?></label>
           <?php
-            // Pré-remplissage : saisie en cours ($_POST) sinon la date déjà connue du compte.
-            $dn  = !empty($utilisateur['date_naissance']) ? explode('-', $utilisateur['date_naissance']) : null; // [AAAA, MM, JJ]
+            $dn  = !empty($utilisateur['date_naissance']) ? explode('-', $utilisateur['date_naissance']) : null;
             $dnJ = $_POST['naiss_jour']  ?? ($dn ? (int) $dn[2] : '');
             $dnM = $_POST['naiss_mois']  ?? ($dn ? (int) $dn[1] : '');
             $dnA = $_POST['naiss_annee'] ?? ($dn ? (int) $dn[0] : '');
           ?>
           <div class="resa-dob">
-            <select class="resa-field" name="naiss_jour" aria-label="Jour">
-              <option value="">Jour</option>
+            <select class="resa-field" name="naiss_jour" aria-label="<?= t('rv_jour') ?>">
+              <option value=""><?= t('rv_jour') ?></option>
               <?php for ($j = 1; $j <= 31; $j++): ?><option <?= $dnJ == $j ? 'selected' : '' ?>><?= $j ?></option><?php endfor; ?>
             </select>
-            <select class="resa-field" name="naiss_mois" aria-label="Mois">
-              <option value="">Mois</option>
+            <select class="resa-field" name="naiss_mois" aria-label="<?= t('rv_mois') ?>">
+              <option value=""><?= t('rv_mois') ?></option>
               <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>" <?= $dnM == $n ? 'selected' : '' ?>><?= ucfirst($m) ?></option><?php endforeach; ?>
             </select>
-            <select class="resa-field" name="naiss_annee" aria-label="Année">
-              <option value="">Année</option>
+            <select class="resa-field" name="naiss_annee" aria-label="<?= t('rv_annee') ?>">
+              <option value=""><?= t('rv_annee') ?></option>
               <?php for ($a = 2010; $a >= 1940; $a--): ?><option <?= $dnA == $a ? 'selected' : '' ?>><?= $a ?></option><?php endfor; ?>
             </select>
           </div>
@@ -87,8 +82,8 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
 
     <!-- ============ NOS DISPONIBILITÉS (calendrier) ============ -->
     <section class="concept-section" id="disponibilites">
-      <h2 class="sec-title">NOS DISPONIBILITÉS</h2>
-      <p class="sec-sub">Venez jouer avec nous en <?= htmlspecialchars($nomMois) ?> !</p>
+      <h2 class="sec-title"><?= t('rv_dispo_t') ?></h2>
+      <p class="sec-sub"><?= t('rv_come') . htmlspecialchars($nomMois) ?> !</p>
 
       <div class="calendrier">
         <div class="cal-grille">
@@ -100,67 +95,58 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
               $passe = ($dateJour < $aujour->format('Y-m-d'));
           ?>
             <?php if ($passe): ?>
-              <span class="cal-case cal-passe" title="Fermé"><span class="cal-num"><?= $jour ?></span></span>
+              <span class="cal-case cal-passe" title="<?= t('cal_ferme') ?>"><span class="cal-num"><?= $jour ?></span></span>
             <?php elseif (in_array($dateJour, $joursComplets ?? [], true)): ?>
-              <span class="cal-case cal-complet" title="Complet : les 3 salles sont réservées"><span class="cal-num"><?= $jour ?></span></span>
+              <span class="cal-case cal-complet" title="<?= t('cal_complet') ?>"><span class="cal-num"><?= $jour ?></span></span>
             <?php elseif (!creneau_ouvert($dateJour)): ?>
-              <span class="cal-case cal-ferme" title="Fermé — ouvert vendredi, samedi, jours fériés et vacances scolaires (sauf le lundi)"><span class="cal-num"><?= $jour ?></span></span>
+              <span class="cal-case cal-ferme" title="<?= t('cal_ferme') ?>"><span class="cal-num"><?= $jour ?></span></span>
             <?php else: ?>
               <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio"
                      <?= ($_POST['date_session'] ?? '') === $dateJour ? 'checked' : '' ?>>
-              <label for="cal<?= $dateJour ?>" class="cal-case" title="Disponible"><span class="cal-num"><?= $jour ?></span></label>
+              <label for="cal<?= $dateJour ?>" class="cal-case" title="<?= t('cal_dispo') ?>"><span class="cal-num"><?= $jour ?></span></label>
             <?php endif; ?>
           <?php endfor; ?>
         </div>
         <ul class="cal-legende">
-          <li><span class="lg lg-ouvert"></span> Disponible</li>
-          <li><span class="lg lg-complet"></span> Complet</li>
-          <li><span class="lg lg-ferme"></span> Fermé</li>
+          <li><span class="lg lg-ouvert"></span> <?= t('cal_dispo') ?></li>
+          <li><span class="lg lg-complet"></span> <?= t('cal_complet') ?></li>
+          <li><span class="lg lg-ferme"></span> <?= t('cal_ferme') ?></li>
         </ul>
         <div class="cal-pagination">
           <?php if ($mois > $moisMin): ?>
-            <!-- Boutons submit (et non liens) : la saisie du formulaire est conservée.
-                 formnovalidate = ne pas bloquer sur les champs requis pendant la navigation. -->
             <button type="submit" name="mois_aff" value="<?= $precedent ?>" class="btn-link cal-btn"
-                    formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate>&lsaquo; Mois précédent</button>
+                    formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate><?= t('rv_prev') ?></button>
           <?php else: ?>
             <span></span>
           <?php endif; ?>
           <button type="submit" name="mois_aff" value="<?= $suivant ?>" class="btn-link cal-btn"
-                  formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate>Passer au mois suivant &rsaquo;</button>
+                  formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate><?= t('rv_next') ?></button>
         </div>
       </div>
     </section>
 
     <!-- ============ SANTÉ ET SÉCURITÉ ============ -->
     <section class="concept-section">
-      <h2 class="sec-title">SANTÉ ET SÉCURITÉ</h2>
-      <p class="sec-sub">Votre santé et votre sécurité sont notre priorité !</p>
+      <h2 class="sec-title"><?= t('rv_sante_t') ?></h2>
+      <p class="sec-sub"><?= t('rv_sante_sub') ?></p>
 
       <?php
-      $questions = [
-        'sante_cardiaque'    => 'Avez-vous des problèmes cardiaques ?',
-        'sante_epilepsie'    => 'Souffrez-vous d\'épilepsie ou de sensibilité aux lumières stroboscopiques ?',
-        'sante_respiratoire' => 'Avez-vous des difficultés respiratoires ou de l\'asthme ?',
-        'sante_claustro'     => 'Souffrez-vous de claustrophobie ?',
-      ];
+      $questions = ['sante_cardiaque'=>t('rv_q1'), 'sante_epilepsie'=>t('rv_q2'), 'sante_respiratoire'=>t('rv_q3'), 'sante_claustro'=>t('rv_q4')];
       foreach ($questions as $nomQ => $libelle): ?>
         <div class="sante-q">
           <span class="sante-libelle"><?= $libelle ?></span>
           <div class="ouinon">
-            <label><input type="radio" name="<?= $nomQ ?>" value="oui" <?= ($_POST[$nomQ] ?? '') === 'oui' ? 'checked' : '' ?>> OUI</label>
-            <label><input type="radio" name="<?= $nomQ ?>" value="non" <?= ($_POST[$nomQ] ?? '') === 'non' ? 'checked' : '' ?>> NON</label>
+            <label><input type="radio" name="<?= $nomQ ?>" value="oui" <?= ($_POST[$nomQ] ?? '') === 'oui' ? 'checked' : '' ?>> <?= t('rv_oui') ?></label>
+            <label><input type="radio" name="<?= $nomQ ?>" value="non" <?= ($_POST[$nomQ] ?? '') === 'non' ? 'checked' : '' ?>> <?= t('rv_non') ?></label>
           </div>
         </div>
       <?php endforeach; ?>
 
-      <!-- Régime alimentaire (un repas est servi sur place) -->
       <div class="sante-q">
-        <span class="sante-libelle">Avez-vous un régime alimentaire particulier ? (un repas est servi)</span>
-        <select class="resa-field" name="regime" style="max-width:240px;" aria-label="Régime alimentaire">
+        <span class="sante-libelle"><?= t('rv_regime_q') ?></span>
+        <select class="resa-field" name="regime" style="max-width:240px;" aria-label="<?= t('rv_regime_q') ?>">
           <?php
-            $regimes = ['aucun' => 'Aucun', 'vegetarien' => 'Végétarien', 'vegan' => 'Végan',
-                        'sans_gluten' => 'Sans gluten', 'halal' => 'Halal', 'autre' => 'Autre'];
+            $regimes = ['aucun'=>t('reg_aucun'),'vegetarien'=>t('reg_vegetarien'),'vegan'=>t('reg_vegan'),'sans_gluten'=>t('reg_sans_gluten'),'halal'=>t('reg_halal'),'autre'=>t('reg_autre')];
             foreach ($regimes as $val => $lib):
           ?>
             <option value="<?= $val ?>" <?= ($_POST['regime'] ?? '') === $val ? 'selected' : '' ?>><?= $lib ?></option>
@@ -171,28 +157,28 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
 
     <!-- ============ PAIEMENT ============ -->
     <section class="concept-section">
-      <h2 class="sec-title">PAIEMENT</h2>
-      <p class="sec-sub">Plus qu'une étape avant de plonger dans les Backrooms !</p>
+      <h2 class="sec-title"><?= t('rv_pay_t') ?></h2>
+      <p class="sec-sub"><?= t('rv_pay_sub') ?></p>
 
       <div class="paiement-grid">
         <div class="pay-col">
-          <h3 class="pay-titre">Je paye par carte dès maintenant</h3>
+          <h3 class="pay-titre"><?= t('rv_pay_card') ?></h3>
           <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" aria-label="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" value="<?= $champ('cb_numero') ?>">
           <div class="pay-ligne">
             <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" aria-label="MM / AA" autocomplete="off" value="<?= $champ('cb_exp') ?>">
             <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" aria-label="CVV" autocomplete="off" value="<?= $champ('cb_cvv') ?>">
           </div>
-          <input class="resa-field" type="text" name="cb_tel" placeholder="TÉLÉPHONE" aria-label="TÉLÉPHONE" autocomplete="off" value="<?= $champ('cb_tel') ?>">
-          <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn">PAYER</button>
+          <input class="resa-field" type="text" name="cb_tel" placeholder="<?= t('ph_TEL') ?>" aria-label="<?= t('ph_TEL') ?>" autocomplete="off" value="<?= $champ('cb_tel') ?>">
+          <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn"><?= t('rv_pay_btn') ?></button>
         </div>
 
         <div class="pay-col">
-          <h3 class="pay-titre">Je souhaite payer sur place</h3>
-          <p class="pay-info">Réglez votre session directement à l'accueil le soir de l'événement.</p>
+          <h3 class="pay-titre"><?= t('rv_pay_place') ?></h3>
+          <p class="pay-info"><?= t('rv_pay_info') ?></p>
           <div class="pay-logos">
             <span>VISA</span><span>Mastercard</span><span>AMEX</span><span>ANCV</span><span> Pay</span>
           </div>
-          <button type="submit" name="paiement" value="sur_place" class="btn btn-outline pay-btn">JE FINALISE</button>
+          <button type="submit" name="paiement" value="sur_place" class="btn btn-outline pay-btn"><?= t('rv_pay_finalise') ?></button>
         </div>
       </div>
     </section>
@@ -202,9 +188,9 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
   <!-- Récapitulatif des réservations de l'équipe -->
   <?php if (!empty($reservations)): ?>
     <section class="concept-section">
-      <h2 class="sec-title">MES RÉSERVATIONS</h2>
+      <h2 class="sec-title"><?= t('rv_myresa_t') ?></h2>
       <table class="tableau">
-        <thead><tr><th>Salle</th><th>Date</th><th>Joueurs</th><th>Statut</th></tr></thead>
+        <thead><tr><th><?= t('th_salle') ?></th><th><?= t('th_date') ?></th><th><?= t('th_joueurs') ?></th><th><?= t('th_statut') ?></th></tr></thead>
         <tbody>
           <?php foreach ($reservations as $r): ?>
             <tr>
@@ -221,7 +207,6 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
 </main>
 
 <script>
-  /* Prix estimé en direct (même grille dégressive que le PHP prix_total) */
   (function () {
     const grille = { 2:170, 3:165, 4:160, 5:155, 6:150 };
     const tarif = n => (n >= 7 ? 145 : (grille[n] || 170));
@@ -233,7 +218,7 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
       const n = parseInt(nb.value, 10);
       if (!salle.value || isNaN(n) || n < 2 || n > 10) { out.textContent = ''; return; }
       const pp = tarif(n) + (salle.value === 'hardcore' ? 10 : 0);
-      out.textContent = 'Tarif estimé : ' + (pp * n) + ' € (' + pp + ' €/pers, repas et nuit inclus)';
+      out.textContent = <?= json_encode(t('rv_js_pre')) ?> + (pp * n) + ' € (' + pp + <?= json_encode(t('rv_js_suf')) ?>;
     }
     salle.addEventListener('change', maj); nb.addEventListener('input', maj); maj();
   })();
