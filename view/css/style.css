@@ -1090,3 +1090,12 @@ textarea:focus-visible, .burger:focus-visible, .partage-btn:focus-visible {
   outline: 2px solid var(--primary-color); outline-offset: 2px;
 }
 .cal-radio:focus-visible + .cal-case { outline: 2px solid var(--primary-color); outline-offset: 2px; }
+
+/* --- Lien d'évitement (sauter au contenu au clavier) --- */
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 2000; background: var(--primary-color); color: #14130d; padding: 10px 16px; border-radius: 0 0 6px 0; font-family: var(--font-nav); font-weight: 600; }
+.skip-link:focus { left: 0; }
+
+/* --- Respect de « réduire les animations » (confort / vestibulaire) --- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
