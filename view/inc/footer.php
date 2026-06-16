@@ -3,7 +3,7 @@
 
       <div class="footer-col footer-brand">
         <img src="<?= BASE_URL ?>/view/img/logo.png?v=2" alt="BACKROOMS" class="footer-logo">
-        <p>Escape game nocturne immersif.<br>« Vous n'auriez jamais dû trouver cet endroit. »</p>
+        <p>Escape game nocturne immersif.<br><span class="citation">«&nbsp;Vous n'auriez jamais dû trouver cet endroit.&nbsp;»</span></p>
       </div>
 
       <div class="footer-col">
