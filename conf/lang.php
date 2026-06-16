@@ -487,4 +487,33 @@ $__mn = [
 ];
 foreach ($__mn as $l => $arr) { $GLOBALS['TRAD'][$l] = array_merge($GLOBALS['TRAD'][$l], $arr); }
 
+// --- Contact : messages du contrôleur + accusé de réception envoyé au visiteur ---
+$__ctc = [
+ 'fr' => [
+  'ct_ok'=>"Votre message a bien été envoyé ! Nous vous répondrons rapidement.",
+  'ct_err_csrf'=>"Session expirée, veuillez renvoyer le formulaire.",
+  'ct_err_empty'=>"Tous les champs sont obligatoires.",
+  'ct_err_email'=>"L'adresse email n'est pas valide.",
+  'ct_ar_subj'=>"BACKROOMS — Nous avons bien reçu votre message",
+  'ct_ar_body'=>"Bonjour %s,\n\nMerci de nous avoir contactés ! Nous avons bien reçu votre message et nous vous répondrons dès que possible.\n\nVotre message :\n« %s »\n\nÀ très vite,\nL'équipe BACKROOMS",
+ ],
+ 'en' => [
+  'ct_ok'=>"Your message has been sent! We'll get back to you shortly.",
+  'ct_err_csrf'=>"Session expired, please resubmit the form.",
+  'ct_err_empty'=>"All fields are required.",
+  'ct_err_email'=>"The email address is not valid.",
+  'ct_ar_subj'=>"BACKROOMS — We've received your message",
+  'ct_ar_body'=>"Hello %s,\n\nThanks for contacting us! We've received your message and will get back to you as soon as possible.\n\nYour message:\n« %s »\n\nSee you soon,\nThe BACKROOMS team",
+ ],
+ 'es' => [
+  'ct_ok'=>"¡Tu mensaje ha sido enviado! Te responderemos en breve.",
+  'ct_err_csrf'=>"Sesión expirada, vuelve a enviar el formulario.",
+  'ct_err_empty'=>"Todos los campos son obligatorios.",
+  'ct_err_email'=>"La dirección de correo no es válida.",
+  'ct_ar_subj'=>"BACKROOMS — Hemos recibido tu mensaje",
+  'ct_ar_body'=>"Hola %s,\n\n¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos lo antes posible.\n\nTu mensaje:\n« %s »\n\nHasta pronto,\nEl equipo BACKROOMS",
+ ],
+];
+foreach ($__ctc as $l => $arr) { $GLOBALS['TRAD'][$l] = array_merge($GLOBALS['TRAD'][$l], $arr); }
+
 function lang_courante() { return $GLOBALS['LANG']; }

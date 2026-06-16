@@ -13,25 +13,27 @@ function index() {
         $message = trim($_POST['message'] ?? '');
 
         if (!csrf_verifie()) {
-            $erreur = 'Session expirée, veuillez renvoyer le formulaire.';
+            $erreur = t('ct_err_csrf');
         } elseif (empty($nom) || empty($email) || empty($sujet) || empty($message)) {
-            $erreur = 'Tous les champs sont obligatoires.';
+            $erreur = t('ct_err_empty');
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $erreur = 'L\'adresse email n\'est pas valide.';
+            $erreur = t('ct_err_email');
         } else {
             // 1) Canal FIABLE : on enregistre le message en base -> lisible dans le back-office (/gestion).
             ajouter_message($nom, $email, $sujet, $message);
 
-            // 2) Best effort : on tente aussi un mail (souvent indisponible sur le VPS, donc non bloquant).
-            $to = 'terrabordas@gmail.com';
-            $subject = 'Nouveau message de contact : ' . $sujet;
-            $headers  = "From: BACKROOMS <no-reply@sae202.mmi25c02.mmi-troyes.fr>\r\n";
-            $headers .= "Reply-To: " . $email . "\r\n";
-            $headers .= "Content-type: text/plain; charset=utf-8\r\n";
-            $body = "Nom: $nom\nEmail: $email\n\nMessage:\n$message";
-            @mail($to, $subject, $body, $headers);
+            $from = "From: BACKROOMS <no-reply@sae202.mmi25c02.mmi-troyes.fr>\r\n";
+            $ctype = "Content-type: text/plain; charset=utf-8\r\n";
 
-            $succes = 'Votre message a bien été envoyé ! Nous vous répondrons rapidement.';
+            // 2) Notification à l'administrateur (best effort : dépend du serveur mail du VPS).
+            @mail('terrabordas@gmail.com', 'Nouveau message de contact : ' . $sujet,
+                  "Nom: $nom\nEmail: $email\n\nMessage:\n$message",
+                  $from . "Reply-To: " . $email . "\r\n" . $ctype);
+
+            // 3) Accusé de réception envoyé au visiteur, dans SA langue (FR/EN/ES).
+            @mail($email, t('ct_ar_subj'), sprintf(t('ct_ar_body'), $nom, $message), $from . $ctype);
+
+            $succes = t('ct_ok');
         }
     }
 
