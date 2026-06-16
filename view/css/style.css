@@ -1104,6 +1104,13 @@ textarea:focus-visible, .burger:focus-visible, .partage-btn:focus-visible {
 .st-hardcore { background-image: url('../img/salle-hardcore.jpg?v=2'); }
 .form-carte { max-width: 600px; margin: 0 auto; background: #1a1a1a; border: 1px solid #2a2a2a; padding: 22px; border-radius: 8px; }
 .form-input { width: 100%; padding: 11px; border-radius: 6px; background: #2a2a2a; color: var(--text-light); border: 1px solid #3a3a3a; font-family: var(--font-body); font-size: 1rem; }
+.foot-cta-txt { margin-bottom: 14px; color: #8f8f88; }
+
+/* --- Sélecteur de langue (FR/EN/ES) --- */
+.lang-switch { display: inline-flex; gap: 4px; margin-right: 12px; font-family: var(--font-nav); font-size: .78rem; }
+.lang-switch a { color: #9a9a8a; text-decoration: none; padding: 3px 6px; border-radius: 4px; line-height: 1; }
+.lang-switch a:hover { color: var(--primary-color); }
+.lang-switch a.on { background: var(--primary-color); color: #14130d; font-weight: 600; }
 
 /* --- Respect de « réduire les animations » (confort / vestibulaire) --- */
 @media (prefers-reduced-motion: reduce) {

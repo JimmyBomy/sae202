@@ -3,48 +3,48 @@
 
       <div class="footer-col footer-brand">
         <img src="<?= BASE_URL ?>/view/img/logo.png?v=2" alt="BACKROOMS" class="footer-logo">
-        <p>Escape game nocturne immersif.<br><span class="citation">«&nbsp;Vous n'auriez jamais dû trouver cet endroit.&nbsp;»</span></p>
+        <p><?= t('foot_tagline') ?><br><span class="citation"><?= t('foot_quote') ?></span></p>
       </div>
 
       <div class="footer-col">
-        <h4>Navigation</h4>
+        <h4><?= t('foot_h_nav') ?></h4>
         <ul>
-          <li><a href="<?= BASE_URL ?>/">Accueil</a></li>
-          <li><a href="<?= BASE_URL ?>/concept">Concept</a></li>
-          <li><a href="<?= BASE_URL ?>/infos">Les salles</a></li>
-          <li><a href="<?= BASE_URL ?>/regles">Règles</a></li>
-          <li><a href="<?= BASE_URL ?>/classement">Classement</a></li>
-          <li><a href="<?= BASE_URL ?>/contact">Contact</a></li>
+          <li><a href="<?= BASE_URL ?>/"><?= t('nav_accueil') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/concept"><?= t('nav_concept') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/infos"><?= t('nav_salles') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/regles"><?= t('nav_regles') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/classement"><?= t('nav_classement') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/contact"><?= t('nav_contact') ?></a></li>
           <?php if (isset($_SESSION['user_id'])): ?>
-            <li><a href="<?= BASE_URL ?>/profil">Mon espace</a></li>
+            <li><a href="<?= BASE_URL ?>/profil"><?= t('btn_espace') ?></a></li>
           <?php else: ?>
-            <li><a href="<?= BASE_URL ?>/compte/connexion">Connexion</a></li>
+            <li><a href="<?= BASE_URL ?>/compte/connexion"><?= t('btn_connexion') ?></a></li>
           <?php endif; ?>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4>Infos pratiques</h4>
+        <h4><?= t('foot_h_infos') ?></h4>
         <ul>
           <li>Cours Émile Zola, 69100 Villeurbanne</li>
-          <li>Vendredi soir, samedi soir, jours fériés et vacances scolaires (sauf le lundi)</li>
-          <li><a href="<?= BASE_URL ?>/contact">Nous contacter</a></li>
+          <li><?= t('foot_jours') ?></li>
+          <li><a href="<?= BASE_URL ?>/contact"><?= t('foot_contact') ?></a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4>Prêt·e&nbsp;?</h4>
-        <p style="margin-bottom:14px; color:#8f8f88;">Réservez votre nuit dans les Backrooms.</p>
-        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary">RÉSERVER</a>
+        <h4><?= t('foot_h_pret') ?></h4>
+        <p class="foot-cta-txt"><?= t('foot_resa_txt') ?></p>
+        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary"><?= t('btn_reserver') ?></a>
       </div>
 
     </div>
 
     <div class="footer-bottom">
       <p>
-        &copy; <?= date('Y') ?> <?= NOM_SITE ?> — Tous droits réservés.
+        &copy; <?= date('Y') ?> <?= NOM_SITE ?> — <?= t('foot_rights') ?>
         · <a href="<?= BASE_URL ?>/mentions">Mentions légales</a>
-        · Réalisé par <strong>Lumina Studio</strong>
+        · <?= t('foot_by') ?> <strong>Lumina Studio</strong>
       </p>
     </div>
   </footer>

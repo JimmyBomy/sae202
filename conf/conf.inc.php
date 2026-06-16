@@ -36,6 +36,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Internationalisation (FR/EN/ES) — définit t() et lang_courante().
+require_once __DIR__ . '/lang.php';
+
 // Affichage des erreurs : ON en local, à couper en production (pas d'erreur PHP visible)
 // define('DEBUG', true);
 error_reporting(E_ALL);

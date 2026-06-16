@@ -5,7 +5,7 @@ $__seg = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'
 $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="active"' : '';
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="<?= lang_courante() ?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +21,7 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="<?= BASE_URL ?>/view/img/favicon.png">
   <!-- Polices auto-hébergées (view/fonts/) : aucune requête externe (éco + RGPD) -->
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=44">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=45">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <a href="#contenu" class="skip-link">Aller au contenu</a>
@@ -39,22 +39,26 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
 
       <nav class="main-nav">
         <ul>
-          <li><a href="<?= BASE_URL ?>/" <?= $actif('') ?>>ACCUEIL</a></li>
-          <li><a href="<?= BASE_URL ?>/concept" <?= $actif('concept') ?>>CONCEPT</a></li>
-          <li><a href="<?= BASE_URL ?>/infos" <?= $actif('infos') ?>>LES SALLES</a></li>
-          <li><a href="<?= BASE_URL ?>/infospratiques" <?= $actif('infospratiques') ?>>INFOS PRATIQUES</a></li>
-          <li><a href="<?= BASE_URL ?>/regles" <?= $actif('regles') ?>>RÈGLES</a></li>
-          <li><a href="<?= BASE_URL ?>/contact" <?= $actif('contact') ?>>CONTACT</a></li>
+          <li><a href="<?= BASE_URL ?>/" <?= $actif('') ?>><?= t('nav_accueil') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/concept" <?= $actif('concept') ?>><?= t('nav_concept') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/infos" <?= $actif('infos') ?>><?= t('nav_salles') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/infospratiques" <?= $actif('infospratiques') ?>><?= t('nav_infos') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/regles" <?= $actif('regles') ?>><?= t('nav_regles') ?></a></li>
+          <li><a href="<?= BASE_URL ?>/contact" <?= $actif('contact') ?>><?= t('nav_contact') ?></a></li>
         </ul>
       </nav>
 
       <div class="header-actions">
+        <!-- Sélecteur de langue (FR / EN / ES) -->
+        <div class="lang-switch" aria-label="Langue / Language">
+          <a href="?lang=fr"<?= lang_courante()==='fr' ? ' class="on"' : '' ?>>FR</a>
+          <a href="?lang=en"<?= lang_courante()==='en' ? ' class="on"' : '' ?>>EN</a>
+          <a href="?lang=es"<?= lang_courante()==='es' ? ' class="on"' : '' ?>>ES</a>
+        </div>
         <?php if (isset($_SESSION['user_id'])): ?>
-          <!-- Connecté : accès à l'espace privé (profil, équipe, déconnexion) -->
-          <a href="<?= BASE_URL ?>/profil" class="btn btn-outline">MON ESPACE</a>
+          <a href="<?= BASE_URL ?>/profil" class="btn btn-outline"><?= t('btn_espace') ?></a>
         <?php else: ?>
-          <!-- Un seul bouton : RÉSERVER mène à l'inscription / connexion -->
-          <a href="<?= BASE_URL ?>/reservation" class="btn btn-outline">RÉSERVER</a>
+          <a href="<?= BASE_URL ?>/reservation" class="btn btn-outline"><?= t('btn_reserver') ?></a>
         <?php endif; ?>
       </div>
     </div>
