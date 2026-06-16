@@ -112,6 +112,13 @@
       les tribunaux français seront seuls compétents.
     </p>
 
+    <h2>Crédits</h2>
+    <p>
+      Certaines illustrations d'ambiance proviennent de Wikimedia Commons (licences libres
+      Creative Commons / domaine public). Les autres visuels, le logo et l'identité graphique
+      sont la propriété de Lumina Studio.
+    </p>
+
     <p class="mentions-maj">Dernière mise à jour : juin 2026</p>
   </section>
 </main>

@@ -174,6 +174,19 @@ $maxSalle = max(1, max($parSalle));
         .msg-sujet .pastille { width: 9px; height: 9px; border-radius: 50%; background: #d1b023; display: inline-block; }
         .msg-corps { color: #d8d8d0; font-size: .9rem; line-height: 1.5; white-space: pre-wrap; margin-bottom: 12px; }
         .msg-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* Responsive back-office */
+        table { max-width: 100%; }
+        @media (max-width: 760px) {
+            .stats { grid-template-columns: repeat(3, 1fr); }
+            .resa-table, table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            .barre-ligne .nom { width: 78px; font-size: 1rem; }
+            h1 { font-size: 2.6rem; }
+        }
+        @media (max-width: 460px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            body { padding: 18px 12px 50px; }
+        }
         .avis-carte .texte { font-style: italic; font-size: .8rem; color: #e3e3e3; flex: 1; }
         .avis-actions { display: flex; gap: 10px; justify-content: center; }
         .btn { font-family: 'Montserrat', Arial, sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;

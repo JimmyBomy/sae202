@@ -28,3 +28,12 @@
     </div>
   </div>
 </main>
+
+<section class="home-video">
+  <h2 class="sec-title">LA BANDE-ANNONCE</h2>
+  <p class="sec-sub">Plongez dans l'ambiance avant de franchir la porte.</p>
+  <div class="video-wrap">
+    <iframe src="https://www.youtube-nocookie.com/embed/e9Fs0jREKUw" title="Bande-annonce BACKROOMS"
+            loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  </div>
+</section>
