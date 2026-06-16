@@ -1,17 +1,17 @@
 <main class="concept-page">
   <section class="concept-section pt30">
-    <h1 class="sec-title">CLASSEMENT</h1>
-    <p class="sec-sub">Les équipes qui ont survécu aux Backrooms… ou presque.</p>
+    <h1 class="sec-title"><?= t('cl_title') ?></h1>
+    <p class="sec-sub"><?= t('cl_sub') ?></p>
 
     <?php if (empty($classement)): ?>
-      <p>Aucune partie jouée pour le moment. Le classement apparaîtra après les premières sessions&nbsp;!</p>
+      <p><?= t('cl_empty') ?></p>
       <div class="cta-bloc">
-        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary">RÉSERVER UNE SESSION</a>
+        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary"><?= t('home_btn_reserver') ?></a>
       </div>
     <?php else: ?>
       <table class="tableau classement-table">
         <thead>
-          <tr><th>#</th><th>Équipe</th><th>Points</th><th>Meilleur temps</th><th>Parties</th><th>Sorties</th></tr>
+          <tr><th>#</th><th><?= t('cl_equipe') ?></th><th><?= t('cl_points') ?></th><th><?= t('cl_temps') ?></th><th><?= t('cl_parties') ?></th><th><?= t('cl_sorties') ?></th></tr>
         </thead>
         <tbody>
           <?php foreach ($classement as $i => $c):
@@ -30,8 +30,8 @@
         </tbody>
       </table>
       <div class="cta-bloc">
-        <p>Votre équipe peut faire mieux&nbsp;?</p>
-        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary">DÉFIER LES BACKROOMS</a>
+        <p><?= t('cl_cta') ?></p>
+        <a href="<?= BASE_URL ?>/reservation" class="btn btn-primary"><?= t('cl_cta_btn') ?></a>
       </div>
     <?php endif; ?>
   </section>
