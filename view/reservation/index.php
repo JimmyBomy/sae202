@@ -112,6 +112,11 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
             <?php endif; ?>
           <?php endfor; ?>
         </div>
+        <ul class="cal-legende">
+          <li><span class="lg lg-ouvert"></span> Disponible</li>
+          <li><span class="lg lg-complet"></span> Complet</li>
+          <li><span class="lg lg-ferme"></span> Fermé</li>
+        </ul>
         <div class="cal-pagination">
           <?php if ($mois > $moisMin): ?>
             <!-- Boutons submit (et non liens) : la saisie du formulaire est conservée.
