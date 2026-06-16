@@ -29,7 +29,7 @@ $champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $d
     <?= csrf_input() ?>
 
     <!-- ============ INSCRIPTION ============ -->
-    <section class="concept-section" style="padding-top:30px;">
+    <section class="concept-section pt30">
       <h1 class="sec-title">INSCRIPTION</h1>
       <p class="sec-sub">Nous avons besoin de vos informations !</p>
       <?php if (!$estConnecte): ?>

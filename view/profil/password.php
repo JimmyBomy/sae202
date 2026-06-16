@@ -1,4 +1,4 @@
-<main class="container" style="padding-top: 50px;">
+<main class="container">
     <h2>Mon Profil</h2>
     
     <div class="profil-onglets">
@@ -15,7 +15,7 @@
         <div class="alert alert-success"><?= $succes ?></div>
     <?php endif; ?>
 
-    <form action="" method="post" style="max-width: 600px; background: #222; padding: 20px; border-radius: 5px;">
+    <form action="" method="post" class="form-carte">
     <?= csrf_input() ?>
         <div class="form-group">
             <label for="mot_de_passe_actuel">Mot de passe actuel *</label>

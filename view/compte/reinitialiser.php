@@ -1,4 +1,4 @@
-<main class="container form-page" style="padding-top: 50px;">
+<main class="container form-page">
   <h1>Nouveau mot de passe</h1>
   <?php if (!empty($erreur)): ?>
     <div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div>

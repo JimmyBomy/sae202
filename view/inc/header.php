@@ -21,7 +21,7 @@ $actif = fn($c) => ($__seg === $c || ($c === '' && $__seg === '')) ? 'class="act
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="<?= BASE_URL ?>/view/img/favicon.png">
   <!-- Polices auto-hébergées (view/fonts/) : aucune requête externe (éco + RGPD) -->
-  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=43">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/view/css/style.css?v=44">
 </head>
 <body class="<?= isset($page_class) ? $page_class : '' ?>">
   <a href="#contenu" class="skip-link">Aller au contenu</a>

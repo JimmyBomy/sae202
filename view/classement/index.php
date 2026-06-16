@@ -1,5 +1,5 @@
 <main class="concept-page">
-  <section class="concept-section" style="padding-top:30px;">
+  <section class="concept-section pt30">
     <h1 class="sec-title">CLASSEMENT</h1>
     <p class="sec-sub">Les équipes qui ont survécu aux Backrooms… ou presque.</p>
 

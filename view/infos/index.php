@@ -5,7 +5,7 @@
 
     <div class="salles-grid">
       <article class="salle-card2">
-        <div class="salle-thumb2" style="background-image:url('<?= BASE_URL ?>/view/img/salle-facile.jpg?v=2')">
+        <div class="salle-thumb2 st-facile">
           <span class="salle-tag">FACILE</span>
         </div>
         <div class="salle-body">
@@ -23,7 +23,7 @@
       </article>
 
       <article class="salle-card2">
-        <div class="salle-thumb2" style="background-image:url('<?= BASE_URL ?>/view/img/salle-standard.jpg?v=2')">
+        <div class="salle-thumb2 st-standard">
           <span class="salle-tag">STANDARD</span>
         </div>
         <div class="salle-body">
@@ -41,7 +41,7 @@
       </article>
 
       <article class="salle-card2">
-        <div class="salle-thumb2" style="background-image:url('<?= BASE_URL ?>/view/img/salle-hardcore.jpg?v=2')">
+        <div class="salle-thumb2 st-hardcore">
           <span class="salle-tag salle-tag--hard">HARDCORE</span>
         </div>
         <div class="salle-body">

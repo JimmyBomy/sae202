@@ -1,4 +1,4 @@
-<main class="container form-page" style="padding-top: 50px;">
+<main class="container form-page">
   <h1>Mot de passe oublié</h1>
   <p>Saisissez votre adresse email : nous vous enverrons un lien pour choisir un nouveau mot de passe.</p>
   <?php if (!empty($erreur)): ?><div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div><?php endif; ?>

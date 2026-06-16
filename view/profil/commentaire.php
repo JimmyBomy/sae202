@@ -2,7 +2,7 @@
 $note = $note ?? '';
 $texte = $texte ?? '';
 ?>
-<main class="container" style="padding-top: 50px;">
+<main class="container">
     <h2>Mon Profil</h2>
     
     <div class="profil-onglets">
@@ -21,11 +21,11 @@ $texte = $texte ?? '';
 
     <p>Avez-vous réussi à sortir des Backrooms ? Laissez-nous votre avis sur l'expérience !</p>
 
-    <form action="" method="post" style="max-width: 600px; background: #222; padding: 20px; border-radius: 5px;">
+    <form action="" method="post" class="form-carte">
     <?= csrf_input() ?>
         <div class="form-group">
             <label for="note">Note (sur 5) *</label>
-            <select name="note" id="note" required style="width: 100%; padding: 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #444;">
+            <select name="note" id="note" required class="form-input">
                 <option value="5" <?= ($note === '5' || $note === 5) ? 'selected' : '' ?>>5 - Excellent, inoubliable !</option>
                 <option value="4" <?= ($note === '4' || $note === 4) ? 'selected' : '' ?>>4 - Très bien, angoissant</option>
                 <option value="3" <?= ($note === '3' || $note === 3) ? 'selected' : '' ?>>3 - Bien, mais peut mieux faire</option>
@@ -35,7 +35,7 @@ $texte = $texte ?? '';
         </div>
         <div class="form-group" style="margin-top: 15px;">
             <label for="texte">Votre commentaire *</label>
-            <textarea name="texte" id="texte" rows="5" required style="width: 100%; padding: 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #444;"><?= isset($texte) ? htmlspecialchars($texte, ENT_QUOTES, 'UTF-8') : '' ?></textarea>
+            <textarea name="texte" id="texte" rows="5" required class="form-input"><?= isset($texte) ? htmlspecialchars($texte, ENT_QUOTES, 'UTF-8') : '' ?></textarea>
         </div>
         <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Envoyer mon avis</button>
     </form>

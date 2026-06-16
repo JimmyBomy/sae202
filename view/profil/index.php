@@ -8,7 +8,7 @@
   <?php endif; ?>
 
   <!-- ============ MON PROFIL ============ -->
-  <section class="concept-section" style="padding-top:30px;">
+  <section class="concept-section pt30">
     <h1 class="sec-title">MON PROFIL</h1>
     <p class="sec-sub">Gérez vos informations et vos réservations !</p>
 
@@ -159,7 +159,7 @@
         </tbody>
       </table>
     <?php endif; ?>
-    <p style="text-align:center; margin-top:18px;"><a href="<?= BASE_URL ?>/profil/commentaire" class="btn-link">Laisser un avis sur votre expérience &rsaquo;</a></p>
+    <p class="center-mt"><a href="<?= BASE_URL ?>/profil/commentaire" class="btn-link">Laisser un avis sur votre expérience &rsaquo;</a></p>
   </section>
 
   <!-- ============ ZONE SÉCURITÉ ============ -->

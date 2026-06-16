@@ -101,7 +101,7 @@
         <span class="stat-lbl">Adrénaline garantie</span>
       </div>
     </div>
-    <p style="text-align:center; margin-top:18px;">
+    <p class="center-mt">
       <a href="<?= BASE_URL ?>/classement" class="btn-link">VOIR LE CLASSEMENT DES ÉQUIPES &gt;</a>
     </p>
   </section>

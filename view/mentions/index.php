@@ -1,5 +1,5 @@
 <main class="concept-page mentions-page">
-  <section class="concept-section" style="padding-top:30px;">
+  <section class="concept-section pt30">
     <h1 class="sec-title">MENTIONS LÉGALES</h1>
 
     <!-- Rangée 1 : identification / cookies -->

@@ -1095,6 +1095,16 @@ textarea:focus-visible, .burger:focus-visible, .partage-btn:focus-visible {
 .skip-link { position: absolute; left: -9999px; top: 0; z-index: 2000; background: var(--primary-color); color: #14130d; padding: 10px 16px; border-radius: 0 0 6px 0; font-family: var(--font-nav); font-weight: 600; }
 .skip-link:focus { left: 0; }
 
+/* --- Classes issues du nettoyage des styles inline --- */
+.pt30 { padding-top: 30px; }
+.center-mt { text-align: center; margin-top: 18px; }
+.form-page { padding-top: 50px; }
+.st-facile   { background-image: url('../img/salle-facile.jpg?v=2'); }
+.st-standard { background-image: url('../img/salle-standard.jpg?v=2'); }
+.st-hardcore { background-image: url('../img/salle-hardcore.jpg?v=2'); }
+.form-carte { max-width: 600px; margin: 0 auto; background: #1a1a1a; border: 1px solid #2a2a2a; padding: 22px; border-radius: 8px; }
+.form-input { width: 100%; padding: 11px; border-radius: 6px; background: #2a2a2a; color: var(--text-light); border: 1px solid #3a3a3a; font-family: var(--font-body); font-size: 1rem; }
+
 /* --- Respect de « réduire les animations » (confort / vestibulaire) --- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
