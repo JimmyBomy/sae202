@@ -62,6 +62,11 @@ $qrcodes  = getImagesFromDir('view/uploads/qrcode');
   .btn:hover{background:#e3c63a;}
   .btn-ghost{background:none;color:#e6e6e6;border:1px solid #4a4636;}
   .btn-ghost:hover{border-color:#d1b023;color:#d1b023;}
+  .reveal-zone{text-align:center;}
+  #vainqueur{margin-top:18px;font-family:'VT323',monospace;animation:pop .55s ease;}
+  #vainqueur .nom{display:block;color:#d1b023;font-size:clamp(2.6rem,9vw,5rem);line-height:1;text-shadow:0 0 18px rgba(209,176,35,.5);}
+  #vainqueur .det{display:block;color:#7ee2a8;font-size:1.5rem;margin-top:6px;}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 </style>
 </head>
 <body>
@@ -101,6 +106,12 @@ $qrcodes  = getImagesFromDir('view/uploads/qrcode');
       <div class="ph">Déposez le QR Code dans <code>view/uploads/qrcode/</code> (jpg, png, svg) — il apparaîtra ici.</div>
     <?php endif; ?>
 
+    <h2>🏆 Le grand gagnant</h2>
+    <div class="reveal-zone">
+      <button class="btn" id="btn-reveal" onclick="revealVainqueur()">Révéler le vainqueur</button>
+      <div id="vainqueur" class="ph hidden" style="border:none;background:none;"></div>
+    </div>
+
     <div class="actions">
       <a class="btn" href="<?= BASE_URL ?>/survie">🎮 Lancer le mini-jeu</a>
       <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
@@ -125,15 +136,25 @@ $qrcodes  = getImagesFromDir('view/uploads/qrcode');
       }
     }
 
-    // Appliquer l'événement "clic"
-    document.querySelectorAll('video, .affiches img, .qrcodes img').forEach(media => {
-      media.addEventListener('click', function(e) {
-        const rect = this.getBoundingClientRect();
-        const y = e.clientY - rect.top;
-        if (this.tagName === 'VIDEO' && this.hasAttribute('controls') && y > rect.height - 40) { return; }
-        toggleFullScreen(this);
-      });
+    // Plein écran au clic UNIQUEMENT sur les images (la vidéo garde sa barre de contrôle native, propre).
+    document.querySelectorAll('.affiches img, .qrcodes img').forEach(media => {
+      media.addEventListener('click', function(){ toggleFullScreen(this); });
     });
+
+    // Révélation du vainqueur (1er du classement du mini-jeu).
+    function revealVainqueur(){
+      fetch('<?= BASE_URL ?>/survie/classement').then(r=>r.json()).then(rows=>{
+        const v=document.getElementById('vainqueur');
+        if(!rows.length){ v.innerHTML='<span class="det">Aucun score pour le moment…</span>'; }
+        else{ const w=rows[0];
+          v.innerHTML='🏆<span class="nom">'+w.pseudo+'</span>'+
+            '<span class="det">'+w.score+' pts · '+w.niveau+' portes</span>'+
+            '<span class="det" style="color:#d1b023">gagne 4 places en avant-première !</span>'; }
+        v.classList.remove('hidden');
+        document.getElementById('btn-reveal').classList.add('hidden');
+      }).catch(()=>{});
+    }
+    window.revealVainqueur=revealVainqueur;
   </script>
 </body>
 </html>

@@ -42,7 +42,8 @@
   #chrono-barre{height:10px;background:#2a2820;}
   #chrono-barre span{display:block;height:100%;width:100%;background:#d1b023;transition:width .15s linear;}
   #chrono-barre span.urgent{background:#c0392b;}
-  #grille{flex:1;display:grid;gap:10px;padding:12px;}
+  #grille{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px;padding:12px;
+    width:min(520px,92vw);aspect-ratio:2/3;max-height:74vh;margin:auto;}
   .porte{position:relative;border:none;border-radius:10px;cursor:pointer;background-size:cover;background-position:center;
     background-image:url('<?= BASE_URL ?>/view/img/cal-ferme.webp');transition:transform .06s;min-height:0;}
   .porte:active{transform:scale(.96);}
