@@ -2,194 +2,176 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="robots" content="noindex">
-<title>SURVIE — Niveau 0 · BACKROOMS</title>
+<title>ÉVASION DES BACKROOMS — 20 s</title>
 <link rel="icon" type="image/png" href="<?= BASE_URL ?>/view/img/favicon.png">
 <style>
   @font-face{font-family:'VT323';src:url('<?= BASE_URL ?>/view/fonts/vt323-400.woff2') format('woff2');font-display:swap;}
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-    font-family:'Segoe UI',Arial,sans-serif;color:#f5f5f0;text-align:center;padding:20px;overflow-x:hidden;
-    background:#14130d;background-image:linear-gradient(rgba(13,12,9,.82),rgba(13,12,9,.9)),
-      repeating-linear-gradient(0deg,#181712 0 2px,#14130d 2px 4px);}
-  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
-    background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);animation:flicker 6s infinite;}
-  @keyframes flicker{0%,97%,100%{opacity:1}98%{opacity:.7}99%{opacity:.9}}
-  body.shake{animation:shake .4s;}
-  @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-8px,4px)}40%{transform:translate(8px,-4px)}60%{transform:translate(-6px,-3px)}80%{transform:translate(6px,3px)}}
-  body.flash{background-color:#1c3a1c;}
-  h1{font-family:'VT323',monospace;color:#d1b023;font-size:clamp(2.2rem,9vw,4rem);line-height:1;letter-spacing:2px;}
-  .sub{color:#bdbdb0;max-width:540px;font-size:.95rem;line-height:1.5;}
-  .amb{color:#9a9a8a;font-style:italic;min-height:1.2em;font-size:.9rem;}
-  .hud{display:flex;gap:22px;align-items:center;font-family:'VT323',monospace;font-size:1.6rem;color:#d1b023;flex-wrap:wrap;justify-content:center;}
-  .hud b{color:#fff;}
-  .vies{letter-spacing:2px;font-size:1.4rem;}
-  .barre{width:min(440px,92vw);height:12px;background:#2a2820;border-radius:6px;overflow:hidden;border:1px solid #3a3320;}
-  .barre span{display:block;height:100%;width:100%;background:#d1b023;}
-  .barre span.urgent{background:#c0392b;}
-  .grille{display:grid;gap:12px;width:min(620px,94vw);}
-  .porte{position:relative;aspect-ratio:3/4;border:none;border-radius:8px;cursor:pointer;background-size:cover;background-position:center;
-    background-image:url('<?= BASE_URL ?>/view/img/cal-ferme.webp');transition:transform .08s,box-shadow .12s;}
-  .porte:hover{transform:translateY(-3px);box-shadow:0 0 14px rgba(209,176,35,.35);}
-  .porte.ouverte{background-image:url('<?= BASE_URL ?>/view/img/cal-ouvert.webp');box-shadow:0 0 20px rgba(209,176,35,.55);}
-  .porte.entite{box-shadow:0 0 18px rgba(192,57,43,.6);}
-  .porte.entite::after{content:"👁";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-size:2rem;background:rgba(120,15,15,.5);border-radius:8px;animation:eye 1.1s infinite;}
-  @keyframes eye{0%,100%{opacity:.55}50%{opacity:1}}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{background:#0b0a07;color:#f5f5f0;font-family:'Segoe UI',Arial,sans-serif;text-align:center;
+    overflow:hidden;background-image:linear-gradient(rgba(13,12,9,.82),rgba(13,12,9,.9)),
+      repeating-linear-gradient(0deg,#181712 0 2px,#14130d 2px 4px);
+    display:flex;flex-direction:column;}
+  .overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;padding:22px;z-index:10;overflow:auto;background:rgba(11,10,7,.9);}
+  .hidden{display:none!important;}
+  h1{font-family:'VT323',monospace;color:#d1b023;font-size:clamp(2rem,8vw,3.8rem);line-height:1;letter-spacing:2px;}
+  .sub{color:#cfcfc4;max-width:520px;line-height:1.5;font-size:.92rem;}
+  .prix{color:#d1b023;font-family:'VT323',monospace;font-size:1.4rem;border:1px solid #d1b023;border-radius:8px;padding:7px 14px;}
   .btn{font-family:'VT323',monospace;font-size:1.5rem;letter-spacing:1px;background:#d1b023;color:#14130d;border:none;
-    border-radius:6px;padding:10px 28px;cursor:pointer;text-decoration:none;display:inline-block;}
+    border-radius:8px;padding:12px 32px;cursor:pointer;text-decoration:none;display:inline-block;}
   .btn:hover{background:#e3c63a;}
-  .btn-ghost{background:none;color:#9a9a8a;border:1px solid #3a3320;}
-  .ecran{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;z-index:6;}
-  .hidden{display:none;}
-  .liens{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:6px;}
-  .msg{font-family:'VT323',monospace;font-size:2.1rem;color:#ff8a7a;}
-  .msg.win{color:#7ee2a8;}
-  .hs{color:#d1b023;font-family:'VT323',monospace;font-size:1.4rem;}
-  #son{position:fixed;top:14px;right:16px;z-index:7;background:none;border:1px solid #3a3320;color:#d1b023;
-    border-radius:6px;padding:6px 10px;font-size:1.1rem;cursor:pointer;}
+  .btn-ghost{background:none;color:#bdbdb0;border:1px solid #3a3320;}
+  .liens{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  .msg{font-family:'VT323',monospace;font-size:2.1rem;color:#7ee2a8;}
+  input{font-family:inherit;font-size:1rem;padding:11px 12px;border-radius:6px;border:1px solid #3a3320;background:#1d1c15;color:#f5f5f0;width:min(260px,78vw);text-align:center;}
+  table{border-collapse:collapse;width:min(420px,92vw);font-size:.92rem;}
+  th,td{padding:6px 9px;border-bottom:1px solid #2a2820;text-align:left;}
+  th{color:#d1b023;font-family:'VT323',monospace;font-size:1.05rem;letter-spacing:1px;}
+  td.r{text-align:right;font-family:'VT323',monospace;color:#fff;font-size:1.05rem;}
+  tr.top td{color:#d1b023;}
+
+  /* ===== Jeu ===== */
+  #jeu{flex:1;display:flex;flex-direction:column;}
+  #topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;
+    font-family:'VT323',monospace;font-size:1.7rem;color:#d1b023;}
+  #topbar b{color:#fff;}
+  #combo{color:#7ee2a8;}
+  #chrono-barre{height:10px;background:#2a2820;}
+  #chrono-barre span{display:block;height:100%;width:100%;background:#d1b023;transition:width .15s linear;}
+  #chrono-barre span.urgent{background:#c0392b;}
+  #grille{flex:1;display:grid;gap:10px;padding:12px;}
+  .porte{position:relative;border:none;border-radius:10px;cursor:pointer;background-size:cover;background-position:center;
+    background-image:url('<?= BASE_URL ?>/view/img/cal-ferme.webp');transition:transform .06s;min-height:0;}
+  .porte:active{transform:scale(.96);}
+  .porte.ouverte{background-image:url('<?= BASE_URL ?>/view/img/cal-ouvert.webp');box-shadow:0 0 22px rgba(126,226,168,.6),inset 0 0 0 3px #3ad17a;}
+  .porte.entite::after{content:"👁";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:9vmin;background:rgba(120,15,15,.45);border-radius:10px;}
+  body.shake{animation:shk .25s;}@keyframes shk{0%,100%{transform:translate(0,0)}33%{transform:translate(-6px,3px)}66%{transform:translate(6px,-3px)}}
 </style>
 </head>
 <body>
-  <button id="son" onclick="toggleSon()" title="Son">🔊</button>
 
-  <!-- Accueil -->
-  <div id="start" class="ecran">
-    <h1>SURVIE — NIVEAU 0</h1>
-    <p class="sub">Perdu·e dans les Backrooms. À chaque palier, <strong style="color:#d1b023">une seule porte est ouverte</strong> :
-       trouve-la avant la fin du chrono. Une porte fermée te coûte une vie ; derrière une porte marquée
-       <span style="color:#ff8a7a">👁</span> rôde une <strong style="color:#ff8a7a">entité</strong> — n'y touche pas.
-       <br>3 vies. Atteins le <strong>niveau 12</strong> pour t'échapper.</p>
-    <p class="hs" id="hs-start"></p>
-    <button class="btn" onclick="demarrer()">ENTRER</button>
-    <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
-  </div>
+<!-- Jeu -->
+<div id="jeu" class="hidden">
+  <div id="topbar"><span>⏱ <b id="t-temps">20</b></span><span id="combo"></span><span>SCORE <b id="t-score">0</b></span></div>
+  <div id="chrono-barre"><span id="t-barre"></span></div>
+  <div id="grille"></div>
+</div>
 
-  <!-- Jeu -->
-  <div id="jeu" class="ecran hidden">
-    <div class="hud">
-      <span>NIVEAU <b id="niveau">1</b></span>
-      <span>SCORE <b id="score">0</b></span>
-      <span class="vies" id="vies">❤️❤️❤️</span>
-    </div>
-    <p class="amb" id="amb"></p>
-    <div class="barre"><span id="barre"></span></div>
-    <div class="grille" id="grille"></div>
-  </div>
+<!-- Accueil -->
+<div id="start" class="overlay">
+  <h1>ÉVASION DES BACKROOMS</h1>
+  <p class="sub"><strong style="color:#d1b023">20 secondes</strong> pour fuir les couloirs.
+     Touche la <strong style="color:#7ee2a8">porte ouverte</strong> le plus vite possible pour enchaîner les combos.
+     Évite les portes <strong style="color:#ff8a7a">👁 entités</strong> (−2 s&nbsp;!). Fais le meilleur score.</p>
+  <p class="prix">🏆 Meilleur score = <strong>4 places en avant-première&nbsp;!</strong></p>
+  <input id="pseudo" maxlength="30" placeholder="Ton pseudo (obligatoire)" autocomplete="off">
+  <button class="btn" onclick="Jeu.start()">JOUER</button>
+  <div id="lb-start"></div>
+  <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
+</div>
 
-  <!-- Fin -->
-  <div id="fin" class="ecran hidden">
-    <p class="msg" id="msg-fin"></p>
-    <div class="hud"><span>SCORE <b id="score-fin">0</b></span></div>
-    <p class="hs" id="hs-fin"></p>
-    <div class="liens">
-      <button class="btn" onclick="demarrer()">REJOUER</button>
-      <a class="btn btn-ghost" href="<?= BASE_URL ?>/presentation">← Présentation</a>
-      <a class="btn btn-ghost" href="<?= BASE_URL ?>/">Accueil</a>
-    </div>
+<!-- Fin -->
+<div id="fin" class="overlay hidden">
+  <p class="msg" id="fin-msg">TEMPS ÉCOULÉ</p>
+  <p class="sub">Score : <strong id="fin-score" style="color:#d1b023;font-size:1.5rem">0</strong>
+     · <span id="fin-portes">0</span> portes</p>
+  <div id="fin-ok"><p class="prix">✔ Score enregistré au classement !</p></div>
+  <div id="lb-fin"></div>
+  <div class="liens">
+    <button class="btn" onclick="Jeu.start()">REJOUER</button>
+    <a class="btn btn-ghost" href="<?= BASE_URL ?>/presentation">Présentation</a>
+    <a class="btn btn-ghost" href="<?= BASE_URL ?>/">Accueil</a>
   </div>
+</div>
 
 <script>
-(function(){
+const BASE='<?= BASE_URL ?>', CSRF='<?= csrf_token() ?>';
+const Jeu=(function(){
   const $=id=>document.getElementById(id);
-  const NIVEAU_MAX=12;
-  const AMBIANCES=["Les néons bourdonnent…","La moquette est humide.","Quelque chose respire derrière toi.",
-    "Le couloir n'en finit pas.","Ne fais aucun bruit.","Une odeur d'amande flotte dans l'air.",
-    "Les murs se rapprochent.","Tu n'es plus seul·e.","Reste concentré·e.","Presque la sortie…","Cours.","La lumière vacille."];
-  let niveau,score,vies,tempsMax,deadline,timer;
-  let hs=parseInt(localStorage.getItem('backrooms_hs')||'0',10);
-  let soundOn=localStorage.getItem('backrooms_son')!=='off';
+  const DUREE=20000;
+  let fin0,score,combo,portes,raf,running,pseudo='',lastScore=0,lastPortes=0;
 
-  // --- Son synthétisé (sans fichier) ---
-  let actx;
-  function tone(freq,dur,type='square',vol=.15){
-    if(!soundOn)return;
-    try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-      const o=actx.createOscillator(),g=actx.createGain();
-      o.type=type;o.frequency.value=freq;o.connect(g);g.connect(actx.destination);
-      g.gain.setValueAtTime(vol,actx.currentTime);
-      g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+dur);
-      o.start();o.stop(actx.currentTime+dur);
-    }catch(e){}
-  }
-  const sOk=()=>{tone(660,.08);setTimeout(()=>tone(990,.12),70);};
-  const sBad=()=>tone(140,.3,'sawtooth',.2);
-  const sDead=()=>{tone(200,.2,'sawtooth',.2);setTimeout(()=>tone(90,.5,'sawtooth',.22),120);};
-  const sWin=()=>{[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.18),i*120));};
-  window.toggleSon=function(){soundOn=!soundOn;localStorage.setItem('backrooms_son',soundOn?'on':'off');$('son').textContent=soundOn?'🔊':'🔇';};
-
-  function majHS(){$('son').textContent=soundOn?'🔊':'🔇';
-    $('hs-start').textContent=hs?('Meilleur score : '+hs):'';}
-  majHS();
-
-  window.demarrer=function(){
-    niveau=1;score=0;vies=3;
+  function start(){
+    const p=$('pseudo').value.trim();
+    if(!p){$('pseudo').focus();$('pseudo').style.borderColor='#c0392b';return;}  // pseudo OBLIGATOIRE
+    pseudo=p;
+    score=0;combo=0;portes=0;running=true;
     $('start').classList.add('hidden');$('fin').classList.add('hidden');$('jeu').classList.remove('hidden');
-    palier();
-  };
+    fin0=performance.now()+DUREE;
+    manche();boucle();
+  }
 
-  function palier(){
-    $('niveau').textContent=niveau;$('score').textContent=score;
-    $('vies').textContent='❤️'.repeat(vies)+'🖤'.repeat(3-vies);
-    $('amb').textContent=AMBIANCES[(niveau-1)%AMBIANCES.length];
-    const nb=Math.min(4+niveau,16);
-    const cols=Math.ceil(Math.sqrt(nb));
-    const g=$('grille');g.style.gridTemplateColumns='repeat('+cols+',1fr)';g.innerHTML='';
-    const ouverte=Math.floor(Math.random()*nb);
-    // entités (à partir du niveau 3), jamais sur la porte ouverte
-    const nbEnt=niveau<3?0:Math.min(Math.floor(niveau/3),Math.floor((nb-1)/2));
-    const ent=new Set();
-    while(ent.size<nbEnt){const r=Math.floor(Math.random()*nb);if(r!==ouverte)ent.add(r);}
+  function boucle(){
+    if(!running)return;
+    const reste=fin0-performance.now();
+    if(reste<=0){return termine();}
+    $('t-temps').textContent=Math.ceil(reste/1000);
+    const pct=reste/DUREE*100;
+    const b=$('t-barre');b.style.width=pct+'%';b.classList.toggle('urgent',pct<25);
+    raf=requestAnimationFrame(boucle);
+  }
+
+  function manche(){
+    // difficulté croissante : plus le temps passe, plus d'entités
+    const ecoule=1-(fin0-performance.now())/DUREE;
+    const nb=6;                                  // 6 grosses portes (2x3) : idéal mobile
+    const g=$('grille');g.style.gridTemplateColumns='repeat(2,1fr)';g.innerHTML='';
+    const ouverte=Math.random()*nb|0;
+    const nbEnt=Math.min(1+Math.floor(ecoule*3),3);   // 1 → 3 entités
+    const ent=new Set();while(ent.size<nbEnt){const r=Math.random()*nb|0;if(r!==ouverte)ent.add(r);}
     for(let i=0;i<nb;i++){
       const p=document.createElement('button');p.className='porte';p.type='button';
-      if(i===ouverte){p.classList.add('ouverte');p.onclick=reussi;}
-      else if(ent.has(i)){p.classList.add('entite');p.onclick=()=>mort("Une entité vous a dévoré…");}
-      else{p.onclick=()=>erreur();}
+      if(i===ouverte){p.classList.add('ouverte');p.onclick=bon;}
+      else if(ent.has(i)){p.classList.add('entite');p.onclick=entite;}
+      else p.onclick=ferme;
       g.appendChild(p);
     }
-    tempsMax=Math.max(1100,3200-niveau*180);
-    deadline=Date.now()+tempsMax;
-    clearInterval(timer);timer=setInterval(tick,50);
   }
 
-  function tick(){
-    const reste=deadline-Date.now();
-    const pct=Math.max(0,reste/tempsMax*100);
-    const b=$('barre');b.style.width=pct+'%';b.classList.toggle('urgent',pct<30);
-    if(reste<=0){clearInterval(timer);erreur("Le temps vous a rattrapé…");}
+  function bon(){combo=Math.min(combo+1,5);score+=10*combo;portes++;sOk();maj();manche();}
+  function ferme(){combo=0;sBad();maj();manche();}                    // mauvaise porte : combo perdu
+  function entite(){combo=0;fin0-=2000;sBad();shake();maj();manche();} // entité : −2 s !
+
+  function maj(){$('t-score').textContent=score;$('combo').textContent=combo>1?('COMBO x'+combo):'';}
+
+  function termine(){
+    running=false;cancelAnimationFrame(raf);lastScore=score;lastPortes=portes;
+    $('jeu').classList.add('hidden');
+    $('fin-score').textContent=score;$('fin-portes').textContent=portes;
+    $('fin').classList.remove('hidden');
+    envoyer();                       // enregistrement automatique avec le pseudo saisi au départ
   }
 
-  function reussi(){
-    clearInterval(timer);
-    const bonus=Math.round((deadline-Date.now())/tempsMax*50);   // bonus vitesse
-    score+=niveau*10+Math.max(0,bonus);
-    sOk();flash();
-    if(niveau>=NIVEAU_MAX)return gagne();
-    niveau++;palier();
+  // --- Classement serveur ---
+  function chargerClassement(cible){
+    fetch(BASE+'/survie/classement').then(r=>r.json()).then(rows=>{
+      let h='<table><tr><th>#</th><th>Joueur</th><th>Score</th><th>Portes</th></tr>';
+      if(!rows.length)h+='<tr><td colspan="4" style="color:#9a9a8a">Sois le premier !</td></tr>';
+      rows.forEach((r,i)=>{h+='<tr class="'+(i===0?'top':'')+'"><td>'+(i===0?'🏆':(i+1))+'</td><td>'+r.pseudo+
+        '</td><td class="r">'+r.score+'</td><td class="r">'+r.niveau+'</td></tr>';});
+      document.getElementById(cible).innerHTML=h+'</table>';
+    }).catch(()=>{});
+  }
+  function envoyer(){
+    const fd=new FormData();fd.append('csrf',CSRF);fd.append('pseudo',pseudo);fd.append('score',lastScore);fd.append('niveau',lastPortes);
+    fetch(BASE+'/survie/soumettre',{method:'POST',body:fd})
+      .then(r=>r.json()).then(()=>chargerClassement('lb-fin')).catch(()=>chargerClassement('lb-fin'));
   }
 
-  function erreur(txt){
-    clearInterval(timer);
-    vies--;sBad();shake();
-    if(vies<=0)return mort(txt||"Vous êtes resté·e coincé·e…");
-    palier();                                   // on rejoue le palier
-  }
+  // --- Son ---
+  let actx;function tone(f,d,t='square',v=.12){try{actx=actx||new(AudioContext||webkitAudioContext)();
+    const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);
+    g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d);}catch(e){}}
+  const sOk=()=>tone(740+combo*90,.07);
+  const sBad=()=>tone(150,.2,'sawtooth',.18);
+  function shake(){document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),250);}
 
-  function mort(txt){clearInterval(timer);vies=0;sDead();shake();
-    $('msg-fin').textContent=txt;$('msg-fin').classList.remove('win');terminer();}
-  function gagne(){sWin();$('msg-fin').textContent="VOUS VOUS ÊTES ÉCHAPPÉ DES BACKROOMS !";$('msg-fin').classList.add('win');terminer();}
-
-  function terminer(){
-    if(score>hs){hs=score;localStorage.setItem('backrooms_hs',hs);}
-    $('score-fin').textContent=score;
-    $('hs-fin').textContent='Meilleur score : '+hs;
-    $('hs-start').textContent='Meilleur score : '+hs;
-    $('jeu').classList.add('hidden');$('fin').classList.remove('hidden');
-  }
-
-  function shake(){document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),400);}
-  function flash(){document.body.classList.add('flash');setTimeout(()=>document.body.classList.remove('flash'),160);}
+  chargerClassement('lb-start');
+  return {start,envoyer};
 })();
 </script>
 </body>

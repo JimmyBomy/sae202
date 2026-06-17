@@ -86,3 +86,12 @@ CREATE TABLE IF NOT EXISTS messages (
     lu            TINYINT(1) NOT NULL DEFAULT 0,    -- 0 = non lu, 1 = lu
     date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Scores du mini-jeu d'évasion (classement public).
+CREATE TABLE IF NOT EXISTS jeu_scores (
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    pseudo        VARCHAR(30) NOT NULL,
+    score         INT UNSIGNED NOT NULL,
+    niveau        TINYINT UNSIGNED NOT NULL DEFAULT 1,
+    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

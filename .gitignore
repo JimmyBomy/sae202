@@ -3,3 +3,5 @@ conf/secrets.local.php
 .DS_Store
 view/uploads/avatars/*
 !view/uploads/avatars/.gitkeep
+view/uploads/*.mp4
+view/uploads/*.webm
