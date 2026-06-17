@@ -29,24 +29,30 @@ function smtp_actif(): bool {
  * @param string|null $replyTo adresse de réponse éventuelle
  */
 function envoyer_mail(string $to, string $sujet, string $corps, ?string $replyTo = null): bool {
-    if (!smtp_actif()) {
-        return false; // SMTP non configuré : on n'envoie rien (pas d'erreur).
-    }
     $mail = new PHPMailer(true);
     try {
-        $mail->isSMTP();
-        $mail->Host       = SMTP_HOST;
-        $mail->Port       = defined('SMTP_PORT') ? (int) SMTP_PORT : 587;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = SMTP_USER;
-        $mail->Password   = SMTP_PASS;
-        // Chiffrement : STARTTLS (587) par défaut, ou SSL (465) si SMTP_SECURE = 'ssl'.
-        $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE === 'ssl')
-            ? PHPMailer::ENCRYPTION_SMTPS
-            : PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->CharSet    = 'UTF-8';
+        if (smtp_actif()) {
+            // Option : relais SMTP externe (Brevo, Gmail…) si configuré dans secrets.local.php.
+            $mail->isSMTP();
+            $mail->Host       = SMTP_HOST;
+            $mail->Port       = defined('SMTP_PORT') ? (int) SMTP_PORT : 587;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = SMTP_USER;
+            $mail->Password   = SMTP_PASS;
+            $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE === 'ssl')
+                ? PHPMailer::ENCRYPTION_SMTPS
+                : PHPMailer::ENCRYPTION_STARTTLS;
+        } else {
+            // Par défaut : Postfix local du VPS, qui relaie via le serveur mail de l'IUT
+            // (mail.mmi-troyes.fr) — bonne délivrabilité, aucun compte externe requis.
+            $mail->isSendmail();
+        }
+        $mail->CharSet = 'UTF-8';
 
-        $from     = defined('SMTP_FROM') && SMTP_FROM !== '' ? SMTP_FROM : SMTP_USER;
+        // Expéditeur sur le domaine du serveur (aligné avec le relais → évite le spam).
+        $from = (defined('SMTP_FROM') && SMTP_FROM !== '')
+            ? SMTP_FROM
+            : 'no-reply@' . gethostname() . '.mmi-troyes.fr';
         $fromName = defined('SMTP_FROM_NAME') ? SMTP_FROM_NAME : 'BACKROOMS';
         $mail->setFrom($from, $fromName);
         $mail->addAddress($to);
@@ -59,8 +65,7 @@ function envoyer_mail(string $to, string $sujet, string $corps, ?string $replyTo
         $mail->send();
         return true;
     } catch (\Throwable $e) {
-        // En production on ne montre rien à l'utilisateur ; on journalise pour le débogage.
-        error_log('Envoi mail SMTP échoué : ' . $e->getMessage());
+        error_log('Envoi mail échoué : ' . $e->getMessage());
         return false;
     }
 }
