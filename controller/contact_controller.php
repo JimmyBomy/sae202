@@ -1,5 +1,6 @@
 <?php
 require_once('model/message.php');
+require_once('model/mailer.php');
 
 function index() {
     $erreur = '';
@@ -22,16 +23,12 @@ function index() {
             // 1) Canal FIABLE : on enregistre le message en base -> lisible dans le back-office (/gestion).
             ajouter_message($nom, $email, $sujet, $message);
 
-            $from = "From: BACKROOMS <no-reply@sae202.mmi25c02.mmi-troyes.fr>\r\n";
-            $ctype = "Content-type: text/plain; charset=utf-8\r\n";
-
-            // 2) Notification à l'administrateur (best effort : dépend du serveur mail du VPS).
-            @mail('terrabordas@gmail.com', 'Nouveau message de contact : ' . $sujet,
-                  "Nom: $nom\nEmail: $email\n\nMessage:\n$message",
-                  $from . "Reply-To: " . $email . "\r\n" . $ctype);
+            // 2) Notification à l'administrateur (SMTP sécurisé ; Reply-To = visiteur).
+            envoyer_mail('terrabordas@gmail.com', 'Nouveau message de contact : ' . $sujet,
+                         "Nom: $nom\nEmail: $email\n\nMessage:\n$message", $email);
 
             // 3) Accusé de réception envoyé au visiteur, dans SA langue (FR/EN/ES).
-            @mail($email, t('ct_ar_subj'), sprintf(t('ct_ar_body'), $nom, $message), $from . $ctype);
+            envoyer_mail($email, t('ct_ar_subj'), sprintf(t('ct_ar_body'), $nom, $message));
 
             $succes = t('ct_ok');
         }

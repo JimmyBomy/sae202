@@ -1,5 +1,6 @@
 <?php
 require_once('model/utilisateur.php');
+require_once('model/mailer.php');
 
 function inscription() {
     $erreur = '';
@@ -101,9 +102,7 @@ function mdp_oublie() {
                        . $lien . "\n\n"
                        . "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.\n\n"
                        . "L'équipe BACKROOMS";
-                $headers = "From: BACKROOMS <no-reply@sae202.mmi25c02.mmi-troyes.fr>\r\n"
-                         . "Content-type: text/plain; charset=utf-8\r\n";
-                @mail($email, 'BACKROOMS — Réinitialisation du mot de passe', $corps, $headers);
+                envoyer_mail($email, 'BACKROOMS — Réinitialisation du mot de passe', $corps);
             }
             // Même message que le compte existe ou non (on ne révèle rien).
             $succes = "Si un compte existe avec cette adresse, un email de réinitialisation vient d'être envoyé.";
