@@ -96,6 +96,8 @@
 
 <script>
 const BASE='<?= BASE_URL ?>', CSRF='<?= csrf_token() ?>';
+// Masque l'URL réelle dans la barre d'adresse (les gens ne doivent pas pouvoir la lire/retaper).
+try{ history.replaceState(null,'',BASE+'/'); }catch(e){}
 const Jeu=(function(){
   const $=id=>document.getElementById(id);
   const DUREE=20000, CLE='bk_survie_joue';

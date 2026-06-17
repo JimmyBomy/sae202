@@ -93,6 +93,9 @@ $qrcodes  = getImagesFromDir('view/uploads/qrcode');
   </div>
 
   <script>
+    // Masque l'URL réelle dans la barre d'adresse (illisible pour le public qui voit l'écran).
+    try{ history.replaceState(null,'','<?= BASE_URL ?>/'); }catch(e){}
+
     function toggleFullScreen(elem){
       const fs = document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement;
       if(!fs){ (elem.requestFullscreen||elem.webkitRequestFullscreen||elem.mozRequestFullScreen||elem.msRequestFullscreen).call(elem); }
