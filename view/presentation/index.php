@@ -1,8 +1,21 @@
 <?php
-// Détection des médias présents (déposés dans view/uploads/), pour un rendu propre.
+// Fonction robuste pour scanner un dossier en ignorant la casse (majuscule/minuscule)
+function getImagesFromDir($dir) {
+    if (!is_dir($dir)) return [];
+    $files = glob($dir . '/*.*') ?: [];
+    // Filtre pour ne garder que les images (insensible à la casse grâce au "i" à la fin)
+    return array_filter($files, function($file) {
+        return preg_match('/\.(jpg|jpeg|png|webp|svg|gif)$/i', $file);
+    });
+}
+
+// Détection des médias présents
 $introVid    = file_exists('view/uploads/intro.mp4')    ? BASE_URL . '/view/uploads/intro.mp4'    : null;
 $discoursVid = file_exists('view/uploads/discours.mp4') ? BASE_URL . '/view/uploads/discours.mp4' : null;
-$affiches = glob('view/uploads/affiches/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [];
+
+// Utilisation de notre nouvelle fonction
+$affiches = getImagesFromDir('view/uploads/affiches');
+$qrcodes  = getImagesFromDir('view/uploads/qrcode');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -22,10 +35,27 @@ $affiches = glob('view/uploads/affiches/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [
   h1{font-family:'VT323',monospace;color:#d1b023;font-size:clamp(2.4rem,8vw,4rem);letter-spacing:2px;text-align:center;line-height:1;}
   .lede{text-align:center;color:#bdbdb0;margin:6px 0 30px;}
   h2{font-family:'VT323',monospace;color:#d1b023;font-size:1.9rem;letter-spacing:1px;margin:34px 0 14px;border-bottom:1px solid #3a3320;padding-bottom:6px;}
-  video{width:100%;border-radius:10px;border:1px solid #3a3320;background:#000;display:block;}
+  video{display:block;margin:0 auto;width:auto;max-width:100%;max-height:72vh;border-radius:10px;border:1px solid #3a3320;background:#000;cursor:zoom-in;}
   .ph{border:1px dashed #4a4636;border-radius:10px;padding:26px;text-align:center;color:#8f8f88;background:rgba(10,10,8,.4);}
-  .affiches{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
-  .affiches img{width:100%;border-radius:8px;border:1px solid #3a3320;}
+  
+  /* Nouveau CSS pour des affiches/QR Codes propres et non zoomés */
+  .affiches, .qrcodes {display:flex;flex-wrap:wrap;justify-content:center;gap:24px;}
+  .affiches img, .qrcodes img {
+    height:auto;
+    width:auto;
+    max-height:min(320px,55vh);
+    max-width:100%;
+    border-radius:8px;
+    border:1px solid #3a3320;
+    cursor:zoom-in;
+    object-fit:contain;
+  }
+  
+  /* Styles spécifiques quand les images passent en plein écran */
+  .affiches img:fullscreen, .qrcodes img:fullscreen {height:100%;width:100%;background:#000;border:none;}
+  .affiches img:-webkit-full-screen, .qrcodes img:-webkit-full-screen {height:100%;width:100%;background:#000;border:none;}
+  .affiches img:-moz-full-screen, .qrcodes img:-moz-full-screen {height:100%;width:100%;background:#000;border:none;}
+
   .actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:40px;}
   .btn{font-family:'VT323',monospace;font-size:1.6rem;letter-spacing:1px;background:#d1b023;color:#14130d;border:none;
     border-radius:8px;padding:14px 34px;cursor:pointer;text-decoration:none;display:inline-block;}
@@ -54,7 +84,7 @@ $affiches = glob('view/uploads/affiches/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [
     <?php endif; ?>
 
     <h2>🖼️ Affiches & flyers</h2>
-    <?php if ($affiches): ?>
+    <?php if (!empty($affiches)): ?>
       <div class="affiches">
         <?php foreach ($affiches as $a): ?><img src="<?= BASE_URL . '/' . htmlspecialchars($a) ?>" alt="Affiche" loading="lazy"><?php endforeach; ?>
       </div>
@@ -62,10 +92,48 @@ $affiches = glob('view/uploads/affiches/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [
       <div class="ph">Déposez les visuels dans <code>view/uploads/affiches/</code> (jpg, png, webp) — ils apparaîtront ici.</div>
     <?php endif; ?>
 
+    <h2>📱 QR CODE</h2>
+    <?php if (!empty($qrcodes)): ?>
+      <div class="qrcodes">
+        <?php foreach ($qrcodes as $q): ?><img src="<?= BASE_URL . '/' . htmlspecialchars($q) ?>" alt="QR Code" loading="lazy"><?php endforeach; ?>
+      </div>
+    <?php else: ?>
+      <div class="ph">Déposez le QR Code dans <code>view/uploads/qrcode/</code> (jpg, png, svg) — il apparaîtra ici.</div>
+    <?php endif; ?>
+
     <div class="actions">
       <a class="btn" href="<?= BASE_URL ?>/survie">🎮 Lancer le mini-jeu</a>
       <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
     </div>
   </div>
+
+  <script>
+    // Fonction de bascule (toggle) plein écran couvrant les 4 supports (Standard, WebKit, Moz, MS)
+    function toggleFullScreen(elem) {
+      const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+      
+      if (!isFullScreen) {
+        if (elem.requestFullscreen) { elem.requestFullscreen(); } 
+        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } 
+        else if (elem.mozRequestFullScreen) { elem.mozRequestFullScreen(); } 
+        else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
+      } else {
+        if (document.exitFullscreen) { document.exitFullscreen(); } 
+        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); } 
+        else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); } 
+        else if (document.msExitFullscreen) { document.msExitFullscreen(); }
+      }
+    }
+
+    // Appliquer l'événement "clic"
+    document.querySelectorAll('video, .affiches img, .qrcodes img').forEach(media => {
+      media.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        if (this.tagName === 'VIDEO' && this.hasAttribute('controls') && y > rect.height - 40) { return; }
+        toggleFullScreen(this);
+      });
+    });
+  </script>
 </body>
 </html>

@@ -15,7 +15,7 @@
       repeating-linear-gradient(0deg,#181712 0 2px,#14130d 2px 4px);
     display:flex;flex-direction:column;}
   .overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:14px;padding:22px;z-index:10;overflow:auto;background:rgba(11,10,7,.9);}
+    gap:14px;padding:22px;z-index:10;overflow:auto;background:rgba(11,10,7,.92);}
   .hidden{display:none!important;}
   h1{font-family:'VT323',monospace;color:#d1b023;font-size:clamp(2rem,8vw,3.8rem);line-height:1;letter-spacing:2px;}
   .sub{color:#cfcfc4;max-width:520px;line-height:1.5;font-size:.92rem;}
@@ -66,41 +66,55 @@
   <h1>ÉVASION DES BACKROOMS</h1>
   <p class="sub"><strong style="color:#d1b023">20 secondes</strong> pour fuir les couloirs.
      Touche la <strong style="color:#7ee2a8">porte ouverte</strong> le plus vite possible pour enchaîner les combos.
-     Évite les portes <strong style="color:#ff8a7a">👁 entités</strong> (−2 s&nbsp;!). Fais le meilleur score.</p>
+     Évite les portes <strong style="color:#ff8a7a">👁 entités</strong> (−2 s&nbsp;!).</p>
   <p class="prix">🏆 Meilleur score = <strong>4 places en avant-première&nbsp;!</strong></p>
+  <p class="sub" style="color:#9a9a8a">⚠️ Une seule partie possible — donne tout !</p>
   <input id="pseudo" maxlength="30" placeholder="Ton pseudo (obligatoire)" autocomplete="off">
   <button class="btn" onclick="Jeu.start()">JOUER</button>
   <div id="lb-start"></div>
   <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
 </div>
 
-<!-- Fin -->
+<!-- Déjà joué -->
+<div id="deja" class="overlay hidden">
+  <h1>DÉJÀ JOUÉ</h1>
+  <p class="sub">Tu as déjà participé au concours 🎮 — une seule partie par personne.</p>
+  <div id="lb-deja"></div>
+  <a class="btn" href="<?= BASE_URL ?>/">Retour à l'accueil</a>
+</div>
+
+<!-- Fin (pop-up) -->
 <div id="fin" class="overlay hidden">
-  <p class="msg" id="fin-msg">TEMPS ÉCOULÉ</p>
-  <p class="sub">Score : <strong id="fin-score" style="color:#d1b023;font-size:1.5rem">0</strong>
+  <p class="msg">PARTIE TERMINÉE</p>
+  <p class="sub">Ton score : <strong id="fin-score" style="color:#d1b023;font-size:1.6rem">0</strong>
      · <span id="fin-portes">0</span> portes</p>
   <div id="fin-ok"><p class="prix">✔ Score enregistré au classement !</p></div>
   <div id="lb-fin"></div>
-  <div class="liens">
-    <button class="btn" onclick="Jeu.start()">REJOUER</button>
-    <a class="btn btn-ghost" href="<?= BASE_URL ?>/presentation">Présentation</a>
-    <a class="btn btn-ghost" href="<?= BASE_URL ?>/">Accueil</a>
-  </div>
+  <a class="btn" href="<?= BASE_URL ?>/">Retour à l'accueil</a>
 </div>
 
 <script>
 const BASE='<?= BASE_URL ?>', CSRF='<?= csrf_token() ?>';
 const Jeu=(function(){
   const $=id=>document.getElementById(id);
-  const DUREE=20000;
+  const DUREE=20000, CLE='bk_survie_joue';
   let fin0,score,combo,portes,raf,running,pseudo='',lastScore=0,lastPortes=0;
 
+  // Une seule partie par appareil (localStorage — PAS d'IP, car tout l'amphi partage la connexion).
+  if(localStorage.getItem(CLE)){
+    $('start').classList.add('hidden');
+    $('deja').classList.remove('hidden');
+    chargerClassement('lb-deja');
+  }
+
   function start(){
+    if(localStorage.getItem(CLE)){location.reload();return;}
     const p=$('pseudo').value.trim();
     if(!p){$('pseudo').focus();$('pseudo').style.borderColor='#c0392b';return;}  // pseudo OBLIGATOIRE
     pseudo=p;
+    localStorage.setItem(CLE,'1');                 // ← partie consommée dès le lancement
     score=0;combo=0;portes=0;running=true;
-    $('start').classList.add('hidden');$('fin').classList.add('hidden');$('jeu').classList.remove('hidden');
+    $('start').classList.add('hidden');$('jeu').classList.remove('hidden');
     fin0=performance.now()+DUREE;
     manche();boucle();
   }
@@ -116,12 +130,11 @@ const Jeu=(function(){
   }
 
   function manche(){
-    // difficulté croissante : plus le temps passe, plus d'entités
     const ecoule=1-(fin0-performance.now())/DUREE;
-    const nb=6;                                  // 6 grosses portes (2x3) : idéal mobile
+    const nb=6;
     const g=$('grille');g.style.gridTemplateColumns='repeat(2,1fr)';g.innerHTML='';
     const ouverte=Math.random()*nb|0;
-    const nbEnt=Math.min(1+Math.floor(ecoule*3),3);   // 1 → 3 entités
+    const nbEnt=Math.min(1+Math.floor(ecoule*3),3);
     const ent=new Set();while(ent.size<nbEnt){const r=Math.random()*nb|0;if(r!==ouverte)ent.add(r);}
     for(let i=0;i<nb;i++){
       const p=document.createElement('button');p.className='porte';p.type='button';
@@ -133,9 +146,8 @@ const Jeu=(function(){
   }
 
   function bon(){combo=Math.min(combo+1,5);score+=10*combo;portes++;sOk();maj();manche();}
-  function ferme(){combo=0;sBad();maj();manche();}                    // mauvaise porte : combo perdu
-  function entite(){combo=0;fin0-=2000;sBad();shake();maj();manche();} // entité : −2 s !
-
+  function ferme(){combo=0;sBad();maj();manche();}
+  function entite(){combo=0;fin0-=2000;sBad();shake();maj();manche();}
   function maj(){$('t-score').textContent=score;$('combo').textContent=combo>1?('COMBO x'+combo):'';}
 
   function termine(){
@@ -143,10 +155,9 @@ const Jeu=(function(){
     $('jeu').classList.add('hidden');
     $('fin-score').textContent=score;$('fin-portes').textContent=portes;
     $('fin').classList.remove('hidden');
-    envoyer();                       // enregistrement automatique avec le pseudo saisi au départ
+    envoyer();
   }
 
-  // --- Classement serveur ---
   function chargerClassement(cible){
     fetch(BASE+'/survie/classement').then(r=>r.json()).then(rows=>{
       let h='<table><tr><th>#</th><th>Joueur</th><th>Score</th><th>Portes</th></tr>';
@@ -162,7 +173,6 @@ const Jeu=(function(){
       .then(r=>r.json()).then(()=>chargerClassement('lb-fin')).catch(()=>chargerClassement('lb-fin'));
   }
 
-  // --- Son ---
   let actx;function tone(f,d,t='square',v=.12){try{actx=actx||new(AudioContext||webkitAudioContext)();
     const o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;o.connect(g);g.connect(actx.destination);
     g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.start();o.stop(actx.currentTime+d);}catch(e){}}
@@ -170,8 +180,8 @@ const Jeu=(function(){
   const sBad=()=>tone(150,.2,'sawtooth',.18);
   function shake(){document.body.classList.add('shake');setTimeout(()=>document.body.classList.remove('shake'),250);}
 
-  chargerClassement('lb-start');
-  return {start,envoyer};
+  if(!localStorage.getItem(CLE)) chargerClassement('lb-start');
+  return {start};
 })();
 </script>
 </body>

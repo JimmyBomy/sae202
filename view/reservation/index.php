@@ -1,225 +1,127 @@
 <?php
-// --- Préparation du calendrier (mois affiché, transmis par le contrôleur) ---
-$moisFr = [1=>'janvier',2=>'février',3=>'mars',4=>'avril',5=>'mai',6=>'juin',
-           7=>'juillet',8=>'août',9=>'septembre',10=>'octobre',11=>'novembre',12=>'décembre'];
-$premier   = DateTime::createFromFormat('Y-m-d', $mois . '-01');
-$nbJours   = (int) $premier->format('t');
-$decalage  = ((int) $premier->format('N')) - 1;          // 0 = lundi
-$aujour    = new DateTime('today');
-$suivant   = (clone $premier)->modify('+1 month')->format('Y-m');
-$precedent = (clone $premier)->modify('-1 month')->format('Y-m');
-$nomMois   = $moisFr[(int) $premier->format('n')] . ' ' . $premier->format('Y');
-$moisMin   = max((new DateTime('today'))->format('Y-m'), '2026-06');
-$champ = fn(string $k, string $defaut = '') => htmlspecialchars($_POST[$k] ?? $defaut);
+// Détection des médias présents (déposés dans view/uploads/), pour un rendu propre.
+$introVid    = file_exists('view/uploads/intro.mp4')    ? BASE_URL . '/view/uploads/intro.mp4'    : null;
+$discoursVid = file_exists('view/uploads/discours.mp4') ? BASE_URL . '/view/uploads/discours.mp4' : null;
+$affiches    = glob('view/uploads/affiches/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [];
+// Ajout de la détection pour les QR codes
+$qrcodes     = glob('view/uploads/qrcode/*.{jpg,jpeg,png,webp}', GLOB_BRACE) ?: [];
 ?>
-<main class="concept-page resa-page">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Soutenance — BACKROOMS</title>
+<link rel="icon" type="image/png" href="<?= BASE_URL ?>/view/img/favicon.png">
+<style>
+  @font-face{font-family:'VT323';src:url('<?= BASE_URL ?>/view/fonts/vt323-400.woff2') format('woff2');font-display:swap;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{min-height:100vh;font-family:'Segoe UI',Arial,sans-serif;color:#f5f5f0;padding:34px 20px 60px;
+    background:#14130d;background-image:linear-gradient(rgba(13,12,9,.82),rgba(13,12,9,.9)),
+      repeating-linear-gradient(0deg,#181712 0 2px,#14130d 2px 4px);}
+  .wrap{max-width:1000px;margin:0 auto;}
+  h1{font-family:'VT323',monospace;color:#d1b023;font-size:clamp(2.4rem,8vw,4rem);letter-spacing:2px;text-align:center;line-height:1;}
+  .lede{text-align:center;color:#bdbdb0;margin:6px 0 30px;}
+  h2{font-family:'VT323',monospace;color:#d1b023;font-size:1.9rem;letter-spacing:1px;margin:34px 0 14px;border-bottom:1px solid #3a3320;padding-bottom:6px;}
+  video{width:100%;border-radius:10px;border:1px solid #3a3320;background:#000;display:block;cursor:zoom-in;}
+  .ph{border:1px dashed #4a4636;border-radius:10px;padding:26px;text-align:center;color:#8f8f88;background:rgba(10,10,8,.4);}
+  .affiches, .qrcodes {display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .affiches img, .qrcodes img {width:100%;border-radius:8px;border:1px solid #3a3320;cursor:zoom-in;}
+  .actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:40px;}
+  .btn{font-family:'VT323',monospace;font-size:1.6rem;letter-spacing:1px;background:#d1b023;color:#14130d;border:none;
+    border-radius:8px;padding:14px 34px;cursor:pointer;text-decoration:none;display:inline-block;}
+  .btn:hover{background:#e3c63a;}
+  .btn-ghost{background:none;color:#e6e6e6;border:1px solid #4a4636;}
+  .btn-ghost:hover{border-color:#d1b023;color:#d1b023;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>BACKROOMS — SOUTENANCE</h1>
+    <p class="lede">Page de présentation (non listée). À n'ouvrir que pendant le passage oral.</p>
 
-  <?php if (!empty($erreur)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($erreur) ?></div>
-  <?php endif; ?>
-  <?php if (!empty($succes)): ?>
-    <div class="alert alert-success"><?= $succes ?></div>
-  <?php endif; ?>
+    <h2>🎬 Vidéo d'introduction</h2>
+    <?php if ($introVid): ?>
+      <video src="<?= $introVid ?>" controls preload="metadata" playsinline></video>
+    <?php else: ?>
+      <div class="ph">Déposez la vidéo dans <code>view/uploads/intro.mp4</code> — elle s'affichera ici.</div>
+    <?php endif; ?>
 
-  <form method="post" action="<?= BASE_URL ?>/reservation" class="resa-form">
-    <?= csrf_input() ?>
+    <h2>🔇 Vidéo d'accompagnement (sans son)</h2>
+    <?php if ($discoursVid): ?>
+      <video src="<?= $discoursVid ?>" muted loop autoplay playsinline></video>
+    <?php else: ?>
+      <div class="ph">Vidéo muette à boucler pendant le discours — déposez-la dans <code>view/uploads/discours.mp4</code>.</div>
+    <?php endif; ?>
 
-    <!-- ============ INSCRIPTION ============ -->
-    <section class="concept-section pt30">
-      <h1 class="sec-title"><?= t('rv_ins_t') ?></h1>
-      <p class="sec-sub"><?= t('rv_ins_sub') ?></p>
-      <?php if (!$estConnecte): ?>
-        <p class="form-switch" style="margin:0 0 18px;"><?= t('rv_already') ?> <a href="<?= BASE_URL ?>/compte/connexion"><?= t('rv_login') ?></a></p>
-      <?php endif; ?>
-
-      <div class="resa-grid">
-        <div class="resa-col">
-          <input class="resa-field" type="text"  name="nom"       placeholder="<?= t('ph_NOM') ?>" aria-label="<?= t('ph_NOM') ?>" value="<?= $champ('nom', $utilisateur['nom'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="prenom"    placeholder="<?= t('ph_PRENOM') ?>" aria-label="<?= t('ph_PRENOM') ?>" value="<?= $champ('prenom', $utilisateur['prenom'] ?? '') ?>" required>
-          <input class="resa-field" type="email" name="email"     placeholder="<?= t('ph_EMAIL') ?>" aria-label="<?= t('ph_EMAIL') ?>" value="<?= $champ('email', $utilisateur['email'] ?? '') ?>" required>
-          <input class="resa-field" type="text"  name="telephone" placeholder="<?= t('ph_TEL') ?>" aria-label="<?= t('ph_TEL') ?>" value="<?= $champ('telephone', $utilisateur['telephone'] ?? '') ?>">
-        </div>
-        <div class="resa-col">
-          <input class="resa-field" type="text" name="nom_equipe" placeholder="<?= t('ph_EQUIPE') ?>" aria-label="<?= t('ph_EQUIPE') ?>"
-                 value="<?= $equipe ? htmlspecialchars($equipe['nom']) : $champ('nom_equipe') ?>" <?= $equipe ? 'readonly' : '' ?>>
-          <?php if (!$equipe): ?>
-            <input class="resa-field" type="text" name="code_invite" maxlength="6"
-                   placeholder="<?= t('ph_CODE') ?>" aria-label="<?= t('ph_CODE') ?>"
-                   value="<?= $champ('code_invite') ?>" style="text-transform:uppercase;">
-          <?php endif; ?>
-          <input class="resa-field" type="number" name="nb_joueurs" placeholder="<?= t('ph_NB') ?>" aria-label="<?= t('ph_NB') ?>" min="2" max="10" value="<?= $champ('nb_joueurs') ?>" required>
-          <select class="resa-field" name="salle" required aria-label="<?= t('calc_salle') ?>">
-            <option value=""><?= t('rv_salle_ph') ?></option>
-            <option value="facile"   <?= ($_POST['salle'] ?? '') === 'facile'   ? 'selected' : '' ?>><?= t('rv_s1') ?></option>
-            <option value="standard" <?= ($_POST['salle'] ?? '') === 'standard' ? 'selected' : '' ?>><?= t('rv_s2') ?></option>
-            <option value="hardcore" <?= ($_POST['salle'] ?? '') === 'hardcore' ? 'selected' : '' ?>><?= t('rv_s3') ?></option>
-          </select>
-          <p class="resa-prix" id="resa-prix" aria-live="polite"></p>
-          <label class="resa-dob-label"><?= t('rv_dob') ?></label>
-          <?php
-            $dn  = !empty($utilisateur['date_naissance']) ? explode('-', $utilisateur['date_naissance']) : null;
-            $dnJ = $_POST['naiss_jour']  ?? ($dn ? (int) $dn[2] : '');
-            $dnM = $_POST['naiss_mois']  ?? ($dn ? (int) $dn[1] : '');
-            $dnA = $_POST['naiss_annee'] ?? ($dn ? (int) $dn[0] : '');
-          ?>
-          <div class="resa-dob">
-            <select class="resa-field" name="naiss_jour" aria-label="<?= t('rv_jour') ?>">
-              <option value=""><?= t('rv_jour') ?></option>
-              <?php for ($j = 1; $j <= 31; $j++): ?><option <?= $dnJ == $j ? 'selected' : '' ?>><?= $j ?></option><?php endfor; ?>
-            </select>
-            <select class="resa-field" name="naiss_mois" aria-label="<?= t('rv_mois') ?>">
-              <option value=""><?= t('rv_mois') ?></option>
-              <?php foreach ($moisFr as $n => $m): ?><option value="<?= $n ?>" <?= $dnM == $n ? 'selected' : '' ?>><?= ucfirst($m) ?></option><?php endforeach; ?>
-            </select>
-            <select class="resa-field" name="naiss_annee" aria-label="<?= t('rv_annee') ?>">
-              <option value=""><?= t('rv_annee') ?></option>
-              <?php for ($a = 2010; $a >= 1940; $a--): ?><option <?= $dnA == $a ? 'selected' : '' ?>><?= $a ?></option><?php endfor; ?>
-            </select>
-          </div>
-        </div>
+    <h2>🖼️ Affiches & flyers</h2>
+    <?php if ($affiches): ?>
+      <div class="affiches">
+        <?php foreach ($affiches as $a): ?><img src="<?= BASE_URL . '/' . htmlspecialchars($a) ?>" alt="Affiche" loading="lazy"><?php endforeach; ?>
       </div>
-    </section>
+    <?php else: ?>
+      <div class="ph">Déposez les visuels dans <code>view/uploads/affiches/</code> (jpg, png, webp) — ils apparaîtront ici.</div>
+    <?php endif; ?>
 
-    <!-- ============ NOS DISPONIBILITÉS (calendrier) ============ -->
-    <section class="concept-section" id="disponibilites">
-      <h2 class="sec-title"><?= t('rv_dispo_t') ?></h2>
-      <p class="sec-sub"><?= t('rv_come') . htmlspecialchars($nomMois) ?> !</p>
-
-      <div class="calendrier">
-        <div class="cal-grille">
-          <span class="cal-jour">Lundi</span><span class="cal-jour">Mardi</span><span class="cal-jour">Mercredi</span>
-          <span class="cal-jour">Jeudi</span><span class="cal-jour">Vendredi</span><span class="cal-jour">Samedi</span><span class="cal-jour">Dimanche</span>
-          <?php for ($i = 0; $i < $decalage; $i++): ?><span class="cal-vide"></span><?php endfor; ?>
-          <?php for ($jour = 1; $jour <= $nbJours; $jour++):
-              $dateJour = $premier->format('Y-m') . '-' . str_pad($jour, 2, '0', STR_PAD_LEFT);
-              $passe = ($dateJour < $aujour->format('Y-m-d'));
-          ?>
-            <?php if ($passe): ?>
-              <span class="cal-case cal-passe" title="<?= t('cal_ferme') ?>"><span class="cal-num"><?= $jour ?></span></span>
-            <?php elseif (in_array($dateJour, $joursComplets ?? [], true)): ?>
-              <span class="cal-case cal-complet" title="<?= t('cal_complet') ?>"><span class="cal-num"><?= $jour ?></span></span>
-            <?php elseif (!creneau_ouvert($dateJour)): ?>
-              <span class="cal-case cal-ferme" title="<?= t('cal_ferme') ?>"><span class="cal-num"><?= $jour ?></span></span>
-            <?php else: ?>
-              <input type="radio" name="date_session" id="cal<?= $dateJour ?>" value="<?= $dateJour ?>" class="cal-radio"
-                     <?= ($_POST['date_session'] ?? '') === $dateJour ? 'checked' : '' ?>>
-              <label for="cal<?= $dateJour ?>" class="cal-case" title="<?= t('cal_dispo') ?>"><span class="cal-num"><?= $jour ?></span></label>
-            <?php endif; ?>
-          <?php endfor; ?>
-        </div>
-        <ul class="cal-legende">
-          <li><span class="lg lg-ouvert"></span> <?= t('cal_dispo') ?></li>
-          <li><span class="lg lg-complet"></span> <?= t('cal_complet') ?></li>
-          <li><span class="lg lg-ferme"></span> <?= t('cal_ferme') ?></li>
-        </ul>
-        <div class="cal-pagination">
-          <?php if ($mois > $moisMin): ?>
-            <button type="submit" name="mois_aff" value="<?= $precedent ?>" class="btn-link cal-btn"
-                    formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate><?= t('rv_prev') ?></button>
-          <?php else: ?>
-            <span></span>
-          <?php endif; ?>
-          <button type="submit" name="mois_aff" value="<?= $suivant ?>" class="btn-link cal-btn"
-                  formaction="<?= BASE_URL ?>/reservation#disponibilites" formnovalidate><?= t('rv_next') ?></button>
-        </div>
+    <h2>📱 QR CODE</h2>
+    <?php if ($qrcodes): ?>
+      <div class="qrcodes">
+        <?php foreach ($qrcodes as $q): ?><img src="<?= BASE_URL . '/' . htmlspecialchars($q) ?>" alt="QR Code" loading="lazy"><?php endforeach; ?>
       </div>
-    </section>
+    <?php else: ?>
+      <div class="ph">Déposez les visuels dans <code>view/uploads/qrcode/</code> (jpg, png, webp) — ils apparaîtront ici.</div>
+    <?php endif; ?>
 
-    <!-- ============ SANTÉ ET SÉCURITÉ ============ -->
-    <section class="concept-section">
-      <h2 class="sec-title"><?= t('rv_sante_t') ?></h2>
-      <p class="sec-sub"><?= t('rv_sante_sub') ?></p>
+    <div class="actions">
+      <a class="btn" href="<?= BASE_URL ?>/survie">🎮 Lancer le mini-jeu</a>
+      <a class="btn btn-ghost" href="<?= BASE_URL ?>/">← Retour à l'accueil</a>
+    </div>
+  </div>
 
-      <?php
-      $questions = ['sante_cardiaque'=>t('rv_q1'), 'sante_epilepsie'=>t('rv_q2'), 'sante_respiratoire'=>t('rv_q3'), 'sante_claustro'=>t('rv_q4')];
-      foreach ($questions as $nomQ => $libelle): ?>
-        <div class="sante-q">
-          <span class="sante-libelle"><?= $libelle ?></span>
-          <div class="ouinon">
-            <label><input type="radio" name="<?= $nomQ ?>" value="oui" <?= ($_POST[$nomQ] ?? '') === 'oui' ? 'checked' : '' ?>> <?= t('rv_oui') ?></label>
-            <label><input type="radio" name="<?= $nomQ ?>" value="non" <?= ($_POST[$nomQ] ?? '') === 'non' ? 'checked' : '' ?>> <?= t('rv_non') ?></label>
-          </div>
-        </div>
-      <?php endforeach; ?>
-
-      <div class="sante-q">
-        <span class="sante-libelle"><?= t('rv_regime_q') ?></span>
-        <select class="resa-field" name="regime" style="max-width:240px;" aria-label="<?= t('rv_regime_q') ?>">
-          <?php
-            $regimes = ['aucun'=>t('reg_aucun'),'vegetarien'=>t('reg_vegetarien'),'vegan'=>t('reg_vegan'),'sans_gluten'=>t('reg_sans_gluten'),'halal'=>t('reg_halal'),'autre'=>t('reg_autre')];
-            foreach ($regimes as $val => $lib):
-          ?>
-            <option value="<?= $val ?>" <?= ($_POST['regime'] ?? '') === $val ? 'selected' : '' ?>><?= $lib ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-    </section>
-
-    <!-- ============ PAIEMENT ============ -->
-    <section class="concept-section">
-      <h2 class="sec-title"><?= t('rv_pay_t') ?></h2>
-      <p class="sec-sub"><?= t('rv_pay_sub') ?></p>
-
-      <div class="paiement-grid">
-        <div class="pay-col">
-          <h3 class="pay-titre"><?= t('rv_pay_card') ?></h3>
-          <input class="resa-field" type="text" name="cb_numero"  placeholder="XXXX XXXX XXXX XXXX" aria-label="XXXX XXXX XXXX XXXX" inputmode="numeric" autocomplete="off" value="<?= $champ('cb_numero') ?>">
-          <div class="pay-ligne">
-            <input class="resa-field" type="text" name="cb_exp" placeholder="MM / AA" aria-label="MM / AA" autocomplete="off" value="<?= $champ('cb_exp') ?>">
-            <input class="resa-field" type="text" name="cb_cvv" placeholder="CVV" aria-label="CVV" autocomplete="off" value="<?= $champ('cb_cvv') ?>">
-          </div>
-          <input class="resa-field" type="text" name="cb_tel" placeholder="<?= t('ph_TEL') ?>" aria-label="<?= t('ph_TEL') ?>" autocomplete="off" value="<?= $champ('cb_tel') ?>">
-          <button type="submit" name="paiement" value="carte" class="btn btn-primary pay-btn"><?= t('rv_pay_btn') ?></button>
-        </div>
-
-        <div class="pay-col">
-          <h3 class="pay-titre"><?= t('rv_pay_place') ?></h3>
-          <p class="pay-info"><?= t('rv_pay_info') ?></p>
-          <div class="pay-logos">
-            <span>VISA</span><span>Mastercard</span><span>AMEX</span><span>ANCV</span><span> Pay</span>
-          </div>
-          <button type="submit" name="paiement" value="sur_place" class="btn btn-outline pay-btn"><?= t('rv_pay_finalise') ?></button>
-        </div>
-      </div>
-    </section>
-
-  </form>
-
-  <!-- Récapitulatif des réservations de l'équipe -->
-  <?php if (!empty($reservations)): ?>
-    <section class="concept-section">
-      <h2 class="sec-title"><?= t('rv_myresa_t') ?></h2>
-      <table class="tableau">
-        <thead><tr><th><?= t('th_salle') ?></th><th><?= t('th_date') ?></th><th><?= t('th_joueurs') ?></th><th><?= t('th_statut') ?></th></tr></thead>
-        <tbody>
-          <?php foreach ($reservations as $r): ?>
-            <tr>
-              <td><?= htmlspecialchars(ucfirst($r['salle'])) ?></td>
-              <td><?= htmlspecialchars(date('d/m/Y à H\hi', strtotime($r['date_session']))) ?></td>
-              <td><?= htmlspecialchars($r['nb_joueurs']) ?></td>
-              <td><span class="badge badge-<?= htmlspecialchars($r['statut']) ?>"><?= htmlspecialchars(str_replace('_',' ',$r['statut'])) ?></span></td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </section>
-  <?php endif; ?>
-</main>
-
-<script>
-  (function () {
-    const grille = { 2:170, 3:165, 4:160, 5:155, 6:150 };
-    const tarif = n => (n >= 7 ? 145 : (grille[n] || 170));
-    const salle = document.querySelector('[name=salle]');
-    const nb    = document.querySelector('[name=nb_joueurs]');
-    const out   = document.getElementById('resa-prix');
-    if (!salle || !nb || !out) return;
-    function maj() {
-      const n = parseInt(nb.value, 10);
-      if (!salle.value || isNaN(n) || n < 2 || n > 10) { out.textContent = ''; return; }
-      const pp = tarif(n) + (salle.value === 'hardcore' ? 10 : 0);
-      out.textContent = <?= json_encode(t('rv_js_pre')) ?> + (pp * n) + ' € (' + pp + <?= json_encode(t('rv_js_suf')) ?>;
+  <script>
+    // Fonction de bascule (toggle) plein écran couvrant les 4 supports (Standard, WebKit, Moz, MS)
+    function toggleFullScreen(elem) {
+      const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+      
+      if (!isFullScreen) {
+        // Entrer en plein écran
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+        } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+        }
+      } else {
+        // Sortir du plein écran
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
     }
-    salle.addEventListener('change', maj); nb.addEventListener('input', maj); maj();
-  })();
-</script>
+
+    // Appliquer l'événement "clic" sur toutes les vidéos, images d'affiches et QR codes
+    document.querySelectorAll('video, .affiches img, .qrcodes img').forEach(media => {
+      media.addEventListener('click', function(e) {
+        // Empêche le clic d'interférer avec les contrôles natifs si cliqué sur la barre de contrôle
+        const rect = this.getBoundingClientRect();
+        const y = e.clientY - rect.top;
+        // Si la vidéo a des contrôles et qu'on clique dans les 40 derniers pixels (barre de contrôle), on ignore
+        if (this.tagName === 'VIDEO' && this.hasAttribute('controls') && y > rect.height - 40) {
+            return; 
+        }
+        toggleFullScreen(this);
+      });
+    });
+  </script>
+</body>
+</html>
